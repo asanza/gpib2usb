@@ -1,0 +1,7 @@
+/src/nbproject/private/
+*.bin
+*.out
+*.hex
+*bak
+*.ses
+*.dsn

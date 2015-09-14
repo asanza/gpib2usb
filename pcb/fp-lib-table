@@ -1,0 +1,7 @@
+(fp_lib_table
+  (lib (name w_pin_strip)(type Legacy)(uri /home/diego/Electronics/Libraries/w_pin_strip.mod)(options "")(descr ""))
+  (lib (name w_conn_misc)(type Legacy)(uri /home/diego/Electronics/Libraries/w_conn_misc.mod)(options "")(descr ""))
+  (lib (name w_conn_strip)(type Legacy)(uri /home/diego/Electronics/Libraries/w_conn_strip.mod)(options "")(descr ""))
+  (lib (name w_conn_pc)(type Legacy)(uri /home/diego/Electronics/Libraries/w_conn_pc.mod)(options "")(descr ""))
+  (lib (name Housings_DFN_QFN)(type KiCad)(uri /home/diego/Electronics/Libraries/footprints/Housings_DFN_QFN.pretty)(options "")(descr ""))
+)

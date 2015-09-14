@@ -3,8 +3,12 @@ ISP_PROGRAMMER=buspirate
 ISP_FLAGS=-p m16u4 -P /dev/ttyUSB0
 CC=avr-gcc
 OBJCOPY=avr-objcopy
-CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=atmega16u4
-SOURCES=main.c
+CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=at90can128
+SOURCES=main.c \
+    hal/hal_uart.c \
+    hal/hal_sys.c
+
+INCLUDE=hal/
 
 all: $(PROJECT).hex
 
@@ -12,7 +16,7 @@ $(PROJECT).hex: $(PROJECT).out
 	$(OBJCOPY) -j .text -O ihex $(PROJECT).out $(PROJECT).hex
 
 $(PROJECT).out: $(SOURCES)
-	$(CC) $(CFLAGS) -I./ -o $(PROJECT).out $(SOURCES)
+	$(CC) $(CFLAGS) -I./ -I$(INCLUDE) -o $(PROJECT).out $(SOURCES)
 
 program-usb:
 	dfu-programmer erase
@@ -22,7 +26,7 @@ program-isp:
 	avrdude -c $(ISP_PROGRAMMER) $(ISP_FLAGS) -e
 	avrdude -c $(ISP_PROGRAMMER) $(ISP_FLAGS) -U flash:w:$(PROJECT).hex
 
-# Program fuses with avrdude, settings: 
+# Program fuses with avrdude, settings:
 # CKSEL = 0010, SUT = 10: Internal RC-oscillator, 6ck + 64ms start-up
 # BOOTSZ = 10: Boot flash size 2048 words, start address $1800
 # SPIEN = 0: SPI program downloading enabled
