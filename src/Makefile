@@ -1,6 +1,6 @@
 PROJECT=gpib_adapter
-ISP_PROGRAMMER=buspirate
-ISP_FLAGS=-p m16u4 -P /dev/ttyUSB0
+ISP_PROGRAMMER=avrispmkII
+ISP_FLAGS=-p c128 
 CC=avr-gcc
 OBJCOPY=avr-objcopy
 CFLAGS=-g -Os -Wall -mcall-prologues -mmcu=at90can128
@@ -34,8 +34,8 @@ program-isp:
 # BODLEVEL = 000: Brown-out detection level VCC=4.3V
 # HWB = 0: Hardware boot enable
 fuses:
-	avrdude -c buspirate -p m16u4 -P /dev/ttyUSB0 -U lfuse:w:0xe2:m \
-			-U hfuse:w:0x98:m -U efuse:w:0xf0:m
+	avrdude -c $(ISP_PROGRAMMER) $(ISP_FLAGS) -U lfuse:w:0xe2:m \
+			-U hfuse:w:0x18:m -U efuse:w:0xff:m
 
 clean:
 	rm -f $(PROJECT).out

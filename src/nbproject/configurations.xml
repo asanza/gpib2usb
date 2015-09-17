@@ -4,6 +4,8 @@
     <df name="src" root=".">
       <df name="hal">
         <in>HardwareProfile.h</in>
+        <in>hal_gpib.c</in>
+        <in>hal_gpib.h</in>
         <in>hal_sys.c</in>
         <in>hal_sys.h</in>
         <in>hal_uart.c</in>

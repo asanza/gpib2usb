@@ -19,10 +19,13 @@ int main() {
      */
     hal_uart_init(on_data_received);
 
+    DDRD = 0x10;
+    
     // Interrupts enabled after configuration
     hal_sys_exit_critical();
     while (1) {
-
+        PORTD ^= 0x80;
+        _delay_ms(250);
     }
 }
 

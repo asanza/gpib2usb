@@ -21,4 +21,10 @@ void writeChar(char data);
 
 /* Set bus mode, TRUE for command mode FALSE for data mode */
 void setMode(enum BOOLEAN mode);
+
+/********************************************/
+
+
+
+
 #endif
