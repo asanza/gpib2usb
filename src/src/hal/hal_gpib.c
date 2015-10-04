@@ -1,54 +1,38 @@
 #include "HardwareProfile.h"
 #include "hal_gpib.h"
 
-static char myAddress = 0xFF;
+#define _spinmcr(pin, func)do{ \
+switch(pin){ \
+        case IFC: func(_IFC); break; \
+        case REN: func(_REN); break; \
+        case DAV: func(_DAV); break; \
+        case ATN: func(_ATN); break; \
+        case EOI: func(_EOI); break; \
+        case SRQ: func(_SRQ); break; \
+        case NRFD: func(_NRFD); break; \
+        case NDAC: func(_NDAC); break; \
+        case TE: func(_TE); break; \
+        case DC: func(_DC); break; \
+        case PE: func(_PE); break; \
+}}while(0);
 
-int GPIB_Init(int our_address){
-    if(myAddress != 0xFF)
-        return -1; // already initialized
-    myAddress = our_address + 0x20;
-    /* initialize hardware stuff */
+int hal_gpib_read_pin(int pin){
+   _spinmcr(pin, PortReadPin);
+   return pin;
 }
 
-int GPIB_gpiSend(int listen, char what){
-    hal_io_set_pin(DAV);
-    if(hal_io_is_pin_set(NRFD|NDAC))
-        return -1;
-    hal_dport_put(what);
-    while(!hal_io_is_pin_set(NRFD));
-    hal_io_clear_pin(DAV);
-    while(!hal_io_is_pin_set(NDAC));
-    hal_io_set_pin(DAV);
+void hal_gpib_set_pin(int pin){
+   _spinmcr(pin, PortSetPin);    
 }
 
-int GPIB_PutStr(int listen, char *string, int count){
-    
+void hal_gpib_clear_pin(int pin){
+   _spinmcr(pin, PortClearPin);        
 }
 
-int GPIB_Stat(void){
-    
+void hal_gpib_put_data(char c){
+    _DIO = c;
 }
 
-int GPIB_Get(int listen){
-    
-}
-
-int GPIB_GetStr(int listen, char*buf){
-    
-}
-
-int GPIB_SerPoll(int listen){
-    
-}
-
-int GPIB_PutAdd(char what){
-    
-}
-
-int GPIB_PutData(char what){
-    
-}
-
-int GPIB_GetData(void){
-    
+char hal_gpib_read_data(void){
+    return _DIO;
 }

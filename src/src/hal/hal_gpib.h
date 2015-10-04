@@ -27,46 +27,35 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#define GPIB_PORT 1
 
-    /* Initializes the GPIB driver with a given gpib address. 
-     * returns -1 in case of error.
-     */
-    int GPIB_Init(int our_address);
-    
-    /* sends a single character to the gpib device addressed
-     * by listen. returns -1 in case of error */
-    int GPIB_Send(int listen, char what);
-    
-    /* sends a string of bytes to the gpib device addressed by listen. 
-     * Returns -1 in case of error. */
-    int GPIB_PutStr(int listen, char *string, int count);
+/* exported pin interface */
+#define IFC     0
+#define REN     1
 
-    /* simply return the status of the GPIB status lines. These are 
-     * encoded in the lower 8 bits of the return value as:
-     * IFC REN EOI SRQ NDAC NRF ATN DAV
-     */
-    int GPIB_Stat(void);
+#define DAV     2
+#define ATN     3
+#define EOI     4
+#define SRQ     5
+#define NRFD    6
+#define NDAC    7
+#define TE      8
+#define DC      9
+#define PE      10
+
+#define GPIO1   11
+#define GPIO2   12
+#define GPIO3   13
+#define GPIO4   14
+#define GPIO5   15
+#define TXD     16
+#define RXD     17
     
-    /* read a character from the GPIB device addressed by listen. 
-     * Returns the character or -1 in case of error */
-    int GPIB_Get(int listen);
-    
-    /* reads a string of data from the device addressed by listen. 
-     * Returns the number of bytes read into buf or -1 if error. */
-    int GPIB_GetStr(int listen, char*buf);
-    
-    /* Returns the serial poll on the device at listen. Returnss
-     * the serial poll status in the lower 8 bits or -1 if error */
-    int GPIB_SerPoll(int listen);
-    
-    /* puts value what out as an address byte. return -1 if error. */
-    int GPIB_PutAdd(char what);
-    
-    /* puts what on the gpib bus as data. returns -1 if error. */
-    int GPIB_PutData(char what);
-    
-    /* read the value on the gpib bus as data value and returns it or -1 in case of error. */
-    int GPIB_GetData(void);
+int hal_gpib_read_pin(int pin);
+void hal_gpib_set_pin(int pin);
+void hal_gpib_clear_pin(int pin);
+void hal_gpib_put_data(char c);
+char hal_gpib_read_data(void);
     
 #ifdef	__cplusplus
 }

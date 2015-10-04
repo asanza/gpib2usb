@@ -27,28 +27,29 @@
 #include "HardwareProfile.h"
 
 void hal_sys_init(void){
-    PortSetInput(DIO);
-    PinSetOutput(GPIO1);
-    PinSetOutput(GPIO2);
-    PinSetOutput(GPIO3);
-    PinSetOutput(GPIO4);
-    PinSetOutput(GPIO5);
-    PinSetOutput(DAV);
-    PinSetOutput(ATN);
-    PinSetOutput(TXD);
-    PinSetOutput(EOI);
-    PinSetInput(RXD);
-    PinSetInput(SRQ);
-    PinSetInput(NRFD);
-    PinSetInput(NDAC);
-    PinSetOutput(TE);
-    PinSetOutput(PE);
-    PinSetOutput(DC);
+    PortSetInput(_DIO);
+    PinSetOutput(_GPIO1);
+    PinSetOutput(_GPIO2);
+    PinSetOutput(_GPIO3);
+    PinSetOutput(_GPIO4);
+    PinSetOutput(_GPIO5);
+    PinSetOutput(_DAV);
+    PinSetOutput(_ATN);
+    PinSetOutput(_TXD);
+    PinSetOutput(_EOI);
+    PinSetInput(_RXD);
+    PinSetInput(_SRQ);
+    PinSetInput(_NRFD);
+    PinSetInput(_NDAC);
+    PinSetOutput(_TE);
+    PinSetOutput(_PE);
+    PinSetOutput(_DC);
     /* Set bus outputs on tri-state mode */
-    PortClearPin(TE);
-    PortClearPin(PE);
-    PortClearPin(DC);
+    PortClearPin(_TE);
+    PortClearPin(_PE);
+    PortClearPin(_DC);
 }
+
 
 void hal_sys_enter_critical(void){
     cli();

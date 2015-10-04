@@ -11,30 +11,30 @@
 #define BIT7 0x07
 
 
-#define DIO PORTA
+#define _DIO PORTA
 
-#define IFC PORTC, BIT6
-#define REN PORTC, BIT7
+#define _IFC PORTC, BIT6
+#define _REN PORTC, BIT7
 
-#define DAV PORTC, BIT3
-#define ATN PORTC, BIT1
-#define EOI PORTC, BIT2
-#define SRQ PORTC, BIT0
-#define NRFD PORTC, BIT4
-#define NDAC PORTC, BIT5
+#define _DAV PORTC, BIT3
+#define _ATN PORTC, BIT1
+#define _EOI PORTC, BIT2
+#define _SRQ PORTC, BIT0
+#define _NRFD PORTC, BIT4
+#define _NDAC PORTC, BIT5
 
-#define TE PORTD, BIT4
-#define DC PORTD, BIT5
-#define PE PORTD, BIT1
+#define _TE PORTD, BIT4
+#define _DC PORTD, BIT5
+#define _PE PORTD, BIT1
 
-#define GPIO1 PORTB, BIT0
-#define GPIO2 PORTB, BIT4
-#define GPIO3 PORTB, BIT5
-#define GPIO4 PORTB, BIT6
-#define GPIO5 PORTB, BIT7
+#define _GPIO1 PORTB, BIT0
+#define _GPIO2 PORTB, BIT4
+#define _GPIO3 PORTB, BIT5
+#define _GPIO4 PORTB, BIT6
+#define _GPIO5 PORTB, BIT7
 
-#define TXD   PORTE, BIT0
-#define RXD   PORTE, BIT1
+#define _TXD   PORTE, BIT0
+#define _RXD   PORTE, BIT1
 
 // Internal RC oscillator, 8MHz
 #define F_CPU 8000000UL
@@ -82,5 +82,7 @@
 #define PortClearPin(val) _PortClearPin(val)
 #define _PortSetPin(port, pin){port |= _BV(pin);}
 #define _PortClearPin(port, pin){port &= ~_BV(pin);}
+#define PortReadPin(val) _PortReadPin(val)
+#define _PortReadPin(port, pin){ }
 
 #endif /*_HARDWAREPROFILE_H_*/
