@@ -77,6 +77,7 @@ static void do_print_syserror(syserr err){
 
 static syserr do_address(char* args, int size){
     char* token = strtok(args, " ");
+    printf("token: %s\n", args);
     if(!token) {
         printf("%d\n", sys_get_addr());
         return SYSERR_NONE;

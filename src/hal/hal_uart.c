@@ -51,7 +51,9 @@ void hal_uart_send_byte(char data) {
 
 char hal_uart_receive_byte(){
     while ((UCSR0A & (1 << RXC)) == 0) {}; 
-      return UDR0; 
+    char data = UDR0;
+    //hal_uart_send_byte(data);
+      return data; 
 }
 
 ISR(USART0_RX_vect) {
