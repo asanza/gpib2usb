@@ -24,6 +24,8 @@
 #include "stdiodrv.h"
 #include <hal_uart.h>
 
+#define ESC 27
+
 int uart_putchar(char c, FILE* stream){
     hal_uart_send_byte(c);
     return 0;
@@ -38,10 +40,11 @@ char uart_getchar(FILE *stream){
 }
 
 static char last_received = 0x00;
-char *uart_fgets(char *str, int size, FILE *stream)
+int uart_fgets(char *str, int size, FILE *stream)
 {
 	char *cp;
 	int c;
+	int recN = size;
 
 	if ((stream->flags & __SRD) == 0 || size <= 0)
 		return NULL;
@@ -50,13 +53,13 @@ char *uart_fgets(char *str, int size, FILE *stream)
 		if ((c = getc(stream)) == EOF)
 			return NULL;
                 if(c == '\n' || c == '\r'){
-                    if(last_received != 0x27)
-                        size = 0;
+                    if(last_received != ESC)
+			    break;
                 }
                 last_received = (char)c;
 		*cp = (char)c;
 	}
 	*cp = '\0';
 
-	return str;
+	return recN - size;
 }

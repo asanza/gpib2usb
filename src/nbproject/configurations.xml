@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="80">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df name="src" root=".">
+      <df name="drivers">
+        <in>stdiodrv.c</in>
+        <in>stdiodrv.h</in>
+      </df>
+      <df name="hal">
+        <in>HardwareProfile.h</in>
+        <in>hal_gpib.c</in>
+        <in>hal_gpib.h</in>
+        <in>hal_sys.c</in>
+        <in>hal_sys.h</in>
+        <in>hal_uart.c</in>
+        <in>hal_uart.h</in>
+      </df>
+      <df name="input">
+        <in>input.c</in>
+        <in>input.h</in>
+      </df>
+      <df name="lib">
+        <in>gpib_internals.h</in>
+        <in>lib_gpib.c</in>
+        <in>lib_gpib.h</in>
+      </df>
+      <df name="sys">
+        <in>system.c</in>
+        <in>system.h</in>
+      </df>
+      <in>main.c</in>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>.</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+      </makefileType>
+      <folder path="src/drivers">
+        <cTool>
+          <incDir>
+            <pElem>drivers</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/hal">
+        <cTool>
+          <incDir>
+            <pElem>hal</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/input">
+        <cTool>
+          <incDir>
+            <pElem>input</pElem>
+            <pElem>/usr/lib/gcc/avr/4.8.1/include</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/lib">
+        <cTool>
+          <incDir>
+            <pElem>lib</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <folder path="src/sys">
+        <cTool>
+          <incDir>
+            <pElem>sys</pElem>
+          </incDir>
+        </cTool>
+      </folder>
+      <item path="lib/gpib_internals.h" ex="true" tool="3" flavor="0">
+      </item>
+      <item path="main.c" ex="false" tool="0" flavor="2">
+        <cTool>
+          <incDir>
+            <pElem>input</pElem>
+            <pElem>sys</pElem>
+          </incDir>
+        </cTool>
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

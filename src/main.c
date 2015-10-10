@@ -35,8 +35,8 @@ int main(void) {
     devcmd cmd;
     syserr err;
     while (1) {
-        uart_fgets(inbuff,BUFFER_SIZE, stdin);
-        int size = parse_input(&cmd, inbuff, BUFFER_SIZE);
+        int recv = uart_fgets(inbuff,BUFFER_SIZE, stdin);
+        int size = parse_input(&cmd, inbuff, recv);
         switch(cmd){
             case CMD_ADDR:              err = do_address(inbuff, size); break;
             case CMD_AUTO:              printf("auto\n"); break;

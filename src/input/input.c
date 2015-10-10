@@ -22,7 +22,6 @@
  */
 
 #include "input.h"
-#include <avr/pgmspace.h>
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -57,18 +56,18 @@ static const struct command_t command_strings[] = {
     {CMD_VER, "++ver"},
     {CMD_HELP, "++help"},
 };
-static int parse_command(devcmd* cmd, char* input);
-static int delchar(char* input, char val);
+static int parse_command(devcmd* cmd, char* input, int size);
+static int delchar(char* input, char val, int size);
 static int starts_with(const char *pre, const char *str);
 
 int parse_input(devcmd* cmd, char* input, int buffer_size) {
     assert(cmd);
     assert(input);
-    if(!starts_with("++",input)) return delchar(input, ESC);
-    return parse_command(cmd, input);
+    if(!starts_with("++",input)) return delchar(input, ESC, buffer_size);
+    return parse_command(cmd, input, buffer_size);
 }
 
-static int parse_command(devcmd* cmd, char* input){
+static int parse_command(devcmd* cmd, char* input, int size){
     if(*(input + strlen(input) - 1) == '\n'){
         if(*(input+strlen(input)-2)!=ESC)
                 *(input + strlen(input) - 1) = 0x00;
@@ -76,31 +75,32 @@ static int parse_command(devcmd* cmd, char* input){
     char* p = strchr(input, ' ');
     if(p != NULL) *p = 0x00;
     int offset = 0;
-    for(int i = 0; i < CMD_COUNT; i++ ){
+    int i;
+    for(i = 0; i < CMD_COUNT; i++ ){
         if(!strcmp(input,command_strings[i].string)){
             *cmd = command_strings[i].command;
             offset = strlen(command_strings[i].string);
             break;
         }
     }
-    if(*cmd == CMD_COUNT) return delchar(input, ESC);
-    return delchar(input+offset+1, ESC);
+    if(*cmd == CMD_COUNT) return delchar(input, ESC, size);
+    return delchar(input+offset+1, ESC, offset+1);
 }
 
-static int delchar(char* input, char val){
+static int delchar(char* input, char val, int size){
     char* p = input;
     char* q = input;
-    int size = 0;
-    do{
+    int count = 0;
+    while(size--){
         if(*p++ == val){
             *q++ = *p++;
         } else{
             q++;
-            size++;
+	    count++;
         }
-    }while(*p);
+    }
     *q = 0x00;
-    return size;
+    return count - 1;
 }
 
 static int starts_with(const char *pre, const char *str)
