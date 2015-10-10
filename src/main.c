@@ -117,5 +117,6 @@ static int _isdigit(char* args){
 }
 
 syserr do_write_gpib(char* args, int size){
+	printf("%s\n", args);
     return sys_gpib_write(args,1);
 }

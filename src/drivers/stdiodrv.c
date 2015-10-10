@@ -55,8 +55,10 @@ int uart_fgets(char *str, int size, FILE *stream)
 		if ((c = getc(stream)) == EOF)
 			return NULL;
 		if (c == '\n' || c == '\r') {
-			if (last_received != ESC)
+			if (last_received != ESC){
+				*cp = (char) c;
 				break;
+			}
 		}
 		last_received = (char) c;
 		*cp = (char) c;
