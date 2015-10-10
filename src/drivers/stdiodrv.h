@@ -32,7 +32,7 @@ int uart_putchar(char c, FILE* stream);
 
 char uart_getchar(FILE *stream);
 
-char *uart_fgets(char *str, int size, FILE *stream);
+int uart_fgets(char *str, int size, FILE *stream);
 
 #ifdef	__cplusplus
 }

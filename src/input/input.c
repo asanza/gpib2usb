@@ -63,6 +63,7 @@ static int starts_with(const char *pre, const char *str);
 int parse_input(devcmd* cmd, char* input, int buffer_size) {
     assert(cmd);
     assert(input);
+    *cmd = CMD_COUNT;
     if(!starts_with("++",input)) return delchar(input, ESC, buffer_size);
     return parse_command(cmd, input, buffer_size);
 }
@@ -91,16 +92,15 @@ static int delchar(char* input, char val, int size){
     char* p = input;
     char* q = input;
     int count = 0;
-    while(size--){
-        if(*p++ == val){
-            *q++ = *p++;
+    while(--size){
+        if(*++p == val){
+            *++q = *++p;
         } else{
-            q++;
+            *++q = *p;
 	    count++;
         }
     }
-    *q = 0x00;
-    return count - 1;
+    return count + 1;
 }
 
 static int starts_with(const char *pre, const char *str)
