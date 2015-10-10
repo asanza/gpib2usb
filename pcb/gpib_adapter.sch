@@ -55,26 +55,22 @@ $EndComp
 $Comp
 L GND-RESCUE-gpib_adapter #PWR02
 U 1 1 4FFC9BA8
-P 13550 4900
-F 0 "#PWR02" H 13550 4900 30  0001 C CNN
-F 1 "GND" H 13550 4830 30  0001 C CNN
-F 2 "" H 13550 4900 60  0001 C CNN
-F 3 "" H 13550 4900 60  0001 C CNN
-	1    13550 4900
+P 14500 4900
+F 0 "#PWR02" H 14500 4900 30  0001 C CNN
+F 1 "GND" H 14500 4830 30  0001 C CNN
+F 2 "" H 14500 4900 60  0001 C CNN
+F 3 "" H 14500 4900 60  0001 C CNN
+	1    14500 4900
 	1    0    0    -1  
 $EndComp
-Text Label 9400 6425 0    60   ~ 0
-RXD
 Text Label 9400 6325 0    60   ~ 0
+RXD
+Text Label 9400 6425 0    60   ~ 0
 TXD
 Entry Wire Line
 	14750 3650 14850 3550
 Entry Wire Line
 	14750 3750 14850 3650
-Entry Wire Line
-	14750 4250 14850 4150
-Entry Wire Line
-	14750 4350 14850 4250
 $Comp
 L CONN_5 P2
 U 1 1 4FFF132F
@@ -385,21 +381,21 @@ Entry Wire Line
 	11950 4150 12050 4050
 Entry Wire Line
 	11950 4250 12050 4150
-Text Label 13200 3650 0    60   ~ 0
+Text Label 13250 3650 0    60   ~ 0
 DIO1 B
-Text Label 14400 3650 0    60   ~ 0
+Text Label 13250 3750 0    60   ~ 0
 DIO2 B
-Text Label 13200 3750 0    60   ~ 0
+Text Label 13250 3850 0    60   ~ 0
 DIO3 B
-Text Label 14400 3750 0    60   ~ 0
+Text Label 13250 3950 0    60   ~ 0
 DIO4 B
-Text Label 13200 4250 0    60   ~ 0
+Text Label 14425 3650 0    60   ~ 0
 DIO5 B
-Text Label 14400 4250 0    60   ~ 0
+Text Label 14425 3750 0    60   ~ 0
 DIO6 B
-Text Label 13200 4350 0    60   ~ 0
+Text Label 14425 3850 0    60   ~ 0
 DIO7 B
-Text Label 14400 4350 0    60   ~ 0
+Text Label 14425 3950 0    60   ~ 0
 DIO8 B
 Entry Wire Line
 	13050 3550 13150 3650
@@ -425,19 +421,19 @@ Text Label 11600 6450 0    60   ~ 0
 ATN B
 Text Label 11600 6550 0    60   ~ 0
 SRQ B
-Text Label 13200 3850 0    60   ~ 0
+Text Label 13250 4050 0    60   ~ 0
 EOI B
-Text Label 13200 3950 0    60   ~ 0
+Text Label 13250 4250 0    60   ~ 0
 NRFD B
-Text Label 14400 3850 0    60   ~ 0
+Text Label 13250 4150 0    60   ~ 0
 DAV B
-Text Label 13200 4050 0    60   ~ 0
+Text Label 13250 4450 0    60   ~ 0
 IFC B
-Text Label 14400 4050 0    60   ~ 0
+Text Label 13250 4550 0    60   ~ 0
 SRQ B
-Text Label 13200 4150 0    60   ~ 0
+Text Label 13250 4650 0    60   ~ 0
 ATN B
-Text Label 14400 3950 0    60   ~ 0
+Text Label 13250 4350 0    60   ~ 0
 NDAC B
 Entry Wire Line
 	14750 3850 14850 3750
@@ -525,7 +521,7 @@ F 3 "" H 1950 6325 60  0001 C CNN
 	1    1950 6325
 	0    -1   -1   0   
 $EndComp
-Text Label 13200 4450 0    60   ~ 0
+Text Label 14450 4050 0    60   ~ 0
 REN B
 Entry Wire Line
 	13050 4350 13150 4450
@@ -1104,10 +1100,6 @@ Wire Wire Line
 	5325 6425 6775 6425
 Wire Wire Line
 	5325 6325 6775 6325
-Wire Wire Line
-	5325 6225 6775 6225
-Wire Wire Line
-	5325 6125 6775 6125
 Connection ~ 3175 6725
 Wire Wire Line
 	6775 3425 6650 3425
@@ -1231,8 +1223,6 @@ Wire Wire Line
 	14350 5250 14400 5250
 Wire Wire Line
 	14350 5500 14350 5450
-Wire Bus Line
-	12050 3450 14850 3450
 Wire Wire Line
 	13150 4450 13550 4450
 Connection ~ 10650 5150
@@ -1282,7 +1272,7 @@ Wire Wire Line
 Wire Bus Line
 	12050 3450 12050 6450
 Wire Bus Line
-	13050 3450 13050 4350
+	13050 3450 13050 4550
 Wire Wire Line
 	13150 4350 13550 4350
 Wire Wire Line
@@ -1291,8 +1281,6 @@ Wire Wire Line
 	13150 3750 13550 3750
 Wire Wire Line
 	13150 3650 13550 3650
-Wire Wire Line
-	14350 4350 14750 4350
 Wire Wire Line
 	14350 3750 14750 3750
 Wire Wire Line
@@ -1382,27 +1370,8 @@ Wire Wire Line
 	10650 3200 10650 3250
 Wire Wire Line
 	10650 2750 10650 2800
-Wire Wire Line
-	14900 4150 14900 4450
-Wire Wire Line
-	14900 4450 14350 4450
 Wire Bus Line
-	14850 3450 14850 4250
-Wire Wire Line
-	14350 4150 14900 4150
-Connection ~ 14350 4450
-Connection ~ 14350 4750
-Connection ~ 13550 4850
-Wire Wire Line
-	14350 4850 13550 4850
-Connection ~ 13550 4750
-Connection ~ 13550 4650
-Wire Wire Line
-	13550 4550 13550 4900
-Connection ~ 14350 4650
-Connection ~ 14350 4550
-Wire Wire Line
-	14350 4450 14350 4850
+	14850 3450 14850 3950
 Wire Wire Line
 	5525 7000 5525 6925
 Connection ~ 5525 6925
@@ -1423,10 +1392,8 @@ Wire Wire Line
 Connection ~ 6050 6325
 Wire Wire Line
 	6150 7000 6150 6225
-Connection ~ 6150 6225
 Wire Wire Line
 	6250 7000 6250 6125
-Connection ~ 6250 6125
 Wire Wire Line
 	3875 5700 3875 5825
 Wire Wire Line
@@ -1488,8 +1455,6 @@ Connection ~ 7875 8750
 Wire Wire Line
 	7575 8275 7575 8200
 Connection ~ 7875 8200
-Wire Wire Line
-	14350 4250 14750 4250
 $Comp
 L PWR_FLAG #FLG022
 U 1 1 55F64F5E
@@ -1618,4 +1583,63 @@ Text Label 6400 6125 0    60   ~ 0
 MOSI
 NoConn ~ 9375 4525
 NoConn ~ 9375 4625
+Entry Wire Line
+	13050 4450 13150 4550
+Entry Wire Line
+	13050 4550 13150 4650
+Wire Wire Line
+	13150 4550 13550 4550
+Wire Wire Line
+	13550 4650 13150 4650
+$Comp
+L GND-RESCUE-gpib_adapter #PWR?
+U 1 1 56199A3C
+P 13450 4875
+F 0 "#PWR?" H 13450 4875 30  0001 C CNN
+F 1 "GND" H 13450 4805 30  0001 C CNN
+F 2 "" H 13450 4875 60  0001 C CNN
+F 3 "" H 13450 4875 60  0001 C CNN
+	1    13450 4875
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13550 4750 13450 4750
+Wire Wire Line
+	13450 4750 13450 4875
+Wire Wire Line
+	14500 4750 14350 4750
+Wire Wire Line
+	14500 4150 14500 4900
+Wire Wire Line
+	14350 4150 14500 4150
+Connection ~ 14500 4750
+Wire Wire Line
+	14350 4650 14500 4650
+Connection ~ 14500 4650
+Wire Wire Line
+	14350 4550 14500 4550
+Connection ~ 14500 4550
+Wire Wire Line
+	14350 4450 14500 4450
+Connection ~ 14500 4450
+Wire Wire Line
+	14350 4350 14500 4350
+Connection ~ 14500 4350
+Wire Wire Line
+	14350 4250 14500 4250
+Connection ~ 14500 4250
+Wire Bus Line
+	14850 3450 12050 3450
+Wire Wire Line
+	6775 6125 6400 6125
+Wire Wire Line
+	6775 6225 6400 6225
+Wire Wire Line
+	6150 6225 5325 6225
+Wire Wire Line
+	6250 6125 5325 6125
+Text Label 5900 6225 0    60   ~ 0
+TXD
+Text Label 5900 6125 0    60   ~ 0
+RXD
 $EndSCHEMATC

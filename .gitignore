@@ -1,4 +1,5 @@
 /src/nbproject/private/
+*.bak
 *.elf
 *.eep
 *.map
@@ -12,3 +13,4 @@
 *bak
 *.ses
 *.dsn
+/src/.dep/

@@ -28,9 +28,6 @@ int GPIB_gpiSend(int listen, char what)
 
 int GPIB_PutStr(int listen, char *string, int count)
 {
-    DIAG("clearing ren");
-    hal_gpib_clear_pin(REN);
-    hal_gpib_clear_pin(DC);
     return 0;
 }
 

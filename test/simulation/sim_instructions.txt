@@ -1,0 +1,20 @@
+device pic32MX350F256L  
+hwtool sim 
+set oscillator.auxfrequency 	120
+set oscillator.auxfrequencyunit Mega
+set oscillator.frequency 	80
+set oscillator.frequencyunit 	Mega
+set oscillator.rcfrequency  	250
+set oscillator.rcfrequencyunit 	Kilo              
+set uart2io.uartioenabled	true
+set uart2io.output		file
+set uart2io.outputfile		test/simulation/out.txt
+set system.disableerrormsg 	true
+
+
+program build/test/TestBuild.elf
+
+run
+
+wait 5000
+quit
