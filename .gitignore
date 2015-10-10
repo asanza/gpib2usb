@@ -1,4 +1,11 @@
 /src/nbproject/private/
+*.elf
+*.eep
+*.map
+*.sys
+*.lss
+*.lst
+*.o
 *.bin
 *.out
 *.hex

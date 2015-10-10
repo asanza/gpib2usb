@@ -1,5 +1,5 @@
 /*
- * gpib_internals.h
+ * stdiodrv.c
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -18,27 +18,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on September 15, 2015, 9:37 PM
+ * Created on October 7, 2015, 9:59 PM
  */
-#ifndef GPIB_INTERNALS_H
-#define	GPIB_INTERNALS_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+#include "stdiodrv.h"
+#include <hal_uart.h>
 
-    /* perform source handshake */
-    void gpib_sh(void);
-    
-    void gpib_ah(void);
-    
-    
-    
-
-
-#ifdef	__cplusplus
+int uart_putchar(char c, FILE* stream){
+    hal_uart_send_byte(c);
+    return 0;
 }
-#endif
 
-#endif	/* GPIB_INTERNALS_H */
+char uart_getchar(FILE *stream){
+    char c = hal_uart_receive_byte();
+    if(c == '\r')
+        return '\n';
+    else
+        return c;
+}
 
+static char last_received = 0x00;
+char *uart_fgets(char *str, int size, FILE *stream)
+{
+	char *cp;
+	int c;
+
+	if ((stream->flags & __SRD) == 0 || size <= 0)
+		return NULL;
+	size--;
+	for (c = 0, cp = str; size > 0; size--, cp++) {
+		if ((c = getc(stream)) == EOF)
+			return NULL;
+                if(c == '\n' || c == '\r'){
+                    if(last_received != 0x27)
+                        size = 0;
+                }
+                last_received = (char)c;
+		*cp = (char)c;
+	}
+	*cp = '\0';
+
+	return str;
+}

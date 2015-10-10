@@ -1,5 +1,5 @@
 /*
- * hal_sys.c
+ * stdiodrv.h
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -18,43 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on September 14, 2015, 10:23 PM
+ * Created on October 7, 2015, 9:58 PM
  */
+#ifndef STDIODRV_H
+#define	STDIODRV_H
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include "hal_sys.h"
-#include "HardwareProfile.h"
+#ifdef	__cplusplus
+extern "C" {
+#endif
+#include <stdio.h>
+    
+int uart_putchar(char c, FILE* stream);
 
-void hal_sys_init(void){
-    PortSetInput(_DIO);
-    PinSetOutput(_GPIO1);
-    PinSetOutput(_GPIO2);
-    PinSetOutput(_GPIO3);
-    PinSetOutput(_GPIO4);
-    PinSetOutput(_GPIO5);
-    PinSetOutput(_DAV);
-    PinSetOutput(_ATN);
-    PinSetOutput(_TXD);
-    PinSetOutput(_EOI);
-    PinSetInput(_RXD);
-    PinSetInput(_SRQ);
-    PinSetInput(_NRFD);
-    PinSetInput(_NDAC);
-    PinSetOutput(_TE);
-    PinSetOutput(_PE);
-    PinSetOutput(_DC);
-    /* Set bus outputs on tri-state mode */
-    PortClearPin(_TE);
-    PortClearPin(_PE);
-    PortClearPin(_DC);
+char uart_getchar(FILE *stream);
+
+char *uart_fgets(char *str, int size, FILE *stream);
+
+#ifdef	__cplusplus
 }
+#endif
 
+#endif	/* STDIODRV_H */
 
-void hal_sys_enter_critical(void){
-    cli();
-}
-
-void hal_sys_exit_critical(void){
-    sei();
-}

@@ -339,8 +339,6 @@ Text Label 10200 6750 0    60   ~ 0
 TE
 Text Label 10200 6900 0    60   ~ 0
 DC
-Text Label 9400 4625 0    60   ~ 0
-MISO
 Text Label 9400 4725 0    60   ~ 0
 GPIO2
 Text Label 9400 4825 0    60   ~ 0
@@ -579,10 +577,6 @@ Entry Wire Line
 Entry Wire Line
 	9675 4725 9775 4625
 Entry Wire Line
-	9675 4625 9775 4525
-Entry Wire Line
-	9675 4525 9775 4425
-Entry Wire Line
 	9675 4425 9775 4325
 Entry Wire Line
 	9675 4325 9775 4225
@@ -766,8 +760,6 @@ F 3 "" H 5650 5500 60  0001 C CNN
 	1    5650 5500
 	1    0    0    -1  
 $EndComp
-Text Label 9400 4525 0    60   ~ 0
-MOSI
 Text Label 9400 4425 0    60   ~ 0
 SCK
 Text Label 9400 4325 0    60   ~ 0
@@ -1224,10 +1216,6 @@ Wire Wire Line
 Wire Wire Line
 	9375 4425 9675 4425
 Wire Wire Line
-	9375 4525 9675 4525
-Wire Wire Line
-	9375 4625 9675 4625
-Wire Wire Line
 	9375 4725 9675 4725
 Wire Wire Line
 	9375 4825 9675 4825
@@ -1624,4 +1612,10 @@ Wire Wire Line
 Connection ~ 9200 8200
 Text Label 9375 8200 0    60   ~ 0
 RESET
+Text Label 6400 6225 0    60   ~ 0
+MISO
+Text Label 6400 6125 0    60   ~ 0
+MOSI
+NoConn ~ 9375 4525
+NoConn ~ 9375 4625
 $EndSCHEMATC
