@@ -26,11 +26,11 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
+
     void hal_sys_init(void);
     void hal_sys_enter_critical(void);
     void hal_sys_exit_critical(void);
-    
+
     void hal_sysled_on(void);
     void hal_sysled_off(void);
     void hal_sysled_toggle(void);

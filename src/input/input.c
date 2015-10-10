@@ -27,34 +27,34 @@
 #include <stdio.h>
 
 struct command_t {
-	devcmd command;
-	const char* string;
-};
+    devcmd command;
+    const char* string;
+} ;
 
 static const struct command_t command_strings[] = {
-	{CMD_ADDR, "++addr"},
-	{CMD_AUTO, "++auto"},
-	{CMD_CLR, "++clr"},
-	{CMD_EOI, "++eoi"},
-	{CMD_EOS, "++eos"},
-	{CMD_EOT_ENABLE, "++eot_enable"},
-	{CMD_EOT_CHAR, "++eot_char"},
-	{CMD_IFC, "++ifc"},
-	{CMD_LLO, "++llo"},
-	{CMD_LOC, "++loc"},
-	{CMD_LON, "++lon"},
-	{CMD_MODE, "++mode"},
-	{CMD_READ, "++read"},
-	{CMD_READ_TMO_MS, "++read_tmo_ms"},
-	{CMD_RST, "++rst"},
-	{CMD_SAVE_CONFIG, "++save_cfg"},
-	{CMD_RST_FACTORY, "++factory_reset"},
-	{CMD_SPOLL, "++spoll"},
-	{CMD_SRQ, "++srq"},
-	{CMD_STATUS, "++status"},
-	{CMD_TRG, "++trg"},
-	{CMD_VER, "++ver"},
-	{CMD_HELP, "++help"},
+    {CMD_ADDR, "++addr"},
+    {CMD_AUTO, "++auto"},
+    {CMD_CLR, "++clr"},
+    {CMD_EOI, "++eoi"},
+    {CMD_EOS, "++eos"},
+    {CMD_EOT_ENABLE, "++eot_enable"},
+    {CMD_EOT_CHAR, "++eot_char"},
+    {CMD_IFC, "++ifc"},
+    {CMD_LLO, "++llo"},
+    {CMD_LOC, "++loc"},
+    {CMD_LON, "++lon"},
+    {CMD_MODE, "++mode"},
+    {CMD_READ, "++read"},
+    {CMD_READ_TMO_MS, "++read_tmo_ms"},
+    {CMD_RST, "++rst"},
+    {CMD_SAVE_CONFIG, "++save_cfg"},
+    {CMD_RST_FACTORY, "++factory_reset"},
+    {CMD_SPOLL, "++spoll"},
+    {CMD_SRQ, "++srq"},
+    {CMD_STATUS, "++status"},
+    {CMD_TRG, "++trg"},
+    {CMD_VER, "++ver"},
+    {CMD_HELP, "++help"},
 };
 
 static int delchar(char* input, char val, int size);
@@ -62,41 +62,41 @@ static int starts_with(const char *pre, const char *str);
 
 int parse_input(devcmd* cmd, char* input, int size)
 {
-	assert(cmd);
-	assert(input);
-	int i = 0, offset;
-	*cmd = CMD_COUNT;
-	for (i = 0; i < CMD_COUNT; i++) {
-		if (starts_with(command_strings[i].string, input)) {
-			*cmd = command_strings[i].command;
-			offset = strlen(command_strings[i].string);
-			break;
-		}
-	}
-	if (*cmd == CMD_COUNT) return delchar(input, ESC, size);
-	memmove(input, input + offset, size - offset);
-	return delchar(input, ESC, size - offset);
+    assert(cmd);
+    assert(input);
+    int i = 0, offset;
+    *cmd = CMD_COUNT;
+    for (i = 0; i < CMD_COUNT; i++) {
+        if (starts_with(command_strings[i].string, input)) {
+            *cmd = command_strings[i].command;
+            offset = strlen(command_strings[i].string);
+            break;
+        }
+    }
+    if (*cmd == CMD_COUNT) return delchar(input, ESC, size);
+    memmove(input, input + offset, size - offset);
+    return delchar(input, ESC, size - offset);
 }
 
 static int delchar(char* input, char val, int size)
 {
-	char* p = input;
-	char* q = input;
-	int count = 0;
-	while (--size) {
-		if (*++p == val) {
-			*++q = *++p;
-		} else {
-			*++q = *p;
-			count++;
-		}
-	}
-	return count + 1;
+    char* p = input;
+    char* q = input;
+    int count = 0;
+    while (--size) {
+        if (*++p == val) {
+            *++q = *++p;
+        } else {
+            *++q = *p;
+            count++;
+        }
+    }
+    return count + 1;
 }
 
 static int starts_with(const char *pre, const char *str)
 {
-	size_t lenpre = strlen(pre),
-		lenstr = strlen(str);
-	return lenstr < lenpre ? 0 : strncmp(pre, str, lenpre) == 0;
+    size_t lenpre = strlen(pre),
+            lenstr = strlen(str);
+    return lenstr < lenpre ? 0 : strncmp(pre, str, lenpre) == 0;
 }

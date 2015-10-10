@@ -55,7 +55,7 @@ extern "C" {
         CMD_TRG,
         CMD_VER,
         CMD_HELP,
-                CMD_COUNT
+        CMD_COUNT
     } devcmd;
 
     /* Parse input string. Return pointer to processed string.

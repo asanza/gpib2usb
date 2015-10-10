@@ -57,7 +57,11 @@
           <cTool>
             <incDir>
               <pElem>.</pElem>
+              <pElem>/usr/lib/avr/include</pElem>
             </incDir>
+            <preprocessorList>
+              <Elem>__AVR_AT90CAN128__</Elem>
+            </preprocessorList>
           </cTool>
         </makeTool>
       </makefileType>

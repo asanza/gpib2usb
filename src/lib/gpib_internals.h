@@ -29,11 +29,11 @@ extern "C" {
 
     /* perform source handshake */
     void gpib_sh(void);
-    
+
     void gpib_ah(void);
-    
-    
-    
+
+
+
 
 
 #ifdef	__cplusplus

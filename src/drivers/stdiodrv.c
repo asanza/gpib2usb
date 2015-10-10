@@ -49,11 +49,11 @@ int uart_fgets(char *str, int size, FILE *stream)
 	int recN = size;
 
 	if ((stream->flags & __SRD) == 0 || size <= 0)
-		return NULL;
+		return 0;
 	size--;
 	for (c = 0, cp = str; size > 0; size--, cp++) {
 		if ((c = getc(stream)) == EOF)
-			return NULL;
+			return 0;
 		if (c == '\n' || c == '\r') {
 			if (last_received != ESC){
 				break;

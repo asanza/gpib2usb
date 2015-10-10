@@ -26,7 +26,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
+
     typedef void(*data_received_callback)(char data);
 
     void hal_uart_init(data_received_callback on_data_received);

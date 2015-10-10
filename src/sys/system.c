@@ -27,25 +27,30 @@
 
 #define DEVICE_ADDRESS (uint8_t*) 1
 
-void sys_init(void){
+void sys_init(void)
+{
     /* initialize in controller mode */
     GPIB_Init(0x00);
 }
 
-syserr sys_set_addr(uint8_t addr){
-    if(addr > 30) return SYSERR_WRONG_PARAMETER;
+syserr sys_set_addr(uint8_t addr)
+{
+    if (addr > 30) return SYSERR_WRONG_PARAMETER;
     eeprom_update_byte(DEVICE_ADDRESS, addr);
     return SYSERR_NONE;
 }
 
-uint8_t sys_get_addr(void){
+uint8_t sys_get_addr(void)
+{
     return eeprom_read_byte(DEVICE_ADDRESS);
 }
 
-void sys_gpib_read(char* buffer, int size, sysread until, int charval){
-    
-}
+void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
+ }
 
-syserr sys_gpib_write(char* buffer, int size){
-    
+syserr sys_gpib_write(char* buffer, int size)
+{
+    int err = GPIB_PutStr(sys_get_addr(), buffer, size);
+    if (err < 0) return SYSERR_WRONG_PARAMETER;
+    return SYSERR_NONE;
 }

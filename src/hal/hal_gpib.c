@@ -16,23 +16,28 @@ switch(pin){ \
         case PE: func(_PE); break; \
 }}while(0);
 
-int hal_gpib_read_pin(int pin){
-   _spinmcr(pin, PortReadPin);
-   return pin;
+int hal_gpib_read_pin(int pin)
+{
+    _spinmcr(pin, PortReadPin);
+    return pin;
 }
 
-void hal_gpib_set_pin(int pin){
-   _spinmcr(pin, PortSetPin);    
+void hal_gpib_set_pin(int pin)
+{
+    _spinmcr(pin, PortSetPin);
 }
 
-void hal_gpib_clear_pin(int pin){
-   _spinmcr(pin, PortClearPin);        
+void hal_gpib_clear_pin(int pin)
+{
+    _spinmcr(pin, PortClearPin);
 }
 
-void hal_gpib_put_data(char c){
+void hal_gpib_put_data(char c)
+{
     _DIO = c;
 }
 
-char hal_gpib_read_data(void){
+char hal_gpib_read_data(void)
+{
     return _DIO;
 }

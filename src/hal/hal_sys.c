@@ -26,7 +26,8 @@
 #include "hal_sys.h"
 #include "HardwareProfile.h"
 
-void hal_sys_init(void){
+void hal_sys_init(void)
+{
     PortSetInput(_DIO);
     PinSetOutput(_GPIO1);
     PinSetOutput(_GPIO2);
@@ -50,23 +51,27 @@ void hal_sys_init(void){
     sei();
 }
 
-
-void hal_sys_enter_critical(void){
+void hal_sys_enter_critical(void)
+{
     cli();
 }
 
-void hal_sys_exit_critical(void){
+void hal_sys_exit_critical(void)
+{
     sei();
 }
 
-void hal_sysled_on(void){
+void hal_sysled_on(void)
+{
     PortSetPin(_SYSLED);
 }
 
-void hal_sysled_off(void){
+void hal_sysled_off(void)
+{
     PortClearPin(_SYSLED);
 }
 
-void hal_sysled_toggle(void){
+void hal_sysled_toggle(void)
+{
     PortTogglePin(_SYSLED);
 }

@@ -29,7 +29,7 @@ extern "C" {
 #endif
 #define GPIB_PORT 1
 
-/* exported pin interface */
+    /* exported pin interface */
 #define IFC     0
 #define REN     1
 
@@ -50,13 +50,13 @@ extern "C" {
 #define GPIO5   15
 #define TXD     16
 #define RXD     17
-    
-int hal_gpib_read_pin(int pin);
-void hal_gpib_set_pin(int pin);
-void hal_gpib_clear_pin(int pin);
-void hal_gpib_put_data(char c);
-char hal_gpib_read_data(void);
-    
+
+    int hal_gpib_read_pin(int pin);
+    void hal_gpib_set_pin(int pin);
+    void hal_gpib_clear_pin(int pin);
+    void hal_gpib_put_data(char c);
+    char hal_gpib_read_data(void);
+
 #ifdef	__cplusplus
 }
 #endif
