@@ -26,17 +26,19 @@
 
 #define ESC 27
 
-int uart_putchar(char c, FILE* stream){
-    hal_uart_send_byte(c);
-    return 0;
+int uart_putchar(char c, FILE* stream)
+{
+	hal_uart_send_byte(c);
+	return 0;
 }
 
-char uart_getchar(FILE *stream){
-    char c = hal_uart_receive_byte();
-    if(c == '\r')
-        return '\n';
-    else
-        return c;
+char uart_getchar(FILE *stream)
+{
+	char c = hal_uart_receive_byte();
+	if (c == '\r')
+		return '\n';
+	else
+		return c;
 }
 
 static char last_received = 0x00;
@@ -52,14 +54,13 @@ int uart_fgets(char *str, int size, FILE *stream)
 	for (c = 0, cp = str; size > 0; size--, cp++) {
 		if ((c = getc(stream)) == EOF)
 			return NULL;
-                if(c == '\n' || c == '\r'){
-                    if(last_received != ESC)
-			    break;
-                }
-                last_received = (char)c;
-		*cp = (char)c;
+		if (c == '\n' || c == '\r') {
+			if (last_received != ESC)
+				break;
+		}
+		last_received = (char) c;
+		*cp = (char) c;
 	}
 	*cp = '\0';
-
 	return recN - size;
 }

@@ -68,7 +68,6 @@ int parse_input(devcmd* cmd, char* input, int size)
 	*cmd = CMD_COUNT;
 	for (i = 0; i < CMD_COUNT; i++) {
 		if (starts_with(command_strings[i].string, input)) {
-			printf("found %s\n", command_strings[i].string);
 			*cmd = command_strings[i].command;
 			offset = strlen(command_strings[i].string);
 			break;
