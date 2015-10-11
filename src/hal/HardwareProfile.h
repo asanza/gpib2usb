@@ -12,22 +12,26 @@
 
 /* define pins, Format: PORT NAME, PIN NAME*/
 
+/* data port */
 #define _DIO A
-
+#define _PE D, BIT1
+#define _TE_DATA B, BIT4
+/* bus management lines */
+#define _ATN C, BIT1
 #define _IFC C, BIT6
 #define _REN C, BIT7
-
-#define _DAV C, BIT3
-#define _ATN C, BIT1
 #define _EOI C, BIT2
 #define _SRQ C, BIT0
+/* talker enable for control */
+#define _TE_CTRL D, BIT4
+/* data direction control */
+#define _DC D, BIT5
+
+/* bus handshake lines */
+#define _DAV C, BIT3
 #define _NRFD C, BIT4
 #define _NDAC C, BIT5
 
-#define _TE_CTRL D, BIT4
-#define _TE_DATA B, BIT4
-#define _DC D, BIT5
-#define _PE D, BIT1
 
 #define _GPIO1 B, BIT0
 #define _GPIO2 B, BIT4

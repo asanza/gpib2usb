@@ -50,7 +50,5 @@ void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
 
 syserr sys_gpib_write(char* buffer, int size)
 {
-    int err = GPIB_PutStr(sys_get_addr(), buffer, size);
-    if (err < 0) return SYSERR_WRONG_PARAMETER;
-    return SYSERR_NONE;
+    return SYSERR_NOT_IMPLEMENTED;
 }

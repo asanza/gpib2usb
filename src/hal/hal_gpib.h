@@ -29,15 +29,15 @@ extern "C" {
 #endif
 
     /* exported pin interface */
-#define IFC     0
-#define REN     1
+#define IFC_PIN     0
+#define REN_PIN     1
 
-#define DAV     2
-#define ATN     3
-#define EOI     4
-#define SRQ     5
-#define NRFD    6
-#define NDAC    7
+#define DAV_PIN     2
+#define ATN_PIN     3
+#define EOI_PIN     4
+#define SRQ_PIN     5
+#define NRFD_PIN    6
+#define NDAC_PIN    7
 
 #define GPIO1   11
 #define GPIO2   12
