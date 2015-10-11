@@ -28,26 +28,7 @@
 
 void hal_sys_init(void)
 {
-    PortSetInput(_DIO);
-    PinSetOutput(_GPIO1);
-    PinSetOutput(_GPIO2);
-    PinSetOutput(_GPIO3);
-    PinSetOutput(_GPIO4);
-    PinSetOutput(_GPIO5);
-    PinSetOutput(_DAV);
-    PinSetOutput(_ATN);
-    PinSetOutput(_EOI);
-    PinSetInput(_SRQ);
-    PinSetInput(_NRFD);
-    PinSetInput(_NDAC);
-    PinSetOutput(_TE);
-    PinSetOutput(_PE);
-    PinSetOutput(_DC);
-    /* Set bus outputs on tri-state mode */
-    PortClearPin(_TE);
-    PortClearPin(_PE);
-    PortClearPin(_DC);
-    PortSetOutput(_SYSLED);
+    PinSetOutput(_SYSLED);
     sei();
 }
 
@@ -63,15 +44,15 @@ void hal_sys_exit_critical(void)
 
 void hal_sysled_on(void)
 {
-    PortSetPin(_SYSLED);
+    PinSetValue(_SYSLED);
 }
 
 void hal_sysled_off(void)
 {
-    PortClearPin(_SYSLED);
+    PinClearValue(_SYSLED);
 }
 
 void hal_sysled_toggle(void)
 {
-    PortTogglePin(_SYSLED);
+    PinToggleValue(_SYSLED);
 }

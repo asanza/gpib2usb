@@ -8,7 +8,7 @@ int GPIB_Init(int our_address);
 
 /* sends a single character to the gpib device addressed
  * by listen. returns -1 in case of error */
-int GPIB_Send(int listen, char what);
+int GPIB_Cmd(int listen, char what);
 
 /* sends a string of bytes to the gpib device addressed by listen. 
  * Returns -1 in case of error. */

@@ -10,80 +10,63 @@
 #define BIT6 0x06
 #define BIT7 0x07
 
+/* define pins, Format: PORT NAME, PIN NAME*/
 
-#define _DIO PORTA
+#define _DIO A
 
-#define _IFC PORTC, BIT6
-#define _REN PORTC, BIT7
+#define _IFC C, BIT6
+#define _REN C, BIT7
 
-#define _DAV PORTC, BIT3
-#define _ATN PORTC, BIT1
-#define _EOI PORTC, BIT2
-#define _SRQ PORTC, BIT0
-#define _NRFD PORTC, BIT4
-#define _NDAC PORTC, BIT5
+#define _DAV C, BIT3
+#define _ATN C, BIT1
+#define _EOI C, BIT2
+#define _SRQ C, BIT0
+#define _NRFD C, BIT4
+#define _NDAC C, BIT5
 
-#define _TE PORTD, BIT4
-#define _DC PORTD, BIT5
-#define _PE PORTD, BIT1
+#define _TE_CTRL D, BIT4
+#define _TE_DATA B, BIT4
+#define _DC D, BIT5
+#define _PE D, BIT1
 
-#define _GPIO1 PORTB, BIT0
-#define _GPIO2 PORTB, BIT4
-#define _GPIO3 PORTB, BIT5
-#define _GPIO4 PORTB, BIT6
-#define _GPIO5 PORTB, BIT7
+#define _GPIO1 B, BIT0
+#define _GPIO2 B, BIT4
+#define _GPIO3 B, BIT5
+#define _GPIO4 B, BIT6
+#define _GPIO5 B, BIT7
 
-#define _TXD   PORTE, BIT0
-#define _RXD   PORTE, BIT1
+#define _TXD   E, BIT0
+#define _RXD   E, BIT1
 
-#define _SYSLED PORTF, BIT1
+#define _SYSLED F, BIT1
 
 #define USART_BAUDRATE 57600
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 /* Auxiliar macros */
-#define PinSetInput(val) _PinSetInput(val)
-#define PinSetOutput(val) _PinSetOutput(val)
+#define PinSetInput(val)        _PinSetInput(val)
+#define PinSetOutput(val)       _PinSetOutput(val)
+#define PinSetValue(val)        _PinSetValue(val)
+#define PinClearValue(val)      _PinClearValue(val)
+#define PinToggleValue(val)     _PinToggleValue(val)
+#define PinReadValue(val)       _PinReadValue(val)
 
-#define _PinSetInput(port, pin)do{ \
-        if(port == PORTA) DDRA &= ~_BV(pin); \
-        if(port == PORTB) DDRB &= ~_BV(pin); \
-        if(port == PORTC) DDRC &= ~_BV(pin); \
-        if(port == PORTD) DDRD &= ~_BV(pin); \
-        if(port == PORTE) DDRE &= ~_BV(pin); \
-        if(port == PORTF) DDRF &= ~_BV(pin); }while(0);
+#define PortSetInput(val)       _PortSetInput(val)
+#define PortSetOutput(val)      _PortSetOutput(val)
+#define PortSetValue(port, val)       _PortSetValue(port, val)
+#define PortReadValue(port)      _PortReadValue(port)
 
-#define _PinSetOutput(port, pin)do{ \
-        if(port == PORTA) DDRA |= _BV(pin); \
-        if(port == PORTB) DDRB |= _BV(pin); \
-        if(port == PORTC) DDRC |= _BV(pin); \
-        if(port == PORTD) DDRD |= _BV(pin); \
-        if(port == PORTE) DDRE |= _BV(pin); \
-        if(port == PORTF) DDRF |= _BV(pin); }while(0);
+#define _PinSetInput(port, pin) DDR##port &= ~_BV(pin)
+#define _PinSetOutput(port, pin) DDR##port |= _BV(pin)
+#define _PinToggleValue(port, pin) PORT##port ^= _BV(pin)
+#define _PinSetValue(port, pin) PORT##port |= _BV(pin)
+#define _PinClearValue(port, pin) PORT##port &= ~_BV(pin)
+#define _PinReadValue(port, pin) PIN##port & _BV(pin)
 
-#define PortSetInput(port)do{ \
-        if(port == PORTA) DDRA = 0x00; \
-        if(port == PORTB) DDRB = 0x00; \
-        if(port == PORTC) DDRC = 0x00; \
-        if(port == PORTD) DDRD = 0x00; \
-        if(port == PORTE) DDRE = 0x00; \
-        if(port == PORTF) DDRF = 0x00; }while(0);
+#define _PortSetInput(port) DDR##port = 0x00
+#define _PortSetOutput(port) DDR##port = 0xFF
+#define _PortSetValue(port, value) PORT##port = value
+#define _PortReadValue(port) PIN##port
 
-#define PortSetOutput(port)do{ \
-        if(port == PORTA) DDRA = 0xFF; \
-        if(port == PORTB) DDRB = 0xFF; \
-        if(port == PORTC) DDRC = 0xFF; \
-        if(port == PORTD) DDRD = 0xFF; \
-        if(port == PORTE) DDRE = 0xFF; \
-        if(port == PORTF) DDRF = 0xFF; }while(0);
-
-#define PortSetPin(val) _PortSetPin(val)
-#define PortClearPin(val) _PortClearPin(val)
-#define PortTogglePin(val)_PortTogglePin(val)
-#define _PortTogglePin(port, pin){port ^= _BV(pin);}
-#define _PortSetPin(port, pin){port |= _BV(pin);}
-#define _PortClearPin(port, pin){port &= ~_BV(pin);}
-#define PortReadPin(val) _PortReadPin(val)
-#define _PortReadPin(port, pin){ }
 
 #endif /*_HARDWAREPROFILE_H_*/

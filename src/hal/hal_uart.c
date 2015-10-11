@@ -38,7 +38,7 @@ void hal_uart_init(data_received_callback _on_data_received)
     // Enable receiver and transmitter
     UCSR0B = (1 << RXEN0) | (1 << TXEN0); //|(1<<RXCIE0);
     // Enable internal pullup on rx pin
-    PortSetPin(_RXD);
+    PinSetValue(_RXD);
     on_data_received = _on_data_received;
 }
 

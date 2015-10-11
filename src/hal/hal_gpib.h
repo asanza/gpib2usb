@@ -27,7 +27,6 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-#define GPIB_PORT 1
 
     /* exported pin interface */
 #define IFC     0
@@ -39,9 +38,6 @@ extern "C" {
 #define SRQ     5
 #define NRFD    6
 #define NDAC    7
-#define TE      8
-#define DC      9
-#define PE      10
 
 #define GPIO1   11
 #define GPIO2   12
@@ -50,10 +46,16 @@ extern "C" {
 #define GPIO5   15
 #define TXD     16
 #define RXD     17
-
-    int hal_gpib_read_pin(int pin);
-    void hal_gpib_set_pin(int pin);
-    void hal_gpib_clear_pin(int pin);
+/*
+#define TE_DATA      18
+#define TE_CTRL      8
+#define DC      9
+#define PE      10
+*/
+    void hal_gpib_init(void);
+    int hal_gpib_is_signal_true(int pin);
+    void hal_gpib_set_signal_false(int pin);
+    void hal_gpib_set_signal_true(int pin);
     void hal_gpib_put_data(char c);
     char hal_gpib_read_data(void);
 
