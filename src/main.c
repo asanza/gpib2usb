@@ -99,6 +99,7 @@ static void do_print_syserror(syserr err)
         break;
     case SYSERR_NOT_IMPLEMENTED: printf("Not Implemented\n");
         break;
+    case SYSERR_WRITE_ERROR: printf("GPIB Write Error\n");
     default: break;
     }
 }

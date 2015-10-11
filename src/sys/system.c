@@ -22,6 +22,7 @@
  */
 
 #include <avr/eeprom.h>
+#include <diag.h>
 #include "system.h"
 #include "lib/lib_gpib.h"
 
@@ -50,14 +51,20 @@ void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
 
 syserr sys_gpib_write(char* buffer, int size)
 {
-    GPIB_Send(UNL,1);
-    GPIB_Send(LAD, 12);
-    GPIB_Send(MTA,1);
+    int err = GPIB_Send(UNL,1);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(LAD, 12);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(MTA,1);
+    if(err) return SYSERR_WRITE_ERROR;
     size --;
     while(size--){
-        GPIB_Send(DAB, *buffer++);
+        err = GPIB_Send(DAB, *buffer++);
+        if(err) return SYSERR_WRITE_ERROR;
     }
-    GPIB_Send(UNT, 1);
-    GPIB_Send(UNL, 1);
-    return SYSERR_NOT_IMPLEMENTED;
+    err = GPIB_Send(UNT, 1);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(UNL, 1);
+    if(err) return SYSERR_WRITE_ERROR;
+    return SYSERR_NONE;
 }

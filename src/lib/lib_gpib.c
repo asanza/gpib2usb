@@ -117,12 +117,14 @@ static int gpib_send(char data){
     hal_gpib_set_signal_true(DAV_PIN);
     while(hal_gpib_is_signal_true(NDAC_PIN));
     hal_gpib_set_signal_false(DAV_PIN);
+    return 0;
 }
 
 static int gpib_send_cmd(char data){
     hal_gpib_set_signal_true(ATN_PIN);
-    gpib_send(data);
+    int val = gpib_send(data);
     hal_gpib_set_signal_false(ATN_PIN);
+    return val;
 }
 
 static int gpib_receive(char* data){
@@ -134,5 +136,6 @@ static int gpib_receive(char* data){
     hal_gpib_set_signal_false(NDAC_PIN);
     while(hal_gpib_is_signal_true(DAV_PIN));
     hal_gpib_set_signal_true(NDAC_PIN);
+    return 0;
 }
 

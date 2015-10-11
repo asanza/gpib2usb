@@ -30,7 +30,8 @@ extern "C" {
     typedef enum{
         SYSERR_NONE,
                 SYSERR_WRONG_PARAMETER,
-                SYSERR_NOT_IMPLEMENTED
+                SYSERR_NOT_IMPLEMENTED,
+                SYSERR_WRITE_ERROR
     }syserr;
     
     typedef enum{

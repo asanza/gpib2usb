@@ -1,6 +1,14 @@
 #include "HardwareProfile.h"
 #include <assert.h>
+#include <diag.h>
 #include "hal_gpib.h"
+
+/* mask used to see if a pin belongs to 
+ * control group or flow group. 
+ * TE = Control. DC = Flow */
+
+#define DC_75161 0x0F // ATN, SRQ, REN, IFC
+#define TE_75161 0x70 // DAV, NDAC, NRFD
 
 #define _spinmcr(pin, func)do{ \
 switch(pin){ \
@@ -27,7 +35,10 @@ void hal_gpib_init(){
 
 int hal_gpib_is_signal_true(int pin)
 {
-    _spinmcr(pin, PinSetInput);
+    DIAG("%x", pin);
+    if( pin&TE_75161 ) PinSetValue(_TE_CTRL);
+    else if(pin & DC_75161) PinSetValue(_DC);
+   _spinmcr(pin, PinSetInput);
     switch(pin){ 
     case IFC_PIN:  pin = PinReadValue(_IFC); break; 
     case REN_PIN:  pin = PinReadValue(_REN); break; 
@@ -40,29 +51,38 @@ int hal_gpib_is_signal_true(int pin)
     default:
         assert(0);
     }
-    return pin;
+    DIAG("%x, %x", pin, !pin);
+    return !pin;
 }
 
 void hal_gpib_set_signal_false(int pin)
 {
+    if( pin&TE_75161 ) PinClearValue(_TE_CTRL);
+    else if(pin & DC_75161) PinClearValue(_DC);
     _spinmcr(pin, PinSetOutput);    
     _spinmcr(pin, PinSetValue);
 }
 
 void hal_gpib_set_signal_true(int pin)
 {
+    if( pin&TE_75161 ) PinClearValue(_TE_CTRL);
+    else if(pin & DC_75161) PinClearValue(_DC);
     _spinmcr(pin, PinSetOutput);    
     _spinmcr(pin, PinClearValue);
 }
 
 void hal_gpib_put_data(char c)
 {
+    PinSetValue(_TE_DATA);
+    PinClearValue(_PE);
     PortSetOutput(_DIO);
     PortSetValue(_DIO,c);
 }
 
 char hal_gpib_read_data(void)
 {
+    PinClearValue(_TE_DATA);
+    PinClearValue(_PE);
     PortSetInput(_DIO);
     char val = PortReadValue(_DIO);
     return val;
