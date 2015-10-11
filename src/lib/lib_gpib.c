@@ -64,11 +64,11 @@ int GPIB_Send(GPIB_Command cmd, char data){
         break;
     case MLA: code = MLA_CODE; break;
     case MTA: code = MTA_CODE; break;
-    case LAD: code = LAD_CODE; break;
+    case LAD: code = LAD_CODE + data; break;
     case UNL: code = UNL_CODE; break;
-    case TAD: code = TAD_CODE; break;
+    case TAD: code = TAD_CODE + data; break;
     case UNT: code = UNT_CODE; break;
-    case SAD: code = SAD_CODE; break;
+    case SAD: code = SAD_CODE + data; break;
     case LLO: code = LLO_CODE; break;
     case DCL: code = DCL_CODE; break;
     case PPU: code = PPU_CODE; break;
@@ -86,7 +86,7 @@ int GPIB_Send(GPIB_Command cmd, char data){
         return gpib_send(data);
     default: assert(0);
     }
-    return gpib_send_cmd(code + data);
+    return gpib_send_cmd(code);
 }
 
 int GPIB_Init(int our_address)

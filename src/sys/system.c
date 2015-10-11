@@ -50,5 +50,14 @@ void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
 
 syserr sys_gpib_write(char* buffer, int size)
 {
+    GPIB_Send(UNL,1);
+    GPIB_Send(LAD, 12);
+    GPIB_Send(MTA,1);
+    size --;
+    while(size--){
+        GPIB_Send(DAB, *buffer++);
+    }
+    GPIB_Send(UNT, 1);
+    GPIB_Send(UNL, 1);
     return SYSERR_NOT_IMPLEMENTED;
 }
