@@ -1,6 +1,7 @@
 #include "hal/hal_gpib.h"
 #include "lib_gpib.h"
 #include <diag.h>
+#include <avr/delay.h>
 #include <assert.h>
 
 static char myAddress = 0xFF;
@@ -30,6 +31,7 @@ static int gpib_receive(char* data);
 static int gpib_send_cmd(char data);
 
 int GPIB_Send(GPIB_Command cmd, char data){
+    DIAG("0x%x, %c", cmd, data);
     char code;
     switch(cmd){
     case ATN:
@@ -94,24 +96,24 @@ int GPIB_Init(int our_address)
     if (myAddress != 0xFF)
         return -1; // already initialized
     myAddress = our_address + 0x20;
-    /* initialize hardware stuff */
     hal_gpib_init();
-    hal_gpib_set_signal_false(ATN_PIN);
+    /* initialize hardware stuff */
+    /* TODO: Remove this stuff*/
+    hal_gpib_set_signal_true(REN_PIN);
+    hal_gpib_set_signal_true(IFC_PIN);
+    _delay_ms(100);
     hal_gpib_set_signal_false(IFC_PIN);
-    hal_gpib_set_signal_false(SRQ_PIN);
-    hal_gpib_set_signal_false(REN_PIN);
-    hal_gpib_set_signal_false(EOI_PIN);
-    hal_gpib_set_signal_false(DAV_PIN);
-    hal_gpib_set_signal_false(NRFD_PIN);
-    hal_gpib_set_signal_false(NDAC_PIN);
     return 0;
 }
 
 static int gpib_send(char data){
     hal_gpib_set_signal_false(DAV_PIN);
-    if(!hal_gpib_is_signal_true(NRFD_PIN) ||
-       !hal_gpib_is_signal_true(NDAC_PIN))
+    if(!hal_gpib_is_signal_true(NRFD_PIN) &&
+       !hal_gpib_is_signal_true(NDAC_PIN)){
+        DIAG("nrfd and ndac are H");
+        while(1);
         return -1;
+    }
     hal_gpib_put_data(data);
     while(hal_gpib_is_signal_true(NRFD_PIN));
     hal_gpib_set_signal_true(DAV_PIN);

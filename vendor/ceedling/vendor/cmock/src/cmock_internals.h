@@ -49,12 +49,12 @@
 
 //0 for no alignment, 1 for 16-bit, 2 for 32-bit, 3 for 64-bit
 #ifndef CMOCK_MEM_ALIGN
-#define CMOCK_MEM_ALIGN (2)
+#define CMOCK_MEM_ALIGN (0)
 #endif
 
 //amount of memory to allow cmock to use in its internal heap
 #ifndef CMOCK_MEM_SIZE
-#define CMOCK_MEM_SIZE (32768)
+#define CMOCK_MEM_SIZE (4096)
 #endif
 
 //automatically calculated defs for easier reading

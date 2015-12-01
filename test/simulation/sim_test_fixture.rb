@@ -1,6 +1,6 @@
 OUT_FILE = "test/simulation/out.txt"
 File.delete OUT_FILE if File.exists? OUT_FILE
-IO.popen("simulavr -d at90can128 -f build/test/TestBuild.elf -W 0xFE,- -R 0xFF,- -T exit > test/simulation/simlog.txt")
+IO.popen("simulavr -d at90can128 -f build/test/TestBuild.elf -W 0x20,test/simulation/simlog.txt -R 0x22,- -T UnityEnd")
 sleep 10
 if File.exists? OUT_FILE
     file_contents = File.read OUT_FILE

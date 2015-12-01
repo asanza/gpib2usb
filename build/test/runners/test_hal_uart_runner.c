@@ -46,7 +46,7 @@ void resetTest(void)
 int main(void)
 {
   UnityBegin("test_hal_uart.c");
-  RUN_TEST(test_module_generator_needs_to_be_implemented, 11);
+  RUN_TEST(test_module_generator_needs_to_be_implemented, 13);
 
   return (UnityEnd());
 }

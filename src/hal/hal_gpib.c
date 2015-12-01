@@ -3,12 +3,12 @@
 #include <diag.h>
 #include "hal_gpib.h"
 
-/* mask used to see if a pin belongs to 
- * control group or flow group. 
- * TE = Control. DC = Flow */
-
-#define DC_75161 0x0F // ATN, SRQ, REN, IFC
-#define TE_75161 0x70 // DAV, NDAC, NRFD
+typedef enum{
+    CONTROLLER = 0x01,
+            DEVICE = 0x02,
+            TALKER = 0x04,
+            LISTENER = 0x08
+}driver_mode;
 
 #define _spinmcr(pin, func)do{ \
 switch(pin){ \
@@ -21,6 +21,34 @@ switch(pin){ \
         case NRFD_PIN: func(_NRFD); break; \
         case NDAC_PIN: func(_NDAC); break; \
 }}while(0);
+
+static void set_7516x_mode(driver_mode mode){
+    DIAG("%d", mode);
+    if(mode & CONTROLLER){
+        PinClearValue(_DC);
+        PinSetOutput(_REN);
+        PinClearValue(_REN);
+    }
+    if(mode & DEVICE){
+        PinSetInput(_REN);
+        PinSetValue(_DC);
+    }
+    if(mode & LISTENER){
+        PinClearValue(_TE_CTRL);
+        PinClearValue(_TE_DATA);
+    }
+    if(mode & TALKER){
+        PinSetValue(_TE_CTRL);
+        PinSetValue(_TE_DATA);
+    }
+}
+
+static void driver_switch_mode(int pin){
+    if(pin & (ATN_PIN|REN_PIN|IFC_PIN)) set_7516x_mode(CONTROLLER);
+    if(pin & (SRQ_PIN)) set_7516x_mode(DEVICE);
+    if(pin & (DAV_PIN)) set_7516x_mode(TALKER);
+    if(pin & (NRFD_PIN | NDAC_PIN)) set_7516x_mode(LISTENER);
+}
 
 void hal_gpib_init(){
     PinSetOutput(_PE);
@@ -35,10 +63,8 @@ void hal_gpib_init(){
 
 int hal_gpib_is_signal_true(int pin)
 {
-    DIAG("%x", pin);
-    if( pin&TE_75161 ) PinSetValue(_TE_CTRL);
-    else if(pin & DC_75161) PinSetValue(_DC);
-   _spinmcr(pin, PinSetInput);
+    driver_switch_mode(pin);
+    _spinmcr(pin, PinSetInput);
     switch(pin){ 
     case IFC_PIN:  pin = PinReadValue(_IFC); break; 
     case REN_PIN:  pin = PinReadValue(_REN); break; 
@@ -51,28 +77,28 @@ int hal_gpib_is_signal_true(int pin)
     default:
         assert(0);
     }
-    DIAG("%x, %x", pin, !pin);
+    DIAG("%d", !pin);
     return !pin;
 }
 
 void hal_gpib_set_signal_false(int pin)
 {
-    if( pin&TE_75161 ) PinClearValue(_TE_CTRL);
-    else if(pin & DC_75161) PinClearValue(_DC);
+    driver_switch_mode(pin);
     _spinmcr(pin, PinSetOutput);    
     _spinmcr(pin, PinSetValue);
 }
 
 void hal_gpib_set_signal_true(int pin)
 {
-    if( pin&TE_75161 ) PinClearValue(_TE_CTRL);
-    else if(pin & DC_75161) PinClearValue(_DC);
+    driver_switch_mode(pin);
     _spinmcr(pin, PinSetOutput);    
     _spinmcr(pin, PinClearValue);
 }
 
 void hal_gpib_put_data(char c)
 {
+    DIAG("0x%x",c);
+    set_7516x_mode(TALKER);
     PinSetValue(_TE_DATA);
     PinClearValue(_PE);
     PortSetOutput(_DIO);
@@ -81,6 +107,7 @@ void hal_gpib_put_data(char c)
 
 char hal_gpib_read_data(void)
 {
+    set_7516x_mode(LISTENER);
     PinClearValue(_TE_DATA);
     PinClearValue(_PE);
     PortSetInput(_DIO);

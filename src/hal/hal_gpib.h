@@ -30,9 +30,9 @@ extern "C" {
 
     /* exported pin interface */
 #define ATN_PIN     0x01
-#define SRQ_PIN     0x02
-#define REN_PIN     0x04
-#define IFC_PIN     0x08
+#define REN_PIN     0x02
+#define IFC_PIN     0x04
+#define SRQ_PIN     0x08
     
 #define DAV_PIN     0x10
 #define NDAC_PIN    0x20

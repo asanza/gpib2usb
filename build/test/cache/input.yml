@@ -36,28 +36,31 @@
 - :rake_columns: '120'
 :defines:
   :test:
-  - &23263900 []
   - TEST
+  - F_CPU=8000000UL
+  - DEBUG
   :test_preprocess:
-  - *23263900
   - TEST
   :release: []
   :release_preprocess: []
-  :commmon: []
+  :commmon: 
 :flags: {}
 :extension:
   :header: .h
   :source: .c
   :assembly: .s
   :object: .o
-  :executable: .out
+  :executable: .elf
   :map: .map
   :list: .lst
   :testpass: .pass
   :testfail: .fail
   :dependencies: .d
 :unity:
-  :defines: []
+  :defines:
+  - UNITY_INT_WIDTH=16
+  - UNITY_EXCLUDE_FLOAT
+  - ! '"UNITY_OUTPUT_CHAR(a)=_putchar(a)"'
 :cmock:
   :defines: []
   :mock_prefix: mock_
@@ -82,35 +85,50 @@
   :file_suffix: _runner
 :tools:
   :test_compiler:
-    :executable: gcc
-    :name: default_test_compiler
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
+    :executable: avr-gcc
     :arguments:
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-    - -DGNU_COMPILER
+    - -x c
+    - -c
     - -g
-    - -c "${1}"
+    - -gdwarf-2
+    - -funsigned-char
+    - -funsigned-bitfields
+    - -fpack-struct
+    - -fshort-enums
+    - -MMD
+    - -O0
+    - -Wall
+    - -mmcu=at90can128
+    - ${1}
     - -o "${2}"
-  :test_fixture:
-    :executable: ${1}
-    :name: default_test_fixture
-    :stderr_redirect: :auto
-    :background_exec: :none
-    :optional: false
-    :arguments: []
-  :test_linker:
-    :executable: gcc
-    :name: default_test_linker
+    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    :name: test_compiler
     :stderr_redirect: :none
     :background_exec: :none
     :optional: false
+  :test_linker:
+    :executable: avr-gcc
     :arguments:
-    - ! '"${1}"'
-    - -o "${2}"
+    - -mmcu=at90can128
+    - -gdwarf-2
+    - -funsigned-char
+    - -funsigned-bitfields
+    - ${1}
+    - -o "./build/test/TestBuild.elf"
+    - -Wl,-Map=./build/test/TestOutput.map,--cref
+    :name: test_linker
+    :stderr_redirect: :none
+    :background_exec: :none
+    :optional: false
+  :test_fixture:
+    :executable: ruby
+    :name: Simulavr Test Fixture
+    :stderr_redirect: :unix
+    :arguments:
+    - test/simulation/sim_test_fixture.rb
+    :background_exec: :none
+    :optional: false
   :test_file_preprocessor:
     :executable: gcc
     :name: default_test_file_preprocessor

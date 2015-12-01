@@ -13,4 +13,6 @@
 *bak
 *.ses
 *.dsn
+*.pdf
+*autosave*
 /src/.dep/

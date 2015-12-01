@@ -30,13 +30,13 @@ data_received_callback on_data_received;
 void hal_uart_init(data_received_callback _on_data_received)
 {
     // Load upper 8-bits of the baud rate value into the high byte of the UBRR register
-    UBRR0H = (BAUD_PRESCALE >> 8);
+    UBRR1H = (BAUD_PRESCALE >> 8);
     // Load lower 8-bits of the baud rate value into the low byte of the UBRR register
-    UBRR0L = BAUD_PRESCALE;
+    UBRR1L = BAUD_PRESCALE;
     // Set frame format to 8 data bits, no parity, 1 stop bit
-    UCSR0C = (0 << USBS0) | (1 << UCSZ01) | (1 << UCSZ00);
+    UCSR1C = (0 << USBS1) | (1 << UCSZ11) | (1 << UCSZ10);
     // Enable receiver and transmitter
-    UCSR0B = (1 << RXEN0) | (1 << TXEN0); //|(1<<RXCIE0);
+    UCSR1B = (1 << RXEN1) | (1 << TXEN1); //|(1<<RXCIE1);
     // Enable internal pullup on rx pin
     PinSetValue(_RXD);
     on_data_received = _on_data_received;
@@ -47,23 +47,23 @@ void hal_uart_send_byte(char data)
     if (data == '\n') {
         hal_uart_send_byte('\r');
     }    // Wait if a byte is being transmitted, after finished transmit new data
-    while ((UCSR0A & (1 << UDRE0)) == 0);
-    UDR0 = data;
+    while ((UCSR1A & (1 << UDRE1)) == 0);
+    UDR1 = data;
 }
 
 char hal_uart_receive_byte()
 {
-    while ((UCSR0A & (1 << RXC)) == 0) {
+    while ((UCSR1A & (1 << RXC)) == 0) {
     };
-    char data = UDR0;
+    char data = UDR1;
     //hal_uart_send_byte(data);
     return data;
 }
 
-ISR(USART0_RX_vect)
+ISR(USART1_RX_vect)
 {
     // Fetch the received byte value into the variable "USART_ReceivedByte"
-    char data = UDR0;
+    char data = UDR1;
     if (on_data_received)
         on_data_received(data);
 }

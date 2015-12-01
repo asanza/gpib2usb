@@ -44,7 +44,7 @@
 
 #define _SYSLED F, BIT1
 
-#define USART_BAUDRATE 57600
+#define USART_BAUDRATE 9600
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 /* Auxiliar macros */
