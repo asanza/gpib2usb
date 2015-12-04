@@ -46,12 +46,14 @@ void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode){
         PinAsOutput(_ATN);
         PinAsOutput(_IFC);
         PinAsInput(_SRQ);
+        PinClearValue(_REN);
     }else if(mode & DEVICE){
         PinSetValue(_DC);
         PinAsInput(_REN);
         PinAsInput(_ATN);
         PinAsInput(_IFC);
         PinAsOutput(_SRQ);
+        PinSetValue(_REN);
     }
 }
 
@@ -98,7 +100,7 @@ void hal_gpib_put_data(char c)
     PinSetValue(_TE_DATA);
     PinClearValue(_PE);
     PortAsOutput(_DIO);
-    PortSetValue(_DIO,c);
+    PortSetValue(_DIO,~c);
 }
 
 char hal_gpib_read_data(void)
@@ -107,5 +109,5 @@ char hal_gpib_read_data(void)
     PinClearValue(_PE);
     PortAsInput(_DIO);
     char val = PortReadValue(_DIO);
-    return val;
+    return ~val;
 }

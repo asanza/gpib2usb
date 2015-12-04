@@ -130,6 +130,7 @@ static int gpib_send(char data){
 
 static int gpib_send_cmd(char data){
     hal_gpib_set_signal_true(ATN_PIN);
+    DIAG("%x", data);
     int val = gpib_send(data);
     hal_gpib_set_signal_false(ATN_PIN);
     return val;

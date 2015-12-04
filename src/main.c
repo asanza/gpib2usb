@@ -36,7 +36,7 @@ int main(void)
     devcmd cmd;
     syserr err;
     while (1) {
-        do_write_gpib("Hello", 5);
+        do_write_gpib("F3X", 3);
 /*        int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
         int size = parse_input(&cmd, inbuff, recv);
         switch (cmd) {

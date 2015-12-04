@@ -56,7 +56,9 @@ syserr sys_gpib_write(char* buffer, int size)
     if(err) return SYSERR_WRITE_ERROR;
     err = GPIB_Send(LAD, 12);
     if(err) return SYSERR_WRITE_ERROR;
-    /*err = GPIB_Send(MTA,1);
+    DIAG("HERE!");
+    while(1);
+    err = GPIB_Send(MTA,1);
     if(err) return SYSERR_WRITE_ERROR;
     size --;
     while(size--){
@@ -66,6 +68,6 @@ syserr sys_gpib_write(char* buffer, int size)
     err = GPIB_Send(UNT, 12);
     if(err) return SYSERR_WRITE_ERROR;
     err = GPIB_Send(UNL, 12);
-    if(err) return SYSERR_WRITE_ERROR;*/
+    if(err) return SYSERR_WRITE_ERROR;
     return SYSERR_NONE;
 }
