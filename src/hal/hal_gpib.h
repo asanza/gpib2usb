@@ -49,12 +49,10 @@ extern "C" {
 #define TXD     16
 #define RXD     17
     
-    typedef enum{
+typedef enum{
     CONTROLLER = 0x01,
             DEVICE = 0x02,
-            TALKER = 0x04,
-            LISTENER = 0x08
-}driver_mode;
+}hal_gpib_driver_mode;
     
 /*
 #define TE_DATA      18
@@ -68,7 +66,7 @@ extern "C" {
     void hal_gpib_set_signal_true(int pin);
     void hal_gpib_put_data(char c);
     char hal_gpib_read_data(void);
-void driver_switch_mode(driver_mode mode);
+void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode);
 #ifdef	__cplusplus
 }
 #endif

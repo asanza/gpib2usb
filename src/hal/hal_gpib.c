@@ -15,29 +15,32 @@ switch(pin){ \
         case NDAC_PIN: func(_NDAC); break; \
 }}while(0);
 
-static void set_7516x_mode(driver_mode mode){
-    DIAG("%d", mode);
-    if(mode & CONTROLLER){
-        PinClearValue(_DC);
-        PinAsOutput(_REN);
-        PinClearValue(_REN);
-    }
-    if(mode & DEVICE){
-        PinAsInput(_REN);
-        PinSetValue(_DC);
-    }
+
+    typedef enum{
+            TALKER = 0x04,
+            LISTENER = 0x08
+}data_direction;
+
+static void set_7516x_mode(data_direction mode){
     if(mode & LISTENER){
         PinClearValue(_TE_CTRL);
         PinClearValue(_TE_DATA);
     }
-    if(mode & TALKER){
+    else if(mode & TALKER){
         PinSetValue(_TE_CTRL);
         PinSetValue(_TE_DATA);
     }
 }
 
-void driver_switch_mode(driver_mode mode){
-    set_7516x_mode(mode);
+void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode){
+    if(mode & CONTROLLER){
+        PinClearValue(_DC);
+        PinAsOutput(_REN);
+        PinClearValue(_REN);
+    }else if(mode & DEVICE){
+        PinAsInput(_REN);
+        PinSetValue(_DC);
+    }
 }
 
 void hal_gpib_init(){
@@ -53,7 +56,6 @@ void hal_gpib_init(){
 
 int hal_gpib_is_signal_true(int pin)
 {
-    driver_switch_mode(pin);
     _spinmcr(pin, PinAsInput);
     switch(pin){ 
     case IFC_PIN:  pin = PinReadValue(_IFC); break; 
@@ -73,21 +75,18 @@ int hal_gpib_is_signal_true(int pin)
 
 void hal_gpib_set_signal_false(int pin)
 {
-    driver_switch_mode(pin);
     _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinSetValue);
 }
 
 void hal_gpib_set_signal_true(int pin)
 {
-    driver_switch_mode(pin);
     _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinClearValue);
 }
 
 void hal_gpib_put_data(char c)
 {
-    DIAG("0x%x",c);
     set_7516x_mode(TALKER);
     PinSetValue(_TE_DATA);
     PinClearValue(_PE);
