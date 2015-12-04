@@ -51,6 +51,7 @@ void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
 
 syserr sys_gpib_write(char* buffer, int size)
 {
+    DIAG("%s, %d", buffer, size);
     int err = GPIB_Send(UNL,1);
     if(err) return SYSERR_WRITE_ERROR;
     err = GPIB_Send(LAD, 12);

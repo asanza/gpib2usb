@@ -28,7 +28,7 @@
 
 void hal_sys_init(void)
 {
-    PinSetOutput(_SYSLED);
+    PinAsOutput(_SYSLED);
     sei();
 }
 

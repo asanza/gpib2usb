@@ -26,11 +26,11 @@ static void set_7516x_mode(driver_mode mode){
     DIAG("%d", mode);
     if(mode & CONTROLLER){
         PinClearValue(_DC);
-        PinSetOutput(_REN);
+        PinAsOutput(_REN);
         PinClearValue(_REN);
     }
     if(mode & DEVICE){
-        PinSetInput(_REN);
+        PinAsInput(_REN);
         PinSetValue(_DC);
     }
     if(mode & LISTENER){
@@ -51,10 +51,10 @@ static void driver_switch_mode(int pin){
 }
 
 void hal_gpib_init(){
-    PinSetOutput(_PE);
-    PinSetOutput(_TE_DATA);
-    PinSetOutput(_TE_CTRL);
-    PinSetOutput(_DC);
+    PinAsOutput(_PE);
+    PinAsOutput(_TE_DATA);
+    PinAsOutput(_TE_CTRL);
+    PinAsOutput(_DC);
     PinSetValue(_PE);
     PinSetValue(_TE_DATA);
     PinClearValue(_TE_CTRL);
@@ -64,7 +64,7 @@ void hal_gpib_init(){
 int hal_gpib_is_signal_true(int pin)
 {
     driver_switch_mode(pin);
-    _spinmcr(pin, PinSetInput);
+    _spinmcr(pin, PinAsInput);
     switch(pin){ 
     case IFC_PIN:  pin = PinReadValue(_IFC); break; 
     case REN_PIN:  pin = PinReadValue(_REN); break; 
@@ -84,14 +84,14 @@ int hal_gpib_is_signal_true(int pin)
 void hal_gpib_set_signal_false(int pin)
 {
     driver_switch_mode(pin);
-    _spinmcr(pin, PinSetOutput);    
+    _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinSetValue);
 }
 
 void hal_gpib_set_signal_true(int pin)
 {
     driver_switch_mode(pin);
-    _spinmcr(pin, PinSetOutput);    
+    _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinClearValue);
 }
 
@@ -101,7 +101,7 @@ void hal_gpib_put_data(char c)
     set_7516x_mode(TALKER);
     PinSetValue(_TE_DATA);
     PinClearValue(_PE);
-    PortSetOutput(_DIO);
+    PortAsOutput(_DIO);
     PortSetValue(_DIO,c);
 }
 
@@ -110,7 +110,7 @@ char hal_gpib_read_data(void)
     set_7516x_mode(LISTENER);
     PinClearValue(_TE_DATA);
     PinClearValue(_PE);
-    PortSetInput(_DIO);
+    PortAsInput(_DIO);
     char val = PortReadValue(_DIO);
     return val;
 }

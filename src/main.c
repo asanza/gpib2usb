@@ -36,7 +36,8 @@ int main(void)
     devcmd cmd;
     syserr err;
     while (1) {
-        int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
+        do_write_gpib("Hello", 5);
+/*        int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
         int size = parse_input(&cmd, inbuff, recv);
         switch (cmd) {
         case CMD_ADDR:              err = do_address(inbuff, size);
@@ -88,7 +89,7 @@ int main(void)
         default:                    err = do_write_gpib(inbuff, size);
             break;
         }
-        do_print_syserror(err);
+        do_print_syserror(err);*/
     }
 }
 

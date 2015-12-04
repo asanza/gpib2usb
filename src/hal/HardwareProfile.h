@@ -48,15 +48,15 @@
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 /* Auxiliar macros */
-#define PinSetInput(val)        _PinSetInput(val)
-#define PinSetOutput(val)       _PinSetOutput(val)
+#define PinAsInput(val)        _PinSetInput(val)
+#define PinAsOutput(val)       _PinSetOutput(val)
 #define PinSetValue(val)        _PinSetValue(val)
 #define PinClearValue(val)      _PinClearValue(val)
 #define PinToggleValue(val)     _PinToggleValue(val)
 #define PinReadValue(val)       _PinReadValue(val)
 
-#define PortSetInput(val)       _PortSetInput(val)
-#define PortSetOutput(val)      _PortSetOutput(val)
+#define PortAsInput(val)       _PortSetInput(val)
+#define PortAsOutput(val)      _PortSetOutput(val)
 #define PortSetValue(port, val)       _PortSetValue(port, val)
 #define PortReadValue(port)      _PortReadValue(port)
 
