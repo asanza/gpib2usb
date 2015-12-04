@@ -15,31 +15,43 @@ switch(pin){ \
         case NDAC_PIN: func(_NDAC); break; \
 }}while(0);
 
-
-    typedef enum{
-            TALKER = 0x04,
-            LISTENER = 0x08
-}hal_gpib_data_direction;
-
+/* manage data transfer channels (te line in hardware driver)*/
 void hal_gpib_set_driver_direction(hal_gpib_data_direction direction){
+    DIAG("%d", direction);
     if(direction & LISTENER){
+        /* disable talker in hardware controller.*/
         PinClearValue(_TE_CTRL);
         PinClearValue(_TE_DATA);
+        /* set microcontroller direction lines */
+        PinAsOutput(_NDAC);
+        PinAsOutput(_NRFD);
+        PinAsInput(_DAV);
     }
     else if(direction & TALKER){
+        /* enable talker in hardware controller */
         PinSetValue(_TE_CTRL);
         PinSetValue(_TE_DATA);
+        /* set microcontroller lines accordly */
+        PinAsInput(_NDAC);
+        PinAsInput(_NRFD);
+        PinAsOutput(_DAV);
     }
 }
 
+/* manage bus management channels (dc line on hardware driver) */
 void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode){
     if(mode & CONTROLLER){
         PinClearValue(_DC);
         PinAsOutput(_REN);
-        PinClearValue(_REN);
+        PinAsOutput(_ATN);
+        PinAsOutput(_IFC);
+        PinAsInput(_SRQ);
     }else if(mode & DEVICE){
-        PinAsInput(_REN);
         PinSetValue(_DC);
+        PinAsInput(_REN);
+        PinAsInput(_ATN);
+        PinAsInput(_IFC);
+        PinAsOutput(_SRQ);
     }
 }
 
@@ -56,7 +68,6 @@ void hal_gpib_init(){
 
 int hal_gpib_is_signal_true(int pin)
 {
-    _spinmcr(pin, PinAsInput);
     switch(pin){ 
     case IFC_PIN:  pin = PinReadValue(_IFC); break; 
     case REN_PIN:  pin = PinReadValue(_REN); break; 
@@ -74,13 +85,11 @@ int hal_gpib_is_signal_true(int pin)
 
 void hal_gpib_set_signal_false(int pin)
 {
-    _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinSetValue);
 }
 
 void hal_gpib_set_signal_true(int pin)
 {
-    _spinmcr(pin, PinAsOutput);    
     _spinmcr(pin, PinClearValue);
 }
 

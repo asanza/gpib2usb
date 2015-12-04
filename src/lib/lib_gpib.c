@@ -109,6 +109,7 @@ int GPIB_Init(int our_address)
 }
 
 static int gpib_send(char data){
+    hal_gpib_set_driver_direction(TALKER);
     hal_gpib_set_signal_false(DAV_PIN);
     if(!hal_gpib_is_signal_true(NRFD_PIN) &&
        !hal_gpib_is_signal_true(NDAC_PIN)){
@@ -135,6 +136,7 @@ static int gpib_send_cmd(char data){
 }
 
 static int gpib_receive(char* data){
+    hal_gpib_set_driver_direction(LISTENER);
     hal_gpib_set_signal_true(NDAC_PIN);
     hal_gpib_set_signal_false(NRFD_PIN);
     while(!hal_gpib_is_signal_true(DAV_PIN));
