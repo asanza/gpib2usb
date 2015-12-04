@@ -103,6 +103,8 @@ int GPIB_Init(int our_address)
     hal_gpib_set_signal_true(IFC_PIN);
     _delay_ms(100);
     hal_gpib_set_signal_false(IFC_PIN);
+    /* default mode controller */
+    hal_gpib_set_driver_mode(CONTROLLER);
     return 0;
 }
 

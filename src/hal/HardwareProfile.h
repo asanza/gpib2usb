@@ -15,22 +15,22 @@
 /* data port */
 #define _DIO A
 #define _PE D, BIT1
-#define _TE_DATA B, BIT4
+#define _TE_DATA D, BIT4
 /* bus management lines */
-#define _ATN C, BIT1
-#define _IFC C, BIT6
-#define _REN C, BIT7
-#define _EOI C, BIT2
-#define _SRQ C, BIT0
+#define _ATN C, BIT6
+#define _IFC C, BIT1
+#define _REN C, BIT0
+#define _EOI C, BIT5
+#define _SRQ C, BIT7
 /* talker enable for control */
 #define _TE_CTRL D, BIT4
 /* data direction control */
 #define _DC D, BIT5
 
 /* bus handshake lines */
-#define _DAV C, BIT3
-#define _NRFD C, BIT4
-#define _NDAC C, BIT5
+#define _DAV C, BIT4
+#define _NRFD C, BIT3
+#define _NDAC C, BIT2
 
 
 #define _GPIO1 B, BIT0
@@ -48,27 +48,27 @@
 #define BAUD_PRESCALE (((F_CPU / (USART_BAUDRATE * 16UL))) - 1)
 
 /* Auxiliar macros */
-#define PinAsInput(val)        _PinSetInput(val)
-#define PinAsOutput(val)       _PinSetOutput(val)
+#define PinAsInput(val)        _PinAsInput(val)
+#define PinAsOutput(val)       _PinAsOutput(val)
 #define PinSetValue(val)        _PinSetValue(val)
 #define PinClearValue(val)      _PinClearValue(val)
 #define PinToggleValue(val)     _PinToggleValue(val)
 #define PinReadValue(val)       _PinReadValue(val)
 
-#define PortAsInput(val)       _PortSetInput(val)
-#define PortAsOutput(val)      _PortSetOutput(val)
+#define PortAsInput(val)       _PortAsInput(val)
+#define PortAsOutput(val)      _PortAsOutput(val)
 #define PortSetValue(port, val)       _PortSetValue(port, val)
 #define PortReadValue(port)      _PortReadValue(port)
 
-#define _PinSetInput(port, pin) DDR##port &= ~_BV(pin)
-#define _PinSetOutput(port, pin) DDR##port |= _BV(pin)
+#define _PinAsInput(port, pin) DDR##port &= ~_BV(pin)
+#define _PinAsOutput(port, pin) DDR##port |= _BV(pin)
 #define _PinToggleValue(port, pin) PORT##port ^= _BV(pin)
 #define _PinSetValue(port, pin) PORT##port |= _BV(pin)
 #define _PinClearValue(port, pin) PORT##port &= ~_BV(pin)
 #define _PinReadValue(port, pin) PIN##port & _BV(pin)
 
-#define _PortSetInput(port) DDR##port = 0x00
-#define _PortSetOutput(port) DDR##port = 0xFF
+#define _PortAsInput(port) DDR##port = 0x00
+#define _PortAsOutput(port) DDR##port = 0xFF
 #define _PortSetValue(port, value) PORT##port = value
 #define _PortReadValue(port) PIN##port
 

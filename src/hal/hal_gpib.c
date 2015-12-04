@@ -69,7 +69,6 @@ int hal_gpib_is_signal_true(int pin)
     default:
         assert(0);
     }
-    DIAG("%d", !pin);
     return !pin;
 }
 
