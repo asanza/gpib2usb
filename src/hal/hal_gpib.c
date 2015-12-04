@@ -19,14 +19,14 @@ switch(pin){ \
     typedef enum{
             TALKER = 0x04,
             LISTENER = 0x08
-}data_direction;
+}hal_gpib_data_direction;
 
-static void set_7516x_mode(data_direction mode){
-    if(mode & LISTENER){
+void hal_gpib_set_driver_direction(hal_gpib_data_direction direction){
+    if(direction & LISTENER){
         PinClearValue(_TE_CTRL);
         PinClearValue(_TE_DATA);
     }
-    else if(mode & TALKER){
+    else if(direction & TALKER){
         PinSetValue(_TE_CTRL);
         PinSetValue(_TE_DATA);
     }
@@ -86,7 +86,6 @@ void hal_gpib_set_signal_true(int pin)
 
 void hal_gpib_put_data(char c)
 {
-    set_7516x_mode(TALKER);
     PinSetValue(_TE_DATA);
     PinClearValue(_PE);
     PortAsOutput(_DIO);
@@ -95,7 +94,6 @@ void hal_gpib_put_data(char c)
 
 char hal_gpib_read_data(void)
 {
-    set_7516x_mode(LISTENER);
     PinClearValue(_TE_DATA);
     PinClearValue(_PE);
     PortAsInput(_DIO);

@@ -53,7 +53,13 @@ typedef enum{
     CONTROLLER = 0x01,
             DEVICE = 0x02,
 }hal_gpib_driver_mode;
-    
+
+       typedef enum{
+            TALKER = 0x04,
+            LISTENER = 0x08
+}hal_gpib_data_direction;
+
+void hal_gpib_set_driver_direction(hal_gpib_data_direction direction); 
 /*
 #define TE_DATA      18
 #define TE_CTRL      8
