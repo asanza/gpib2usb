@@ -3,13 +3,6 @@
 #include <diag.h>
 #include "hal_gpib.h"
 
-typedef enum{
-    CONTROLLER = 0x01,
-            DEVICE = 0x02,
-            TALKER = 0x04,
-            LISTENER = 0x08
-}driver_mode;
-
 #define _spinmcr(pin, func)do{ \
 switch(pin){ \
         case IFC_PIN: func(_IFC); break; \
@@ -43,11 +36,8 @@ static void set_7516x_mode(driver_mode mode){
     }
 }
 
-static void driver_switch_mode(int pin){
-    if(pin & (ATN_PIN|REN_PIN|IFC_PIN)) set_7516x_mode(CONTROLLER);
-    if(pin & (SRQ_PIN)) set_7516x_mode(DEVICE);
-    if(pin & (DAV_PIN)) set_7516x_mode(TALKER);
-    if(pin & (NRFD_PIN | NDAC_PIN)) set_7516x_mode(LISTENER);
+void driver_switch_mode(driver_mode mode){
+    set_7516x_mode(mode);
 }
 
 void hal_gpib_init(){

@@ -48,6 +48,14 @@ extern "C" {
 #define GPIO5   15
 #define TXD     16
 #define RXD     17
+    
+    typedef enum{
+    CONTROLLER = 0x01,
+            DEVICE = 0x02,
+            TALKER = 0x04,
+            LISTENER = 0x08
+}driver_mode;
+    
 /*
 #define TE_DATA      18
 #define TE_CTRL      8
@@ -60,7 +68,7 @@ extern "C" {
     void hal_gpib_set_signal_true(int pin);
     void hal_gpib_put_data(char c);
     char hal_gpib_read_data(void);
-
+void driver_switch_mode(driver_mode mode);
 #ifdef	__cplusplus
 }
 #endif
