@@ -28,15 +28,19 @@
 
 #define DEVICE_ADDRESS (uint8_t*) 1
 
+static uint8_t sysaddr = 0;
+
 void sys_init(void)
 {
     /* initialize in controller mode */
     GPIB_Init(0x00);
+    sysaddr = sys_get_addr();
 }
 
 syserr sys_set_addr(uint8_t addr)
 {
     if (addr > 30) return SYSERR_WRONG_PARAMETER;
+    sysaddr = addr;
     eeprom_update_byte(DEVICE_ADDRESS, addr);
     return SYSERR_NONE;
 }
@@ -51,10 +55,9 @@ void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
 
 syserr sys_gpib_write(char* buffer, int size)
 {
-    DIAG("%s, %d", buffer, size);
     int err = GPIB_Send(UNL,1);
     if(err) return SYSERR_WRITE_ERROR;
-    err = GPIB_Send(LAD, 12);
+    err = GPIB_Send(LAD, sysaddr);
     if(err) return SYSERR_WRITE_ERROR;
     err = GPIB_Send(MTA,1);
     if(err) return SYSERR_WRITE_ERROR;
@@ -63,9 +66,9 @@ syserr sys_gpib_write(char* buffer, int size)
         err = GPIB_Send(DAB, *buffer++);
         if(err) return SYSERR_WRITE_ERROR;
     }
-    err = GPIB_Send(UNT, 12);
+    err = GPIB_Send(UNT, sysaddr);
     if(err) return SYSERR_WRITE_ERROR;
-    err = GPIB_Send(UNL, 12);
+    err = GPIB_Send(UNL, sysaddr);
     if(err) return SYSERR_WRITE_ERROR;
     return SYSERR_NONE;
 }

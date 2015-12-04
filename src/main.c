@@ -10,6 +10,7 @@
 #include "drivers/stdiodrv.h"
 #include "input/input.h"
 #include "sys/system.h"
+#include <diag.h>
 
 #define BUFFER_SIZE 250
 char inbuff[BUFFER_SIZE];
@@ -30,14 +31,13 @@ int main(void)
     hal_uart_init(NULL);
     stdout = &uart_stdout;
     stdin = &uart_stdout;
-    // Interrupts enable9R4d after configuration
+    // Interrupts enabled after configuration
     hal_sys_exit_critical();
     sys_init();
     devcmd cmd;
     syserr err;
     while (1) {
-        do_write_gpib("F3X", 3);
-/*        int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
+        int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
         int size = parse_input(&cmd, inbuff, recv);
         switch (cmd) {
         case CMD_ADDR:              err = do_address(inbuff, size);
@@ -89,7 +89,7 @@ int main(void)
         default:                    err = do_write_gpib(inbuff, size);
             break;
         }
-        do_print_syserror(err);*/
+        do_print_syserror(err);
     }
 }
 
