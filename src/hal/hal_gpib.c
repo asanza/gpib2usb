@@ -17,7 +17,6 @@ switch(pin){ \
 
 /* manage data transfer channels (te line in hardware driver)*/
 void hal_gpib_set_driver_direction(hal_gpib_data_direction direction){
-    DIAG("%d", direction);
     if(direction & LISTENER){
         /* disable talker in hardware controller.*/
         PinClearValue(_TE_CTRL);

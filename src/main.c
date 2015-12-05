@@ -39,6 +39,7 @@ int main(void)
     while (1) {
         int recv = uart_fgets(inbuff, BUFFER_SIZE, stdin);
         int size = parse_input(&cmd, inbuff, recv);
+        printf("\n");
         switch (cmd) {
         case CMD_ADDR:              err = do_address(inbuff, size);
             break;

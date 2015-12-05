@@ -31,7 +31,6 @@ static int gpib_receive(char* data);
 static int gpib_send_cmd(char data);
 
 int GPIB_Send(GPIB_Command cmd, char data){
-    DIAG("0x%x, 0x%x", cmd, data);
     char code;
     switch(cmd){
     case ATN:
@@ -113,11 +112,6 @@ static int gpib_send(char data){
     hal_gpib_set_signal_false(DAV_PIN);
     if(!hal_gpib_is_signal_true(NRFD_PIN) &&
        !hal_gpib_is_signal_true(NDAC_PIN)){
-        if(!hal_gpib_is_signal_true(NRFD_PIN))
-            DIAG("nrfd is false");
-        if(!hal_gpib_is_signal_true(NDAC_PIN))
-            DIAG("ndac is false");
-        while(1);
         return -1;
     }
     hal_gpib_put_data(data);
@@ -130,7 +124,6 @@ static int gpib_send(char data){
 
 static int gpib_send_cmd(char data){
     hal_gpib_set_signal_true(ATN_PIN);
-    DIAG("%x", data);
     int val = gpib_send(data);
     hal_gpib_set_signal_false(ATN_PIN);
     return val;
