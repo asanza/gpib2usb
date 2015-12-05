@@ -25,17 +25,39 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-static bool oneshoot;
+static bool oneshoot = true;
 static int period; 
+static bool triggered = false;
 
 void hal_timer_init(int period_us, bool _oneshoot){
     oneshoot = _oneshoot;
     period = period_us;
-    TCCR1B |= (1 << WGM12) | (1<<CS10);
-    //TIMSK1 |= (1<<)
+    TCCR1B |= (1 << WGM12) | (1<<CS11);
+    TCNT1 = 0;
+    TIMSK1 |= (1<<TOIE1);
+    OCR1A = period_us;
+}
+
+void hal_timer_start(void){
+    OCR1A = period;
+    TCNT1 = 0;
+    TCCR1B |= ( 1 << CS11);
+}
+
+void hal_timer_stop(void){
+    TCCR1B &= ~(1 << CS11);
+}
+
+bool hal_timer_elapsed(void){
+    bool t = triggered;
+    triggered = false;
+    return t;
 }
 
 ISR(TIMER1_COMPA_vect){
-    PORTC = 0x00;
-    TCNT0 = 0; //clear the counter of counter0
+    TCNT1 = 0; //clear the counter of counter0
+    if(oneshoot){
+        TCCR1B &= ~(1 << CS11);
+    }
+    triggered = true;
 }

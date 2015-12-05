@@ -25,6 +25,7 @@
 #include <diag.h>
 #include "system.h"
 #include "lib/lib_gpib.h"
+#include "hal/hal_gpib.h"
 
 #define DEVICE_ADDRESS (uint8_t*) 1
 
@@ -50,8 +51,23 @@ uint8_t sys_get_addr(void)
     return eeprom_read_byte(DEVICE_ADDRESS);
 }
 
-void sys_gpib_read(char* buffer, int size, sysread until, int charval) {
- }
+syserr sys_gpib_read(char* buffer, int size, sysread until, int charval) {
+    int err = GPIB_Send(UNL,1);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(TAD, sysaddr);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(MLA, 1);
+    while(GPIB_Receive(buffer) >= 0 && size-- > 0){
+        if(*buffer == '\n') break;
+        //printf("%c", *buffer);
+        buffer++;
+    };
+    err = GPIB_Send(UNT, 1);
+    if(err) return SYSERR_WRITE_ERROR;
+    err = GPIB_Send(UNL, 1);
+    if(err) return SYSERR_WRITE_ERROR;
+    return SYSERR_NONE;   
+}
 
 syserr sys_gpib_write(char* buffer, int size)
 {

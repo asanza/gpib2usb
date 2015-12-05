@@ -64,6 +64,7 @@ SRC = $(TARGET).c \
     hal/hal_uart.c \
     hal/hal_sys.c \
     hal/hal_gpib.c \
+    hal/hal_timer.c \
     drivers/stdiodrv.c\
     input/input.c \
     lib/lib_gpib.c \

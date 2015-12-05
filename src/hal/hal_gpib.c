@@ -56,7 +56,7 @@ void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode){
     }
 }
 
-void hal_gpib_init(){
+void hal_gpib_init(void){
     PinAsOutput(_PE);
     PinAsOutput(_TE_DATA);
     PinAsOutput(_TE_CTRL);

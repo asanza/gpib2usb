@@ -1,4 +1,5 @@
 #include "hal/hal_gpib.h"
+#include <hal/hal_timer.h>
 #include "lib_gpib.h"
 #include <diag.h>
 #include <avr/delay.h>
@@ -29,6 +30,10 @@ static char myAddress = 0xFF;
 static int gpib_send(char data);
 static int gpib_receive(char* data);
 static int gpib_send_cmd(char data);
+
+int GPIB_Receive(char* data){
+    return gpib_receive(data);
+}
 
 int GPIB_Send(GPIB_Command cmd, char data){
     char code;
@@ -133,7 +138,13 @@ static int gpib_receive(char* data){
     hal_gpib_set_driver_direction(LISTENER);
     hal_gpib_set_signal_true(NDAC_PIN);
     hal_gpib_set_signal_false(NRFD_PIN);
-    while(!hal_gpib_is_signal_true(DAV_PIN));
+    hal_timer_init(65000,true);
+    while(!hal_gpib_is_signal_true(DAV_PIN)){
+        if(hal_timer_elapsed()){
+            DIAG("Timeout!");
+            return -1;
+        }
+    };
     hal_gpib_set_signal_true(NRFD_PIN);
     *data = hal_gpib_read_data();
     hal_gpib_set_signal_false(NDAC_PIN);

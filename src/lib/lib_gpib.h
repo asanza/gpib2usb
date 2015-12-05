@@ -39,4 +39,6 @@ int GPIB_Init(int our_address);
 
 int GPIB_Send(GPIB_Command cmd, char data);
 
+int GPIB_Receive(char* data);
+
 #endif

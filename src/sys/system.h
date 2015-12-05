@@ -43,7 +43,7 @@ extern "C" {
     void sys_init(void);
     syserr sys_set_addr(uint8_t addr);
     uint8_t sys_get_addr(void);
-    void sys_gpib_read(char* buffer, int size, sysread until, int charval);
+    syserr sys_gpib_read(char* buffer, int size, sysread until, int charval);
     syserr sys_gpib_write(char* buffer, int size);
     
 
