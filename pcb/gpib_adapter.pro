@@ -1,4 +1,4 @@
-update=Mo 14 Sep 2015 21:34:55 CEST
+update=Mi 22 Jun 2016 20:53:34 CEST
 version=1
 last_client=kicad
 [general]
@@ -23,15 +23,6 @@ MSegLar=118
 [cvpcb]
 version=1
 NetIExt=net
-[eeschema]
-version=1
-LibDir=/home/diego/Electronics/Libraries;/home/diego/Electronics/Libraries/kicad-library
-[eeschema/libraries]
-LibName1=hw01
-LibName2=kicad-library/library/atmel
-LibName3=kicad-library/library/power
-LibName4=kicad-library/library/conn
-LibName5=w_connectors
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
@@ -42,3 +33,17 @@ NetFmtName=
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60
+[eeschema]
+version=1
+LibDir=../../../Cloud/personal/Work/Electronics/Libraries
+[eeschema/libraries]
+LibName1=hw01
+LibName2=kicad-library/library/atmel
+LibName3=kicad-library/library/power
+LibName4=kicad-library/library/conn
+LibName5=w_connectors
+LibName6=microchip
+LibName7=microchip_pic18mcu
+LibName8=device
+LibName9=ESD_Protection
+LibName10=Tag-Connect

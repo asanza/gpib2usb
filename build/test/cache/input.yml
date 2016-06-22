@@ -16,8 +16,8 @@
   :artifacts: []
 :paths:
   :test:
-  - +:test/**
-  - -:test/support
+  - "+:test/**"
+  - "-:test/support"
   :source:
   - src/**
   - src/hal
@@ -46,21 +46,21 @@
   :commmon: 
 :flags: {}
 :extension:
-  :header: .h
-  :source: .c
-  :assembly: .s
-  :object: .o
-  :executable: .elf
-  :map: .map
-  :list: .lst
-  :testpass: .pass
-  :testfail: .fail
-  :dependencies: .d
+  :header: ".h"
+  :source: ".c"
+  :assembly: ".s"
+  :object: ".o"
+  :executable: ".elf"
+  :map: ".map"
+  :list: ".lst"
+  :testpass: ".pass"
+  :testfail: ".fail"
+  :dependencies: ".d"
 :unity:
   :defines:
   - UNITY_INT_WIDTH=16
   - UNITY_EXCLUDE_FLOAT
-  - ! '"UNITY_OUTPUT_CHAR(a)=_putchar(a)"'
+  - '"UNITY_OUTPUT_CHAR(a)=_putchar(a)"'
 :cmock:
   :defines: []
   :mock_prefix: mock_
@@ -87,21 +87,21 @@
   :test_compiler:
     :executable: avr-gcc
     :arguments:
-    - -x c
-    - -c
-    - -g
-    - -gdwarf-2
-    - -funsigned-char
-    - -funsigned-bitfields
-    - -fpack-struct
-    - -fshort-enums
-    - -MMD
-    - -O0
-    - -Wall
-    - -mmcu=at90can128
-    - ${1}
+    - "-x c"
+    - "-c"
+    - "-g"
+    - "-gdwarf-2"
+    - "-funsigned-char"
+    - "-funsigned-bitfields"
+    - "-fpack-struct"
+    - "-fshort-enums"
+    - "-MMD"
+    - "-O0"
+    - "-Wall"
+    - "-mmcu=at90can128"
+    - "${1}"
     - -o "${2}"
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
+    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
     :name: test_compiler
     :stderr_redirect: :none
@@ -110,13 +110,13 @@
   :test_linker:
     :executable: avr-gcc
     :arguments:
-    - -mmcu=at90can128
-    - -gdwarf-2
-    - -funsigned-char
-    - -funsigned-bitfields
-    - ${1}
+    - "-mmcu=at90can128"
+    - "-gdwarf-2"
+    - "-funsigned-char"
+    - "-funsigned-bitfields"
+    - "${1}"
     - -o "./build/test/TestBuild.elf"
-    - -Wl,-Map=./build/test/TestOutput.map,--cref
+    - "-Wl,-Map=./build/test/TestOutput.map,--cref"
     :name: test_linker
     :stderr_redirect: :none
     :background_exec: :none
@@ -136,13 +136,13 @@
     :background_exec: :none
     :optional: false
     :arguments:
-    - -E
+    - "-E"
     - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
     - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-    - -D$: DEFINES_TEST_PREPROCESS
-    - -DGNU_COMPILER
-    - ! '"${1}"'
+    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
+    - "-D$": DEFINES_TEST_PREPROCESS
+    - "-DGNU_COMPILER"
+    - '"${1}"'
     - -o "${2}"
   :test_includes_preprocessor:
     :executable: gcc
@@ -151,16 +151,16 @@
     :background_exec: :none
     :optional: false
     :arguments:
-    - -E
-    - -MM
-    - -MG
-    - -I$: COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I$: COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
-    - -D$: DEFINES_TEST_PREPROCESS
-    - -DGNU_COMPILER
-    - -w
-    - ! '"${1}"'
+    - "-E"
+    - "-MM"
+    - "-MG"
+    - "-I$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - "-I$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
+    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
+    - "-D$": DEFINES_TEST_PREPROCESS
+    - "-DGNU_COMPILER"
+    - "-w"
+    - '"${1}"'
 :test_compiler:
   :arguments: []
 :test_linker:
@@ -192,6 +192,6 @@
   :stdout_pretty_tests_report_path: vendor/ceedling/plugins/stdout_pretty_tests_report/lib
   :module_generator_path: vendor/ceedling/plugins/module_generator/lib
 :module_generator:
-  :project_root: ./
+  :project_root: "./"
   :source_root: src/
   :test_root: test/
