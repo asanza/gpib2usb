@@ -4,4 +4,7 @@
   (lib (name w_conn_strip)(type Legacy)(uri /home/diego/Electronics/Libraries/w_conn_strip.mod)(options "")(descr ""))
   (lib (name w_conn_pc)(type Legacy)(uri /home/diego/Electronics/Libraries/w_conn_pc.mod)(options "")(descr ""))
   (lib (name Housings_DFN_QFN)(type KiCad)(uri /home/diego/Electronics/Libraries/footprints/Housings_DFN_QFN.pretty)(options "")(descr ""))
+  (lib (name tagconnect)(type Legacy)(uri /home/diego/Electronics/Libraries/Tag-Connect.mod)(options "")(descr ""))
+  (lib (name esd_protection)(type KiCad)(uri /home/diego/Electronics/Libraries/esd_protection)(options "")(descr ""))
+  (lib (name gpib_conn_male)(type Legacy)(uri /home/diego/Electronics/Libraries/gpib_conn_male.mod)(options "")(descr ""))
 )
