@@ -218,7 +218,7 @@ Text Label 5600 4800 2    60   ~ 0
 DAV
 Text Label 5600 4900 2    60   ~ 0
 EOI
-Text Label 8825 6400 2    60   ~ 0
+Text Label 5625 5400 2    60   ~ 0
 SRQ
 $Comp
 L R R2
@@ -525,7 +525,7 @@ Text Label 8800 6300 2    60   ~ 0
 ATN
 Entry Wire Line
 	5350 5400 5250 5500
-Text Label 5575 5400 2    60   ~ 0
+Text Label 8775 6400 2    60   ~ 0
 PE
 Text Label 9325 4350 0    60   ~ 0
 PE
