@@ -57,7 +57,7 @@ U 1 1 4FFF132F
 P 3125 6050
 F 0 "P2" V 3075 6050 50  0000 C CNN
 F 1 "USB" V 3175 6050 50  0000 C CNN
-F 2 "w_conn_pc:conn_usb_B" H 3125 6050 60  0001 C CNN
+F 2 "Connect:USB_B" H 3125 6050 60  0001 C CNN
 F 3 "" H 3125 6050 60  0001 C CNN
 	1    3125 6050
 	-1   0    0    -1  
@@ -218,9 +218,7 @@ Text Label 5600 4800 2    60   ~ 0
 DAV
 Text Label 5600 4900 2    60   ~ 0
 EOI
-Text Label 8825 6500 2    60   ~ 0
-ATN
-Text Label 8650 4900 2    60   ~ 0
+Text Label 8825 6400 2    60   ~ 0
 SRQ
 $Comp
 L R R2
@@ -293,19 +291,19 @@ Entry Wire Line
 	11200 4000 11300 3900
 Text Label 12500 3400 0    60   ~ 0
 DIO1 B
-Text Label 12500 3500 0    60   ~ 0
+Text Label 13650 3400 0    60   ~ 0
 DIO2 B
-Text Label 12500 3600 0    60   ~ 0
+Text Label 12500 3500 0    60   ~ 0
 DIO3 B
-Text Label 12500 3700 0    60   ~ 0
+Text Label 13650 3500 0    60   ~ 0
 DIO4 B
-Text Label 13675 3400 0    60   ~ 0
+Text Label 12475 4000 0    60   ~ 0
 DIO5 B
-Text Label 13675 3500 0    60   ~ 0
+Text Label 13625 4000 0    60   ~ 0
 DIO6 B
-Text Label 13675 3600 0    60   ~ 0
+Text Label 12475 4100 0    60   ~ 0
 DIO7 B
-Text Label 13675 3700 0    60   ~ 0
+Text Label 13625 4100 0    60   ~ 0
 DIO8 B
 Entry Wire Line
 	12300 3300 12400 3400
@@ -313,8 +311,6 @@ Entry Wire Line
 	12300 3400 12400 3500
 Entry Wire Line
 	12300 3900 12400 4000
-Entry Wire Line
-	12300 4000 12400 4100
 Text Label 10850 5600 0    60   ~ 0
 REN B
 Text Label 10850 5700 0    60   ~ 0
@@ -331,19 +327,19 @@ Text Label 10850 6200 0    60   ~ 0
 ATN B
 Text Label 10850 6300 0    60   ~ 0
 SRQ B
-Text Label 12500 3800 0    60   ~ 0
+Text Label 12500 3600 0    60   ~ 0
 EOI B
-Text Label 12500 4000 0    60   ~ 0
+Text Label 12500 3700 0    60   ~ 0
 NRFD B
-Text Label 12500 3900 0    60   ~ 0
+Text Label 13650 3600 0    60   ~ 0
 DAV B
-Text Label 12500 4200 0    60   ~ 0
+Text Label 12500 3800 0    60   ~ 0
 IFC B
-Text Label 12500 4300 0    60   ~ 0
+Text Label 13650 3800 0    60   ~ 0
 SRQ B
-Text Label 12500 4400 0    60   ~ 0
+Text Label 12500 3900 0    60   ~ 0
 ATN B
-Text Label 12500 4100 0    60   ~ 0
+Text Label 13650 3700 0    60   ~ 0
 NDAC B
 Entry Wire Line
 	14000 3600 14100 3500
@@ -386,10 +382,8 @@ F 3 "" H 4375 5550 60  0001 C CNN
 	1    4375 5550
 	1    0    0    -1  
 $EndComp
-Text Label 13700 3800 0    60   ~ 0
+Text Label 12475 4200 0    60   ~ 0
 REN B
-Entry Wire Line
-	12300 4100 12400 4200
 Text Label 9350 3300 0    60   ~ 0
 DIO8
 Text Label 8675 5400 0    60   ~ 0
@@ -527,7 +521,7 @@ Text Label 9300 4200 0    60   ~ 0
 TE
 Entry Wire Line
 	9025 4450 9125 4350
-Text Label 8625 5000 2    60   ~ 0
+Text Label 8800 6300 2    60   ~ 0
 ATN
 Entry Wire Line
 	5350 5400 5250 5500
@@ -546,10 +540,6 @@ F 3 "" H 3800 6250 60  0000 C CNN
 	1    3800 6250
 	0    1    1    0   
 $EndComp
-Entry Wire Line
-	12300 4200 12400 4300
-Entry Wire Line
-	12300 4300 12400 4400
 $Comp
 L GND-RESCUE-gpib_adapter #PWR013
 U 1 1 56199A3C
@@ -662,11 +652,9 @@ $EndComp
 Entry Wire Line
 	8925 5200 9025 5300
 Entry Wire Line
-	8925 6500 9025 6600
+	8925 6300 9025 6400
 Entry Wire Line
-	8925 4900 9025 5000
-Entry Wire Line
-	8925 5000 9025 5100
+	8925 6400 9025 6500
 $Comp
 L F_Small F1
 U 1 1 576B5A2D
@@ -783,8 +771,6 @@ Wire Wire Line
 	5350 6000 6050 6000
 Wire Bus Line
 	9025 7825 9025 3150
-Wire Wire Line
-	12400 4200 12800 4200
 Connection ~ 9900 4900
 Connection ~ 9900 2550
 Wire Wire Line
@@ -822,9 +808,7 @@ Wire Wire Line
 Wire Bus Line
 	11300 3200 11300 6200
 Wire Bus Line
-	12300 3200 12300 4300
-Wire Wire Line
-	12400 4100 12800 4100
+	12300 3200 12300 4175
 Wire Wire Line
 	12400 4000 12800 4000
 Wire Wire Line
@@ -915,7 +899,7 @@ Wire Wire Line
 Wire Wire Line
 	9900 2500 9900 2650
 Wire Bus Line
-	14100 3200 14100 3700
+	14100 3200 14100 4100
 Wire Wire Line
 	4375 5850 4375 5550
 Wire Wire Line
@@ -932,35 +916,20 @@ Wire Wire Line
 Wire Wire Line
 	3525 6250 3800 6250
 Wire Wire Line
-	12400 4300 12800 4300
+	12700 4500 12800 4500
 Wire Wire Line
-	12800 4400 12400 4400
+	12700 4300 12700 4625
 Wire Wire Line
-	12800 4500 12700 4500
-Wire Wire Line
-	12700 4500 12700 4625
-Wire Wire Line
-	13750 4500 13600 4500
-Wire Wire Line
-	13750 3900 13750 4650
-Wire Wire Line
-	13600 3900 13750 3900
+	13600 4500 13850 4500
 Connection ~ 13750 4500
 Wire Wire Line
-	13600 4400 13750 4400
+	13750 4400 13600 4400
 Connection ~ 13750 4400
 Wire Wire Line
-	13600 4300 13750 4300
+	13600 4300 13850 4300
 Connection ~ 13750 4300
 Wire Wire Line
 	13600 4200 13750 4200
-Connection ~ 13750 4200
-Wire Wire Line
-	13600 4100 13750 4100
-Connection ~ 13750 4100
-Wire Wire Line
-	13600 4000 13750 4000
-Connection ~ 13750 4000
 Wire Bus Line
 	14100 3200 11300 3200
 Connection ~ 3675 6250
@@ -1008,12 +977,6 @@ Wire Wire Line
 Connection ~ 7150 6975
 Wire Wire Line
 	8925 5200 8450 5200
-Wire Wire Line
-	8450 4900 8925 4900
-Wire Wire Line
-	8450 5000 8925 5000
-Wire Wire Line
-	8925 6500 8450 6500
 Wire Wire Line
 	8450 6600 8925 6600
 Wire Wire Line
@@ -1234,8 +1197,8 @@ F 3 "" H 9775 7725 50  0000 C CNN
 	1    9775 7725
 	0    1    1    0   
 $EndComp
-NoConn ~ 8450 6300
-NoConn ~ 8450 6400
+NoConn ~ 8450 4900
+NoConn ~ 8450 5000
 NoConn ~ 6050 6600
 NoConn ~ 6050 6500
 NoConn ~ 6050 6400
@@ -1244,4 +1207,158 @@ NoConn ~ 6050 5600
 NoConn ~ 6050 5500
 NoConn ~ 6050 5900
 NoConn ~ 6025 8225
+$Comp
+L C C4
+U 1 1 576B0543
+P 2875 8175
+F 0 "C4" H 2925 8275 50  0000 L CNN
+F 1 "100n" H 2925 8075 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 2875 8175 60  0001 C CNN
+F 3 "" H 2875 8175 60  0001 C CNN
+	1    2875 8175
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C5
+U 1 1 576B084B
+P 3250 8175
+F 0 "C5" H 3300 8275 50  0000 L CNN
+F 1 "100n" H 3300 8075 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 3250 8175 60  0001 C CNN
+F 3 "" H 3250 8175 60  0001 C CNN
+	1    3250 8175
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C6
+U 1 1 576B08C8
+P 3575 8175
+F 0 "C6" H 3625 8275 50  0000 L CNN
+F 1 "10n" H 3625 8075 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 3575 8175 60  0001 C CNN
+F 3 "" H 3575 8175 60  0001 C CNN
+	1    3575 8175
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C9
+U 1 1 576B0944
+P 3900 8175
+F 0 "C9" H 3950 8275 50  0000 L CNN
+F 1 "10n" H 3950 8075 50  0000 L CNN
+F 2 "Capacitors_SMD:C_0805" H 3900 8175 60  0001 C CNN
+F 3 "" H 3900 8175 60  0001 C CNN
+	1    3900 8175
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2875 8325 2875 8425
+Wire Wire Line
+	2875 8425 3900 8425
+Wire Wire Line
+	3900 8425 3900 8325
+Wire Wire Line
+	3575 8325 3575 8425
+Connection ~ 3575 8425
+Wire Wire Line
+	3250 8325 3250 8550
+Connection ~ 3250 8425
+Wire Wire Line
+	2875 8025 2875 7900
+Wire Wire Line
+	2875 7900 3900 7900
+Wire Wire Line
+	3900 7900 3900 8025
+Wire Wire Line
+	3575 8025 3575 7900
+Connection ~ 3575 7900
+Wire Wire Line
+	3250 7800 3250 8025
+Connection ~ 3250 7900
+$Comp
+L +5V #PWR021
+U 1 1 576B0F5D
+P 3250 7800
+F 0 "#PWR021" H 3250 7890 20  0001 C CNN
+F 1 "+5V" H 3250 7890 30  0000 C CNN
+F 2 "" H 3250 7800 60  0001 C CNN
+F 3 "" H 3250 7800 60  0001 C CNN
+	1    3250 7800
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND-RESCUE-gpib_adapter #PWR022
+U 1 1 576B0FEF
+P 3250 8550
+F 0 "#PWR022" H 3250 8550 30  0001 C CNN
+F 1 "GND" H 3250 8480 30  0001 C CNN
+F 2 "" H 3250 8550 60  0001 C CNN
+F 3 "" H 3250 8550 60  0001 C CNN
+	1    3250 8550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	13750 4200 13750 4650
+Wire Wire Line
+	12800 4300 12700 4300
+Connection ~ 12700 4500
+Wire Wire Line
+	12800 4400 12700 4400
+Connection ~ 12700 4400
+Entry Wire Line
+	14000 4000 14100 3900
+Entry Wire Line
+	14000 4100 14100 4000
+Wire Wire Line
+	13600 4100 14000 4100
+Wire Wire Line
+	14000 4000 13600 4000
+Entry Wire Line
+	12300 4000 12400 4100
+Entry Wire Line
+	12300 4100 12400 4200
+Wire Wire Line
+	12400 4100 12800 4100
+Wire Wire Line
+	12800 4200 12400 4200
+Wire Wire Line
+	13600 3900 13800 3900
+Wire Wire Line
+	13800 3900 13800 3850
+Wire Wire Line
+	13800 3850 14225 3850
+Wire Wire Line
+	14225 3850 14225 4500
+$Comp
+L C C10
+U 1 1 576C4965
+P 14000 4500
+F 0 "C10" V 14050 4400 50  0000 C CNN
+F 1 "C" V 14050 4575 50  0000 C CNN
+F 2 "Capacitors_SMD:C_1206" H 14038 4350 50  0001 C CNN
+F 3 "" H 14000 4500 50  0000 C CNN
+	1    14000 4500
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	14225 4500 14150 4500
+$Comp
+L R R7
+U 1 1 576C4E2E
+P 14000 4300
+F 0 "R7" V 13950 4150 50  0000 C CNN
+F 1 "R" V 13950 4450 50  0000 C CNN
+F 2 "Resistors_SMD:R_1206" V 13930 4300 50  0001 C CNN
+F 3 "" H 14000 4300 50  0000 C CNN
+	1    14000 4300
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	14150 4300 14225 4300
+Connection ~ 14225 4300
+Wire Wire Line
+	8450 6400 8925 6400
+Wire Wire Line
+	8925 6300 8450 6300
+NoConn ~ 8450 6500
 $EndSCHEMATC
