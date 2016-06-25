@@ -1,8 +1,6 @@
 #include "hal/hal_gpib.h"
 #include <hal/hal_timer.h>
 #include "lib_gpib.h"
-#include <diag.h>
-#include <avr/delay.h>
 #include <assert.h>
 
 static char myAddress = 0xFF;

@@ -1,21 +1,17 @@
 #include <stdio.h>
-#include <HardwareProfile.h>
-#include <util/delay.h>
+#include <hal/HardwareProfile.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "lib/lib_gpib.h"
-#include "hal/hal_uart.h"
 #include "hal/hal_sys.h"
-#include "drivers/stdiodrv.h"
 #include "input/input.h"
 #include "sys/system.h"
-#include <diag.h>
 
 #define BUFFER_SIZE 250
 char inbuff[BUFFER_SIZE];
 // Stdout definition. Used for printf.
-static FILE uart_stdout = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
+//static FILE uart_stdout = FDEV_SETUP_STREAM(uart_putchar, uart_getchar, _FDEV_SETUP_RW);
 
 static int _isdigit(char* args);
 static void do_print_syserror(syserr err);
@@ -29,8 +25,8 @@ int main(void)
     hal_sys_enter_critical();
     hal_sys_init();
     hal_uart_init(NULL);
-    stdout = &uart_stdout;
-    stdin = &uart_stdout;
+    //stdout = &uart_stdout;
+    //stdin = &uart_stdout;
     // Interrupts enabled after configuration
     hal_sys_exit_critical();
     sys_init();

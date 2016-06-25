@@ -1,6 +1,5 @@
 #include "HardwareProfile.h"
 #include <assert.h>
-#include <diag.h>
 #include "hal_gpib.h"
 
 #define _spinmcr(pin, func)do{ \

@@ -16,3 +16,5 @@
 *.pdf
 *autosave*
 /src/.dep/
+/mplab.X/nbproject/private/
+/mplab.X/build/default/

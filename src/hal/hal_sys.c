@@ -21,8 +21,6 @@
  * Created on September 14, 2015, 10:23 PM
  */
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include "hal_sys.h"
 #include "HardwareProfile.h"
 

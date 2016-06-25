@@ -21,8 +21,7 @@
  * Created on October 9, 2015, 8:44 PM
  */
 
-#include <avr/eeprom.h>
-#include <diag.h>
+#include <xc.h>
 #include "system.h"
 #include "lib/lib_gpib.h"
 #include "hal/hal_gpib.h"

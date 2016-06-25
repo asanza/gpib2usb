@@ -22,8 +22,7 @@
  */
 
 #include "hal_timer.h"
-#include <avr/io.h>
-#include <avr/interrupt.h>
+#include <xc.h>
 
 static bool oneshoot = true;
 static int period; 

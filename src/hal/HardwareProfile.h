@@ -1,6 +1,8 @@
 #ifndef _HARDWAREPROFILE_H_
 #define _HARDWAREPROFILE_H_
-#include <avr/io.h>
+
+#include <p18f4550.h>
+
 #define BIT0 0x00
 #define BIT1 0x01
 #define BIT2 0x02
