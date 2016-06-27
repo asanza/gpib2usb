@@ -1,1 +1,3 @@
-Simple Gpib 2 usb adapter
+# GPIB (IEEE-488) to usb adapter
+
+![gpib2usb](doc/cad.png)
