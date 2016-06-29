@@ -24,7 +24,7 @@
  *  with this software.  If not, see <http://www.apache.org/licenses/>.
  */
 
-#include "../../usb_config.h"
+#include "usb_config.h"
 
 #include <usb_ch9.h>
 #include <usb.h>

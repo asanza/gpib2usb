@@ -42,7 +42,7 @@
 
 #include <string.h>
 
-#include "../../usb_config.h"
+#include "usb_config.h"
 #include "usb.h"
 #include "usb_hal.h"
 #include "usb_ch9.h"

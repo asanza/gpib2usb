@@ -40,7 +40,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "../../usb_config.h"
+#include "usb_config.h"
 
 /* setup_packet is defined in usb_ch9.h */
 struct setup_packet;

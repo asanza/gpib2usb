@@ -20,161 +20,16 @@
  */
 
 #include "usb.h"
-#include <xc.h>
+#include "hal/hal_sys.h"
 #include <string.h>
 #include "usb_config.h"
 #include "usb_ch9.h"
 #include "usb_cdc.h"
 
-#ifdef __PIC32MX__
-	#include <plib.h>
-#endif
-
-#ifdef __PIC24FJ64GB002__
-_CONFIG1(WDTPS_PS16 & FWPSA_PR32 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx1 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-_CONFIG2(POSCMOD_NONE & I2C1SEL_PRI & IOL1WAY_OFF & OSCIOFNC_OFF & FCKSM_CSDCMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
-_CONFIG3(WPFP_WPFP0 & SOSCSEL_IO & WUTSEL_LEG & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-_CONFIG4(DSWDTPS_DSWDTPS3 & DSWDTOSC_SOSC & RTCOSC_SOSC & DSBOREN_OFF & DSWDTEN_OFF)
-
-#elif __PIC24FJ256DA206__
-_CONFIG1(WDTPS_PS32768 & FWPSA_PR128 & WINDIS_OFF & FWDTEN_OFF & ICS_PGx2 & GWRP_OFF & GCP_OFF & JTAGEN_OFF)
-_CONFIG2(POSCMOD_NONE & IOL1WAY_OFF & OSCIOFNC_ON & FCKSM_CSECMD & FNOSC_FRCPLL & PLL96MHZ_ON & PLLDIV_NODIV & IESO_OFF)
-_CONFIG3(WPFP_WPFP255 & SOSCSEL_SOSC & WUTSEL_LEG & ALTPMP_ALPMPDIS & WPDIS_WPDIS & WPCFG_WPCFGDIS & WPEND_WPENDMEM)
-
-#elif _18F46J50
-#pragma config PLLDIV = 3 /* 3 = Divide by 3. 12MHz crystal => 4MHz */
-#pragma config XINST = OFF
-#pragma config WDTEN = OFF
-#pragma config CPUDIV = OSC1
-#pragma config IESO = OFF
-#pragma config FCMEN = OFF
-#pragma config LPT1OSC = OFF
-#pragma config T1DIG = ON
-#pragma config OSC = ECPLL
-#pragma config DSWDTEN = OFF
-#pragma config IOL1WAY = OFF
-#pragma config WPDIS = OFF /* This pragma seems backwards */
-
-#elif _16F1459
-#pragma config FOSC = INTOSC
-#pragma config WDTE = OFF
-#pragma config PWRTE = OFF
-#pragma config MCLRE = ON
-#pragma config CP = OFF
-#pragma config BOREN = ON
-#pragma config CLKOUTEN = OFF
-#pragma config IESO = OFF
-#pragma config FCMEN = OFF
-#pragma config WRT = OFF
-#pragma config CPUDIV = NOCLKDIV
-#pragma config USBLSCLK = 48MHz
-#pragma config PLLMULT = 3x
-#pragma config PLLEN = ENABLED
-#pragma config STVREN = ON
-#pragma config BORV = LO
-#pragma config LPBOR = ON
-#pragma config LVP = OFF
-
-#elif _16F1454
-#pragma config FOSC = INTOSC
-#pragma config WDTE = OFF
-#pragma config PWRTE = OFF
-#pragma config MCLRE = ON
-#pragma config CP = OFF
-#pragma config BOREN = ON
-#pragma config CLKOUTEN = OFF
-#pragma config IESO = OFF
-#pragma config FCMEN = OFF
-#pragma config WRT = OFF
-#pragma config CPUDIV = NOCLKDIV
-#pragma config USBLSCLK = 48MHz
-#pragma config PLLMULT = 3x
-#pragma config PLLEN = ENABLED
-#pragma config STVREN = ON
-#pragma config BORV = LO
-#pragma config LPBOR = ON
-#pragma config LVP = OFF
-
-#elif __32MX460F512L__
-#pragma config DEBUG = OFF, ICESEL = ICS_PGx2, PWP = OFF, BWP = OFF, CP = OFF
-#pragma config FNOSC = PRIPLL, FSOSCEN = OFF, IESO = OFF, POSCMOD = HS, \
-	       OSCIOFNC = OFF, FPBDIV = DIV_1, FCKSM = CSDCMD, WDTPS = PS1, \
-	       FWDTEN = OFF
-#pragma config FPLLIDIV = DIV_2, FPLLMUL = MUL_15, UPLLIDIV = DIV_2, \
-	       UPLLEN = ON, FPLLODIV = DIV_1
-
-#elif _18F2550
-
-// CONFIG1L
-#pragma config PLLDIV = 1      // PLL Prescaler Selection bits (Divide by 1 (4 MHz oscillator input))
-#pragma config CPUDIV = OSC1_PLL2// System Clock Postscaler Selection bits ([Primary Oscillator Src: /1][96 MHz PLL Src: /2])
-#pragma config USBDIV = 2       // USB Clock Selection bit (used in Full-Speed USB mode only; UCFG:FSEN = 1) (USB clock source comes from the 96 MHz PLL divided by 2)
-
-// CONFIG1H
-#pragma config FOSC = HSPLL_HS  // Oscillator Selection bits (HS oscillator, PLL enabled (HSPLL))
-#pragma config FCMEN = OFF      // Fail-Safe Clock Monitor Enable bit (Fail-Safe Clock Monitor disabled)
-#pragma config IESO = ON      // Internal/External Oscillator Switchover bit (Oscillator Switchover mode disabled)
-
-// CONFIG2L
-#pragma config PWRT = ON       // Power-up Timer Enable bit (PWRT disabled)
-#pragma config BOR = ON         // Brown-out Reset Enable bits (Brown-out Reset enabled in hardware only (SBOREN is disabled))
-#pragma config BORV = 3         // Brown-out Reset Voltage bits (Minimum setting 2.05V)
-#pragma config VREGEN = ON     // USB Voltage Regulator Enable bit (USB voltage regulator enabled)
-
-// CONFIG2H
-#pragma config WDT = OFF        // Watchdog Timer Enable bit (WDT disabled (control is placed on the SWDTEN bit))
-#pragma config WDTPS = 32768    // Watchdog Timer Postscale Select bits (1:32768)
-
-// CONFIG3H
-#pragma config CCP2MX = ON      // CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
-#pragma config PBADEN = OFF     // PORTB A/D Enable bit (PORTB<4:0> pins are configured as digital I/O on Reset)
-#pragma config LPT1OSC = OFF    // Low-Power Timer 1 Oscillator Enable bit (Timer1 configured for higher power operation)
-#pragma config MCLRE = ON       // MCLR Pin Enable bit (MCLR pin enabled; RE3 input pin disabled)
-
-// CONFIG4L
-#pragma config STVREN = ON      // Stack Full/Underflow Reset Enable bit (Stack full/underflow will cause Reset)
-#pragma config LVP = OFF         // Single-Supply ICSP Enable bit (Single-Supply ICSP disabled)
-#pragma config XINST = OFF      // Extended Instruction Set Enable bit (Instruction set extension and Indexed Addressing mode disabled (Legacy mode))
-
-// CONFIG5L
-#pragma config CP0 = OFF        // Code Protection bit (Block 0 (000800-001FFFh) is not code-protected)
-#pragma config CP1 = OFF        // Code Protection bit (Block 1 (002000-003FFFh) is not code-protected)
-#pragma config CP2 = OFF        // Code Protection bit (Block 2 (004000-005FFFh) is not code-protected)
-#pragma config CP3 = OFF        // Code Protection bit (Block 3 (006000-007FFFh) is not code-protected)
-
-// CONFIG5H
-#pragma config CPB = OFF        // Boot Block Code Protection bit (Boot block (000000-0007FFh) is not code-protected)
-#pragma config CPD = OFF        // Data EEPROM Code Protection bit (Data EEPROM is not code-protected)
-
-// CONFIG6L
-#pragma config WRT0 = OFF       // Write Protection bit (Block 0 (000800-001FFFh) is not write-protected)
-#pragma config WRT1 = OFF       // Write Protection bit (Block 1 (002000-003FFFh) is not write-protected)
-#pragma config WRT2 = OFF       // Write Protection bit (Block 2 (004000-005FFFh) is not write-protected)
-#pragma config WRT3 = OFF       // Write Protection bit (Block 3 (006000-007FFFh) is not write-protected)
-
-// CONFIG6H
-#pragma config WRTC = OFF       // Configuration Register Write Protection bit (Configuration registers (300000-3000FFh) are not write-protected)
-#pragma config WRTB = OFF       // Boot Block Write Protection bit (Boot block (000000-0007FFh) is not write-protected)
-#pragma config WRTD = OFF       // Data EEPROM Write Protection bit (Data EEPROM is not write-protected)
-
-// CONFIG7L
-#pragma config EBTR0 = OFF      // Table Read Protection bit (Block 0 (000800-001FFFh) is not protected from table reads executed in other blocks)
-#pragma config EBTR1 = OFF      // Table Read Protection bit (Block 1 (002000-003FFFh) is not protected from table reads executed in other blocks)
-#pragma config EBTR2 = OFF      // Table Read Protection bit (Block 2 (004000-005FFFh) is not protected from table reads executed in other blocks)
-#pragma config EBTR3 = OFF      // Table Read Protection bit (Block 3 (006000-007FFFh) is not protected from table reads executed in other blocks)
-
-// CONFIG7H
-#pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) is not protected from table reads executed in other blocks)
-
-#else
-	#error "Config flags for your device not defined"
-
-#endif
-
 #ifdef MULTI_CLASS_DEVICE
 static uint8_t cdc_interfaces[] = { 0 };
 #endif
-
+int temp = 0;
 static void send_string_sync(uint8_t endpoint, const char *str)
 {
 	char *in_buf = (char*) usb_get_in_buffer(endpoint);
@@ -190,42 +45,7 @@ static void send_string_sync(uint8_t endpoint, const char *str)
 
 int main(void)
 {
-#if defined(__PIC24FJ64GB002__) || defined(__PIC24FJ256DA206__)
-	unsigned int pll_startup_counter = 600;
-	CLKDIVbits.PLLEN = 1;
-	while(pll_startup_counter--);
-#elif _18F46J50
-	unsigned int pll_startup = 600;
-	OSCTUNEbits.PLLEN = 1;
-	while (pll_startup--)
-		;
-
-#elif _18F2550
-	TRISBbits.TRISB5 = 0;
-	LATBbits.LATB5 = 1;
-#elif _16F1459 || _16F1454
-	OSCCONbits.IRCF = 0b1111; /* 0b1111 = 16MHz HFINTOSC postscalar */
-
-	/* Enable Active clock-tuning from the USB */
-	ACTCONbits.ACTSRC = 1; /* 1=USB */
-	ACTCONbits.ACTEN = 1;
-#elif __32MX460F512L__
-	SYSTEMConfigPerformance(80000000);
-#endif
-
-
-/* Configure interrupts, per architecture */
-#ifdef USB_USE_INTERRUPTS
-	#if defined (_PIC18) || defined(_PIC14E)
-		INTCONbits.PEIE = 1;
-		INTCONbits.GIE = 1;
-	#elif __PIC32MX__
-		INTCONbits.MVEC = 1; /* Multi-vector interrupts */
-		IPC11bits.USBIP = 4; /* Interrupt priority, must set to != 0. */
-		__asm volatile("ei");
-	#endif
-#endif
-
+    hal_sys_init();
 #ifdef MULTI_CLASS_DEVICE
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
@@ -330,8 +150,8 @@ int main(void)
 						"\th: help\r\n");
 				}
 				else if (out_buf[0] == 's'){
-					LATBbits.LATB5 ^= 1;
-					if(LATBbits.LATB5)
+					temp ^= 1;
+					if(temp)
 						send_string_sync(2, "LEDD ON\r\n");
 					else
 						send_string_sync(2, "LED OFF\r\n");

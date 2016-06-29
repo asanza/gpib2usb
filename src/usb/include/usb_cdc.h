@@ -37,7 +37,7 @@
  */
 
 #include <stdint.h>
-#include "../../usb_config.h"
+#include "usb_config.h"
 
 #if defined(__XC16__) || defined(__XC32__)
 #pragma pack(push, 1)
