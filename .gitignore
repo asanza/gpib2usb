@@ -1,4 +1,6 @@
-/src/nbproject/private/
+MPLAB.X/nbproject/private/
+MPLAB.X/dist
+MPLAB.X/build
 *.bak
 *.elf
 *.eep

@@ -1,19 +1,25 @@
-"Id";"Designator";"Package";"Quantity";"Designation";"Supplier and ref";
-1;"D2";"LED_16x08mm";1;"LED_X2";;;
-2;"P2";"USB-SMD";1;"USB";;;
-3;"P3";"PIN_ARRAY_5X1_large_pads";1;"GPIO";;;
-4;"P4";"PIN_ARRAY_4X1_large_pads";1;"UART";;;
-5;"P6";"PIN_ARRAY_4X1_large_pads";1;"PWR_JMP";;;
-6;"P5";"CENTRONICS_24PIN_MALE_90_NorComp_112-024-113R001";1;"GPIB";;;
-7;"U1";"SO20L";1;"SN75160";;;
-8;"U2";"SO20L";1;"SN75161";;;
-9;"R4,R1";"SM0805";2;"2.2k";;;
-10;"R2,R3";"SM0805";2;"22";;;
-11;"C7,C8,C6,C3,C5,C2";"SM0603_Capa";6;"100n";;;
-12;"IC1";"TQFP44";1;"ATMEGA16U4";;;
-13;"C1";"SM0805";1;"100n";;;
-14;"L1";"SM0805";1;"Ferrite";;;
-15;"C4";"SM0805";1;"1µ";;;
-16;"P1";"SOLPAD_3X2";1;"ISP";;;
-17;"R5,R7,R6";"SM0805";3;"R";;;
-18;"D1";"LED-0603";1;"PWR";;;
+"Source:","/home/diego/Projects/gpib2usb/pcb/gpib_adapter.sch"
+"Date:","Mi 29 Jun 2016 20:20:03 CEST"
+"Tool:","Eeschema 4.1.0-alpha+201606241232+6946~45~ubuntu16.04.1-product"
+"Generator:","/home/diego/Electronics/Libraries/scripts/bom_csv_grouped_by_value_with_fp.py"
+"Component Count:","29"
+"Ref","Qnty","Value","Cmp name","Footprint","Description","Vendor"
+"C1, ","1","1u","C","Capacitors_SMD:C_0805","Unpolarized capacitor",""
+"C3, C2, ","2","18p","C","Capacitors_SMD:C_0805","Unpolarized capacitor",""
+"C6, C9, ","2","10n","C","Capacitors_SMD:C_0805","Unpolarized capacitor",""
+"C7, C8, C4, C5, ","4","100n","C","Capacitors_SMD:C_0805","Unpolarized capacitor",""
+"C10, ","1","C","C","Capacitors_SMD:C_1206","Unpolarized capacitor",""
+"D1, D2, D3, ","3","PWR","LED-RESCUE-gpib_adapter","LEDs:LED-5MM","",""
+"D4, ","1","PRTR5V0U2X","PRTR5V0U2X","esd_protection:PRTR5V0U2X","",""
+"F1, ","1","F_Small","F_Small","Resistors_SMD:R_1210","Fuse",""
+"P1, ","1","TC2030-MCP","TC2030-MCP","tagconnect:TC2030-NL_SMALL","",""
+"P2, ","1","USB","CONN_5","Connect:USB_B","",""
+"P5, ","1","GPIB","CONN_12X2","gpib_conn_male:gpib_conn_male","",""
+"R1, ","1","R","R-RESCUE-gpib_adapter","Resistors_SMD:R_0805","",""
+"R2, R3, ","2","22","R","Resistors_SMD:R_0805","Resistor",""
+"R4, R5, R6, ","3","470","R","Resistors_SMD:R_0805","Resistor",""
+"R7, ","1","R","R","Resistors_SMD:R_1206","Resistor",""
+"U1, ","1","SN75160","SN75160","Housings_SOIC:SOIC-20_7.5x12.8mm_Pitch1.27mm","",""
+"U2, ","1","SN75161","SN75161","Housings_SOIC:SOIC-20_7.5x12.8mm_Pitch1.27mm","",""
+"U3, ","1","PIC18(L)F4550-I/PT","PIC18(L)F4550-I/PT","Housings_QFP:TQFP-44_10x10mm_Pitch0.8mm","PIC18(L)F4455, 24K Flash, 2K SRAM, 256 EEPROM, USB, nanoWatt XLP, TQFP44",""
+"X1, ","1","8MHz","CRYSTAL_SMD","Crystals:Crystal_SMD_5032_4Pads","",""

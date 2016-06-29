@@ -10,3 +10,6 @@ Here comes this little device to rescue. It is a gpib-to-usb adapter which after
 
 For now is yet a work in progress. So wait for updates.
 
+# USB Interface
+
+The device presents itself as a serial port. Following commands are available:
