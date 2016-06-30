@@ -1,0 +1,24 @@
+device pic18f4550
+hwtool sim
+set oscillator.frequency 	8
+set oscillator.frequencyunit 	Mega
+set oscillator.rcfrequency  	250
+set oscillator.rcfrequencyunit 	Kilo
+set uart1io.uartioenabled	true
+set uart1io.output		file
+set uart1io.outputfile		test/support/out.txt
+set system.disableerrormsg 	true
+set breakoptions.coreerrors 	Break
+set breakoptions.peripheralerrors Break
+set breakoptions.wdtwarnings 	Break
+set breakoptions.peripheralwarnings Break
+
+
+program build/test/TestBuild.elf
+
+
+
+run
+break unity.c:1168
+wait 5000
+quit

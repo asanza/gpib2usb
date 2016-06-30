@@ -1,6 +1,1 @@
-build/test/out/cmock.o: \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/cmock/src/cmock.c \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/unity/src/unity.h \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/unity/src/unity_internals.h \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/cmock/src/cmock_internals.h \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/cmock/src/cmock.h
+ build/test/out/cmock.d  build/test/out/cmock.p1:  /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/cmock/src/cmock.c /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/cmock/src/cmock.h /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity_internals.h /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity.h /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/cmock/src/cmock_internals.h

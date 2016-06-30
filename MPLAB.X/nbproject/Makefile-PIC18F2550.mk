@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../src/usb/src/usb_cdc.c ../src/usb/src/usb.c ../src/usb/src/usb_descriptors.c ../src/hal/fuses.c ../src/main.c ../src/hal/hal_sys.c
+SOURCEFILES_QUOTED_IF_SPACED=../src/hal/fuses.c ../src/hal/hal_sys.c ../src/usb/src/usb_cdc.c ../src/usb/src/usb.c ../src/usb/src/usb_descriptors.c ../src/main.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/432793633/usb_cdc.p1 ${OBJECTDIR}/_ext/432793633/usb.p1 ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1 ${OBJECTDIR}/_ext/659857049/fuses.p1 ${OBJECTDIR}/_ext/1360937237/main.p1 ${OBJECTDIR}/_ext/659857049/hal_sys.p1
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/432793633/usb_cdc.p1.d ${OBJECTDIR}/_ext/432793633/usb.p1.d ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d ${OBJECTDIR}/_ext/659857049/fuses.p1.d ${OBJECTDIR}/_ext/1360937237/main.p1.d ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/659857049/fuses.p1 ${OBJECTDIR}/_ext/659857049/hal_sys.p1 ${OBJECTDIR}/_ext/432793633/usb_cdc.p1 ${OBJECTDIR}/_ext/432793633/usb.p1 ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1 ${OBJECTDIR}/_ext/1360937237/main.p1
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/659857049/fuses.p1.d ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d ${OBJECTDIR}/_ext/432793633/usb_cdc.p1.d ${OBJECTDIR}/_ext/432793633/usb.p1.d ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d ${OBJECTDIR}/_ext/1360937237/main.p1.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/432793633/usb_cdc.p1 ${OBJECTDIR}/_ext/432793633/usb.p1 ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1 ${OBJECTDIR}/_ext/659857049/fuses.p1 ${OBJECTDIR}/_ext/1360937237/main.p1 ${OBJECTDIR}/_ext/659857049/hal_sys.p1
+OBJECTFILES=${OBJECTDIR}/_ext/659857049/fuses.p1 ${OBJECTDIR}/_ext/659857049/hal_sys.p1 ${OBJECTDIR}/_ext/432793633/usb_cdc.p1 ${OBJECTDIR}/_ext/432793633/usb.p1 ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1 ${OBJECTDIR}/_ext/1360937237/main.p1
 
 # Source Files
-SOURCEFILES=../src/usb/src/usb_cdc.c ../src/usb/src/usb.c ../src/usb/src/usb_descriptors.c ../src/hal/fuses.c ../src/main.c ../src/hal/hal_sys.c
+SOURCEFILES=../src/hal/fuses.c ../src/hal/hal_sys.c ../src/usb/src/usb_cdc.c ../src/usb/src/usb.c ../src/usb/src/usb_descriptors.c ../src/main.c
 
 
 CFLAGS=
@@ -87,6 +87,22 @@ MP_PROCESSOR_OPTION=18F2550
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/_ext/659857049/fuses.p1: ../src/hal/fuses.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
+	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/fuses.p1  ../src/hal/fuses.c 
+	@-${MV} ${OBJECTDIR}/_ext/659857049/fuses.d ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/fuses.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
+${OBJECTDIR}/_ext/659857049/hal_sys.p1: ../src/hal/hal_sys.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
+	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/hal_sys.p1  ../src/hal/hal_sys.c 
+	@-${MV} ${OBJECTDIR}/_ext/659857049/hal_sys.d ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 ${OBJECTDIR}/_ext/432793633/usb_cdc.p1: ../src/usb/src/usb_cdc.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/432793633" 
 	@${RM} ${OBJECTDIR}/_ext/432793633/usb_cdc.p1.d 
@@ -111,14 +127,6 @@ ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1: ../src/usb/src/usb_descriptors.c
 	@-${MV} ${OBJECTDIR}/_ext/432793633/usb_descriptors.d ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/_ext/659857049/fuses.p1: ../src/hal/fuses.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
-	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/fuses.p1  ../src/hal/fuses.c 
-	@-${MV} ${OBJECTDIR}/_ext/659857049/fuses.d ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/fuses.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/_ext/1360937237/main.p1: ../src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/main.p1.d 
@@ -127,15 +135,23 @@ ${OBJECTDIR}/_ext/1360937237/main.p1: ../src/main.c  nbproject/Makefile-${CND_CO
 	@-${MV} ${OBJECTDIR}/_ext/1360937237/main.d ${OBJECTDIR}/_ext/1360937237/main.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1360937237/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
+else
+${OBJECTDIR}/_ext/659857049/fuses.p1: ../src/hal/fuses.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
+	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
+	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/fuses.p1  ../src/hal/fuses.c 
+	@-${MV} ${OBJECTDIR}/_ext/659857049/fuses.d ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
+	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/fuses.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
+	
 ${OBJECTDIR}/_ext/659857049/hal_sys.p1: ../src/hal/hal_sys.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
 	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
 	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  -D__DEBUG=1 --debugger=pickit3  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/hal_sys.p1  ../src/hal/hal_sys.c 
+	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/hal_sys.p1  ../src/hal/hal_sys.c 
 	@-${MV} ${OBJECTDIR}/_ext/659857049/hal_sys.d ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-else
 ${OBJECTDIR}/_ext/432793633/usb_cdc.p1: ../src/usb/src/usb_cdc.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/432793633" 
 	@${RM} ${OBJECTDIR}/_ext/432793633/usb_cdc.p1.d 
@@ -160,14 +176,6 @@ ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1: ../src/usb/src/usb_descriptors.c
 	@-${MV} ${OBJECTDIR}/_ext/432793633/usb_descriptors.d ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/432793633/usb_descriptors.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
-${OBJECTDIR}/_ext/659857049/fuses.p1: ../src/hal/fuses.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
-	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/659857049/fuses.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/fuses.p1  ../src/hal/fuses.c 
-	@-${MV} ${OBJECTDIR}/_ext/659857049/fuses.d ${OBJECTDIR}/_ext/659857049/fuses.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/fuses.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
 ${OBJECTDIR}/_ext/1360937237/main.p1: ../src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/_ext/1360937237" 
 	@${RM} ${OBJECTDIR}/_ext/1360937237/main.p1.d 
@@ -175,14 +183,6 @@ ${OBJECTDIR}/_ext/1360937237/main.p1: ../src/main.c  nbproject/Makefile-${CND_CO
 	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/1360937237/main.p1  ../src/main.c 
 	@-${MV} ${OBJECTDIR}/_ext/1360937237/main.d ${OBJECTDIR}/_ext/1360937237/main.p1.d 
 	@${FIXDEPS} ${OBJECTDIR}/_ext/1360937237/main.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
-	
-${OBJECTDIR}/_ext/659857049/hal_sys.p1: ../src/hal/hal_sys.c  nbproject/Makefile-${CND_CONF}.mk
-	@${MKDIR} "${OBJECTDIR}/_ext/659857049" 
-	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
-	@${RM} ${OBJECTDIR}/_ext/659857049/hal_sys.p1 
-	${MP_CC} --pass1 $(MP_EXTRA_CC_PRE) --chip=$(MP_PROCESSOR_OPTION) -Q -G  --double=24 --float=24 --emi=wordwrite --opt=default,+asm,+asmfile,-speed,+space,-debug --addrqual=ignore --mode=free -P -N255 -I"../src/usb/include" --warn=-3 --asmlist --summary=default,-psect,-class,+mem,-hex,-file --output=default,-inhx032 --runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,-plib $(COMPARISON_BUILD)  --output=-mcof,+elf:multilocs --stack=compiled:auto:auto:auto "--errformat=%f:%l: error: (%n) %s" "--warnformat=%f:%l: warning: (%n) %s" "--msgformat=%f:%l: advisory: (%n) %s"    -o${OBJECTDIR}/_ext/659857049/hal_sys.p1  ../src/hal/hal_sys.c 
-	@-${MV} ${OBJECTDIR}/_ext/659857049/hal_sys.d ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d 
-	@${FIXDEPS} ${OBJECTDIR}/_ext/659857049/hal_sys.p1.d $(SILENT) -rsi ${MP_CC_DIR}../  
 	
 endif
 

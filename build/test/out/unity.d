@@ -1,4 +1,1 @@
-build/test/out/unity.o: \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/unity/src/unity.c \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/unity/src/unity.h \
- /home/diego/Electronics/Projects/USB-GPIB-adapter/vendor/ceedling/vendor/unity/src/unity_internals.h
+ build/test/out/unity.d  build/test/out/unity.p1:  /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity.c /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity_internals.h /home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity.h

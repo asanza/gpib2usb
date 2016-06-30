@@ -50,83 +50,25 @@ int main(void)
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
-	uint8_t char_to_send = 'A';
-	bool send = true;
 	bool loopback = false;
 
 	while (1) {
 
-		/* Send data to the PC */
-		/*if (usb_is_configured() &&
-		    !usb_in_endpoint_halted(2) &&
-		    !usb_in_endpoint_busy(2) && send) {
-
-			int i;
-			unsigned char *buf = usb_get_in_buffer(2);
-
-			for (i = 0; i < 16; i++) {
-				buf[i] = char_to_send++;
-				if (char_to_send > 'Z')
-					char_to_send = 'A';
-			}
-			buf[i++] = '\r';
-			buf[i++] = '\n';
-			usb_send_in_buffer(2, i);
-		}*/
-
 		/* Handle data received from the host */
-		if (usb_is_configured() &&
-		    !usb_out_endpoint_halted(2) &&
+		if (usb_is_configured() && !usb_out_endpoint_halted(2) &&
 		    usb_out_endpoint_has_data(2)) {
+
 			const unsigned char *out_buf;
 			size_t out_buf_len;
 			int i;
 
 			/* Check for an empty transaction. */
 			out_buf_len = usb_get_out_buffer(2, &out_buf);
-			if (out_buf_len <= 0)
-				goto empty;
+			
+			if (out_buf_len <= 0){
+				usb_arm_out_endpoint(2);
+			} else {
 
-			//if (send) {
-				/* Stop sendng if a key was hit. */
-			//	send = false;
-			//	send_string_sync(2, "Data send off ('h' for help)\r\n");
-			//}
-			else if (loopback) {
-				/* Loop data back to the PC */
-
-				/* Wait until the IN endpoint can accept it */
-				while (usb_in_endpoint_busy(2))
-					;
-
-				/* Copy contents of OUT buffer to IN buffer
-				 * and send back to host. */
-				memcpy(usb_get_in_buffer(2), out_buf, out_buf_len);
-				usb_send_in_buffer(2, out_buf_len);
-
-				/* Send a zero-length packet if the transaction
-				 * length was the same as the endpoint
-				 * length. This is for demo purposes. In real
-				 * life, you only need to do this if the data
-				 * you're transferring ends on a multiple of
-				 * the endpoint length. */
-				if (out_buf_len == EP_2_LEN) {
-					/* Wait until the IN endpoint can accept it */
-					while (usb_in_endpoint_busy(2))
-						;
-					usb_send_in_buffer(2, 0);
-				}
-
-				/* Scan for ~ character to end loopback mode */
-				for (i = 0; i < out_buf_len; i++) {
-					if (out_buf[i] == '~') {
-						loopback = false;
-						send_string_sync(2, "\r\nLoopback off ('h' for help)\r\n");
-						break;
-					}
-				}
-			}
-			else {
 				/* Scan for commands if not in loopback or
 				 * send mode.
 				 *
@@ -191,7 +133,6 @@ int main(void)
 					send_string_sync(2, "Notification Sent\r\n");
 				}
 			}
-empty:
 			usb_arm_out_endpoint(2);
 		}
 
@@ -328,20 +269,7 @@ int8_t app_send_break_callback(uint8_t interface, uint16_t duration)
 }
 
 
-#ifdef _PIC14E
-void interrupt isr()
-{
-	usb_service();
-}
-#elif _PIC18
-
-#ifdef __XC8
 void interrupt high_priority isr()
 {
 	usb_service();
 }
-#elif _PICC18
-#error need to make ISR
-#endif
-
-#endif

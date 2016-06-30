@@ -4,7 +4,7 @@
   :use_mocks: true
   :compile_threads: 1
   :test_threads: 1
-  :use_test_preprocessor: true
+  :use_test_preprocessor: false
   :use_deep_dependencies: false
   :test_file_prefix: test_
   :options_paths: []
@@ -20,10 +20,10 @@
   - "-:test/support"
   :source:
   - src/**
-  - src/hal
   :support:
   - test/support
-  :include: []
+  :include:
+  - "/opt/microchip/xc8/v1.37/include"
   :test_toolchain_include: []
   :release_toolchain_include: []
 :files:
@@ -34,35 +34,34 @@
   :include: []
 :environment:
 - :rake_columns: '120'
+- :path: "/bin:/usr/bin:/opt/microchip/xc8/v1.37/bin:/opt/microchip/mplabx/v3.30/mplab_ide/bin"
 :defines:
   :test:
+  - &1 []
   - TEST
-  - F_CPU=8000000UL
-  - DEBUG
   :test_preprocess:
+  - *1
   - TEST
   :release: []
   :release_preprocess: []
-  :commmon: 
+  :commmon: []
 :flags: {}
 :extension:
   :header: ".h"
   :source: ".c"
   :assembly: ".s"
-  :object: ".o"
-  :executable: ".elf"
+  :object: ".p1"
+  :executable: ".out"
   :map: ".map"
   :list: ".lst"
   :testpass: ".pass"
   :testfail: ".fail"
   :dependencies: ".d"
 :unity:
-  :defines:
-  - UNITY_INT_WIDTH=16
-  - UNITY_EXCLUDE_FLOAT
-  - '"UNITY_OUTPUT_CHAR(a)=_putchar(a)"'
-:cmock:
   :defines: []
+:cmock:
+  :defines:
+  - CMOCK_MEM_SIZE=256
   :mock_prefix: mock_
   :when_no_prototypes: :warn
   :enforce_strict_ordering: true
@@ -85,82 +84,70 @@
   :file_suffix: _runner
 :tools:
   :test_compiler:
-    :executable: avr-gcc
+    :executable: xc8
     :arguments:
-    - "-x c"
-    - "-c"
-    - "-g"
-    - "-gdwarf-2"
-    - "-funsigned-char"
-    - "-funsigned-bitfields"
-    - "-fpack-struct"
-    - "-fshort-enums"
-    - "-MMD"
-    - "-O0"
-    - "-Wall"
-    - "-mmcu=at90can128"
-    - "${1}"
-    - -o "${2}"
+    - "--pass1"
+    - "--chip=18F4550"
+    - "-Q"
+    - "-G"
+    - "--double=24"
+    - "--float=24"
+    - "--emi=wordwrite"
+    - "--opt=default,+asm,+asmfile,-speed,+space,-debug"
+    - "--addrqual=ignore"
+    - "--mode=free"
+    - "-P"
+    - "-N255"
+    - "--warn=0"
+    - "--asmlist"
     - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
     - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - "--summary=default,-psect,-class,+mem,-hex,-file"
+    - "--output=default,-inhx032"
+    - "--runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,+plib"
+    - "--output=-mcof,+elf:multilocs"
+    - "--stack=compiled:auto:auto:auto"
+    - -o"${2}"
+    - "${1}"
     :name: test_compiler
     :stderr_redirect: :none
     :background_exec: :none
     :optional: false
   :test_linker:
-    :executable: avr-gcc
+    :executable: xc8
     :arguments:
-    - "-mmcu=at90can128"
-    - "-gdwarf-2"
-    - "-funsigned-char"
-    - "-funsigned-bitfields"
+    - "--chip=18F4550"
+    - "-G"
+    - -m"./build/test/TestBuild.map"
+    - "--double=24"
+    - "--float=24"
+    - "--emi=wordwrite"
+    - "--opt=default,+asm,+asmfile,-speed,+space,-debug"
+    - "--addrqual=ignore --mode=free -P -N255"
+    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
+    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
+    - "--warn=0"
+    - "--asmlist"
+    - "--summary=default,-psect,-class,+mem,-hex,-file"
+    - "--output=default,-inhx032"
+    - "--runtime=default,+clear,+init,-keep,-no_startup,-download,+config,+clib,+plib"
+    - "--output=-mcof,+elf:multilocs"
+    - "--stack=compiled:auto:auto:auto"
+    - --memorysummary "./build/test/memoryfile.xml"
+    - -o"./build/test/TestBuild.elf"
     - "${1}"
-    - -o "./build/test/TestBuild.elf"
-    - "-Wl,-Map=./build/test/TestOutput.map,--cref"
     :name: test_linker
     :stderr_redirect: :none
     :background_exec: :none
     :optional: false
   :test_fixture:
     :executable: ruby
-    :name: Simulavr Test Fixture
+    :name: XC8 Test Fixture
     :stderr_redirect: :unix
     :arguments:
-    - test/simulation/sim_test_fixture.rb
+    - test/support/sim_test_fixture.rb
     :background_exec: :none
     :optional: false
-  :test_file_preprocessor:
-    :executable: gcc
-    :name: default_test_file_preprocessor
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - "-E"
-    - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - -I"$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - '"${1}"'
-    - -o "${2}"
-  :test_includes_preprocessor:
-    :executable: gcc
-    :name: default_test_includes_preprocessor
-    :stderr_redirect: :none
-    :background_exec: :none
-    :optional: false
-    :arguments:
-    - "-E"
-    - "-MM"
-    - "-MG"
-    - "-I$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
-    - "-I$": COLLECTION_PATHS_TEST_TOOLCHAIN_INCLUDE
-    - "-D$": COLLECTION_DEFINES_TEST_AND_VENDOR
-    - "-D$": DEFINES_TEST_PREPROCESS
-    - "-DGNU_COMPILER"
-    - "-w"
-    - '"${1}"'
 :test_compiler:
   :arguments: []
 :test_linker:
