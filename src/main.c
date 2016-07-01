@@ -54,6 +54,15 @@ int main(void)
 
 	while (1) {
 
+		if(!usb_is_configured()) continue;
+		if(usb_out_endpoint_halted(2)) continue;
+		gpib_read();
+		if(!usb_out_endpoint_has_data(2)) continue;
+		input_read();
+		input_parse();
+		input_execute();
+		usb_arm_out_endpoint(2);
+
 		/* Handle data received from the host */
 		if (usb_is_configured() && !usb_out_endpoint_halted(2) &&
 		    usb_out_endpoint_has_data(2)) {
@@ -68,7 +77,6 @@ int main(void)
 			if (out_buf_len <= 0){
 				usb_arm_out_endpoint(2);
 			} else {
-
 				/* Scan for commands if not in loopback or
 				 * send mode.
 				 *

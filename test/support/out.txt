@@ -1,10 +1,8 @@
-test_parser.c:38:test_input_data:PASS
-atest_parser.c:49:test_input_addr:PASS
-33test_parser.c:60:test_input_addr_cmd:PASS
-33test_parser.c:71:test_input_addr_cmd_2:PASS
-33test_parser.c:82:test_input_addr_cmd_3:PASS
-test_parser.c:101:test_input_data2:FAIL: Memory Mismatch. Byte 5 Expected 0x0A Was 0x3F
+test_input.c:34:test_read_line:PASS
+test_input.c:44:test_read_line_cr:PASS
+test_input.c:55:test_read_line_esc:PASS
+test_input.c:66:test_read_line_esc2:PASS
 
 -----------------------
-6 Tests 1 Failures 0 Ignored 
-FAIL
+4 Tests 0 Failures 0 Ignored 
+OK

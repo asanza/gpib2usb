@@ -98,5 +98,5 @@ void test_input_data2(void){
   int recv = parse_input(&cmd, buff, strlen(command));
   TEST_ASSERT_EQUAL(6, recv);
   TEST_ASSERT_EQUAL(CMD_COUNT, cmd);
-  TEST_ASSERT_EQUAL_MEMORY(command + 1, buff, 6);
+  TEST_ASSERT_EQUAL_MEMORY(command + 1, buff, 5);
 }

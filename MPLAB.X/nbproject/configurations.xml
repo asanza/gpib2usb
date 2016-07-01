@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="sys" displayName="sys" projectFiles="true">
+        <itemPath>../src/sys/parser.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="usb" displayName="usb" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
           <itemPath>../src/usb/include/usb_microsoft.h</itemPath>
@@ -33,6 +36,9 @@
           <itemPath>../src/hal/fuses.c</itemPath>
           <itemPath>../src/hal/hal_sys.c</itemPath>
           <itemPath>../src/hal/hal_sys.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="sys" displayName="sys" projectFiles="true">
+          <itemPath>../src/sys/parser.c</itemPath>
         </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <logicalFolder name="include" displayName="include" projectFiles="true">

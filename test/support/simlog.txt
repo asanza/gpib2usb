@@ -47,17 +47,17 @@ break unity.c:1168
 Breakpoint 0 at file unity.c, line 1168.
 wait 5000
 
-Single breakpoint: @0x63F2
+Single breakpoint: @0x6CF8
 Simulator halted
 Stop at
-	address:0x63f2
+	address:0x6cf8
 	file:/home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity.c
 	source line:1168
 
 >
 quit
 Stop at
-	address:0x63f2
+	address:0x6cf8
 	file:/home/diego/Projects/gpib2usb/vendor/ceedling/vendor/unity/src/unity.c
 	source line:1168
 
