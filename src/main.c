@@ -59,12 +59,9 @@ int main(void)
 #endif
 	usb_init();
 	bool loopback = false;
-
 	while (1) {
-
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
-		//gpib_read();
 		if(!usb_out_endpoint_has_data(2)) continue;
 		const unsigned char *out_buf;
 		size_t len;
@@ -79,6 +76,7 @@ int main(void)
             write_buffer_sync(str, len);
 		}
 		usb_arm_out_endpoint(2);
+		//gpib_tasks();
 	}
 	return 0;
 }
