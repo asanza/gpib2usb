@@ -1,8 +1,0 @@
-test_input.c:34:test_read_line:PASS
-test_input.c:44:test_read_line_cr:PASS
-test_input.c:55:test_read_line_esc:PASS
-test_input.c:66:test_read_line_esc2:PASS
-
------------------------
-4 Tests 0 Failures 0 Ignored 
-OK

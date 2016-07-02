@@ -23,3 +23,12 @@ build/
 /src/.dep/
 /mplab.X/nbproject/private/
 /mplab.X/build/default/
+
+MPLAB.X/nbproject/Makefile*
+
+*.step
+*.pov
+*.emn
+*.emp
+*.wrl
+test/support/out.txt

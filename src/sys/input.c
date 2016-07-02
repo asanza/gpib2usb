@@ -22,25 +22,25 @@
  */
 
 #include "input.h"
+#include "sysdefs.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
 
 static char ibuffer[INPUT_SIZE];
-static int olen = 0;
+static int olen = 0, len = 0;
 
 int read_line(const char* buffer, size_t size){
-	char *dst = ibuffer;
-	int len = 0;
+	char *dst = &ibuffer[len];
 	while(size--){
 		*dst++ = *buffer++; len++;
 		if(len >= INPUT_SIZE){
 			len = 0;
 			return -1;
 		}
-		if(ibuffer[len - 1] == '\r' || ibuffer[len - 1] == '\n'){
+		if(ibuffer[len - 1] == CR || ibuffer[len - 1] == LF){
 			if(len > 1 ){
-				if(ibuffer[len - 2] == 0x1B)
+				if(ibuffer[len - 2] == ESC)
 					continue;
 			}
 			olen = len;

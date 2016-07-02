@@ -21,6 +21,8 @@
 
 #include "usb.h"
 #include "hal/hal_sys.h"
+#include "sys/input.h"
+#include "sys/parser.h"
 #include <string.h>
 #include "usb_config.h"
 #include "usb_ch9.h"
@@ -34,13 +36,19 @@ static void send_string_sync(uint8_t endpoint, const char *str)
 {
 	char *in_buf = (char*) usb_get_in_buffer(endpoint);
 
-	while (usb_in_endpoint_busy(endpoint))
-		;
+	while (usb_in_endpoint_busy(endpoint));
 
 	strcpy(in_buf, str);
 	/* Hack: Get the length from strlen(). This is inefficient, but it's
 	 * just a demo. strlen()'s return excludes the terminating NULL. */
 	usb_send_in_buffer(endpoint, strlen(in_buf));
+}
+
+static void write_buffer_sync(const char* str, int len){
+   			char *in_buf = (char*) usb_get_in_buffer(2);
+			while (usb_in_endpoint_busy(2));
+			strncpy(in_buf, str, len);
+			usb_send_in_buffer(2, len);
 }
 
 int main(void)
@@ -56,99 +64,22 @@ int main(void)
 
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
-		gpib_read();
+		//gpib_read();
 		if(!usb_out_endpoint_has_data(2)) continue;
-		input_read();
-		input_parse();
-		input_execute();
-		usb_arm_out_endpoint(2);
-
-		/* Handle data received from the host */
-		if (usb_is_configured() && !usb_out_endpoint_halted(2) &&
-		    usb_out_endpoint_has_data(2)) {
-
-			const unsigned char *out_buf;
-			size_t out_buf_len;
-			int i;
-
-			/* Check for an empty transaction. */
-			out_buf_len = usb_get_out_buffer(2, &out_buf);
-			
-			if (out_buf_len <= 0){
-				usb_arm_out_endpoint(2);
-			} else {
-				/* Scan for commands if not in loopback or
-				 * send mode.
-				 *
-				 * This is a hack. One should really scan the
-				 * entire string. In this case, since this
-				 * is a demo, assume that the user is using
-				 * a terminal program and typing the input,
-				 * all but ensuring the data will come in
-				 * single-character transactions. */
-				if (out_buf[0] == 'h' || out_buf[0] == '?') {
-					/* Show help.
-					 * Make sure to not try to send more
-					 * than 63 bytes of data in one
-					 * transaction */
-					send_string_sync(2,
-						"\r\nHelp:\r\n"
-						"\ts: send data\r\n"
-						"\tl: loopback\r\n");
-					send_string_sync(2,
-						"\tn: send notification\r\n"
-						"\th: help\r\n");
-				}
-				else if (out_buf[0] == 's'){
-					temp ^= 1;
-					if(temp)
-						send_string_sync(2, "LEDD ON\r\n");
-					else
-						send_string_sync(2, "LED OFF\r\n");
-					//send = true;
-				}
-				else if (out_buf[0] == 'l') {
-					loopback = true;
-					send_string_sync(2, "loopback enabled; press ~ to disable\r\n");
-				}
-				else if (out_buf[0] == 'n') {
-					/* Send a Notification on Endpoint 1 */
-					struct cdc_serial_state_notification *n =
-						(struct cdc_serial_state_notification *)
-							usb_get_in_buffer(1);
-
-					n->header.REQUEST.bmRequestType = 0xa1;
-					n->header.bNotification = CDC_SERIAL_STATE;
-					n->header.wValue = 0;
-					n->header.wIndex = 1; /* Interface */
-					n->header.wLength = 2;
-					n->data.serial_state = 0; /* Zero the whole bit mask */
-					n->data.bits.bRxCarrier = 1;
-					n->data.bits.bTxCarrier = 1;
-					n->data.bits.bBreak = 0;
-					n->data.bits.bRingSignal = 0;
-					n->data.bits.bFraming = 0;
-					n->data.bits.bParity = 0;
-					n->data.bits.bOverrun = 0;
-
-					/* Wait for the endpoint to be free */
-					while (usb_in_endpoint_busy(1))
-						;
-
-					/* Send to to host */
-					usb_send_in_buffer(1, sizeof(*n));
-
-					send_string_sync(2, "Notification Sent\r\n");
-				}
-			}
-			usb_arm_out_endpoint(2);
+		const unsigned char *out_buf;
+		size_t len;
+		len = usb_get_out_buffer(2, &out_buf);
+        if(len <= 0) usb_arm_out_endpoint(2);        
+		if(read_line(out_buf, len) > 0){
+			/* complete line received. process. */
+			char *str;
+			devcmd cmd;
+			len = get_input_buffer(&str);
+			len = parse_input(&cmd, str, len);
+            write_buffer_sync(str, len);
 		}
-
-		#ifndef USB_USE_INTERRUPTS
-		usb_service();
-		#endif
+		usb_arm_out_endpoint(2);
 	}
-
 	return 0;
 }
 

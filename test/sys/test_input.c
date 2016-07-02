@@ -72,3 +72,16 @@ void test_read_line_esc2(void)
 	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
 	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
 }
+
+void test_accumulation(void){
+	char* T1 = "\x1B\n\x1B\n\x1B\n\x1B\n";
+	char* T2 = "HELLO\n";
+	int len = read_line(T1, strlen(T1));
+	TEST_ASSERT_EQUAL(0, len);
+	len = read_line(T2, strlen(T2));
+	char* buffer;
+	TEST_ASSERT_EQUAL(1, len);
+	TEST_ASSERT_EQUAL(strlen(T1) + strlen(T2), get_input_buffer(&buffer));
+	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));	
+	TEST_ASSERT_EQUAL_MEMORY(T2, buffer + strlen(T1), strlen(T2));	
+}

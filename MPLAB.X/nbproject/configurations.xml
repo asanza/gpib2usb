@@ -39,6 +39,7 @@
         </logicalFolder>
         <logicalFolder name="sys" displayName="sys" projectFiles="true">
           <itemPath>../src/sys/parser.c</itemPath>
+          <itemPath>../src/sys/input.c</itemPath>
         </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <logicalFolder name="include" displayName="include" projectFiles="true">
