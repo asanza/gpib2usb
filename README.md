@@ -17,13 +17,17 @@ The device presents itself as a serial port. Following commands are available:
 
 # Know issues
 
-disable modem manager in linux.
+## Disable modem manager in linux.
 
-in linux modem manager sends at commands to detect possible modems when an acm device is conected. to disable this behaviour:
+In order to detect new devices, modem manager issues two AT commands to each new ACM device detected. This blocks the serial port and causes it to be unavailable the first seconds. This is somewhat annoying. Fortunately it is possible to disable this behaviour. You need to create a new file:
 
-create file: 
+```
 /etc/udev/rules.d/77-mm-usb-device-blacklist.rules 
+```
+and put following content in it:
 
+```
 with content:
 # gpib2usb converter
 ATTRS{idVendor}=="1209", ATTRS{idProduct}=="0001", ENV{ID_MM_DEVICE_IGNORE}="1" 
+```
