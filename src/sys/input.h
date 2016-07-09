@@ -32,7 +32,7 @@
  *internal buffer, until a carriage return or line feed.
  *
  * @param[in]  buffer  The incomming data
- * @param[in]  size    The incomming data size
+ * @param[in]  size    The incomming data size (less than 256)
  *
  * @return     -1 if overflow, 0 if no linefeed or carriage
  * 				return received, 
@@ -42,12 +42,24 @@
 int read_line(const char* buffer, size_t size);
 
 /**
- * @brief      get a pointer to the incomming input buffer.
+ * @brief      process incomming data.
+ * 			   call this function when readline returns 1 in order
+ * 			   to process the incomming data.
  *
- * @param      buffer  The buffer
+ * @param      str        the incomming data.
  *
- * @return     The input buffer.
+ * @return     { len of data to be writen into serial port. }
  */
-int get_input_buffer(char** buffer);
+int process_input(char** str);
+
+/**
+ * @brief      perform system tasks.
+ *             call this function periodically in order to process the incomming
+ *             usb string.
+ */
+void sys_tasks(void);
+
+
+int get_input_buffer(char** str);
 
 #endif // input_H

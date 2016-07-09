@@ -22,6 +22,7 @@
  */
 
 #include "parser.h"
+#include "sysdefs.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>

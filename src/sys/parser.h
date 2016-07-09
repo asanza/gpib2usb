@@ -1,10 +1,6 @@
 #ifndef parser_H
 #define parser_H
 
-#define CR 13
-#define LF 10
-#define ESC 27
-
     typedef enum {
         CMD_ADDR,
         CMD_AUTO,

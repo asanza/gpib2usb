@@ -91,8 +91,8 @@ const ROMPTR struct device_descriptor this_device_descriptor =
 	         Association Descriptor Device Class Code and Use Model" */
 	0x01, // Protocol. See document referenced above.
 	EP_0_LEN, // bMaxPacketSize0
-	0xA0A0, // Vendor
-	0x0004, // Product
+	0x1209, // Vendor
+	0x0001, // Product. Test pid. please change.
 	0x0001, // device release (1.0)
 	1, // Manufacturer
 	2, // Product
@@ -120,7 +120,7 @@ static const ROMPTR struct configuration_1_packet configuration_1 =
 	1, // bConfigurationValue
 	2, // iConfiguration (index of string descriptor)
 	0b10000000,
-	100/2,   // 100/2 indicates 100mA
+	50,   // 100/2 indicates 100mA
 	},
 
 	/* Interface Association Descriptor */
@@ -239,16 +239,16 @@ static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t la
 	0x0409 // US English
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[23]; } vendor_string = {
+static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[16]; } vendor_string = {
 	sizeof(vendor_string),
 	DESC_STRING,
-	{'S','i','g','n','a','l',' ','1','1',' ','S','o','f','t','w','a','r','e',' ','L','L','C','.'}
+	{'A','M',' ','S','o','f','t','w','a','r','e',' ','L','L','C','.',}
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[12]; } product_string = {
+static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[16]; } product_string = {
 	sizeof(product_string),
 	DESC_STRING,
-	{'U','S','B',' ','C','D','C',' ','T','e','s','t',}
+	{'G','P','I','B','2','U','S','B',' ','A','d','a','p','t','e','r',}
 };
 
 static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[13]; } cdc_interface_string = {
@@ -263,14 +263,11 @@ static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t ch
 	{'C','D','C',' ','D','a','t','a',' ','I','n','t','e','r','f','a','c','e'}
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[59]; } fake_serial_num = {
+static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[23]; } fake_serial_num = {
 	sizeof(fake_serial_num),
 	DESC_STRING,
-	{'F','A','K','E',' ','S','e','r','i','a','l',' ',
-	 'N','u','m','b','e','r',':',' ',
-	 'D','o','n','\'','t',' ','s','h','i','p',' ','a',' ',
-	 'p','r','o','d','u','c','t',' ','l','i','k','e',' ',
-	 't','h','i','s','.',' ','P','L','E','A','S','E','!', }
+	{'S','i','m','p','l','e',' ','G','P','I','B','2','U','S','B',' ','A','d',
+		'a','p','t','e','r', }
 };
 
 

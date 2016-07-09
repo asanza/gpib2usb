@@ -27,6 +27,10 @@
 #include "usb_config.h"
 #include "usb_ch9.h"
 #include "usb_cdc.h"
+#include <assert.h>
+
+#include <stdio.h>
+#include "hal/hal_uart.h"
 
 #ifdef MULTI_CLASS_DEVICE
 static uint8_t cdc_interfaces[] = { 0 };
@@ -53,30 +57,34 @@ static void write_buffer_sync(const char* str, int len){
 
 int main(void)
 {
+	char *str;
+	size_t len;
     hal_sys_init();
 #ifdef MULTI_CLASS_DEVICE
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
-	bool loopback = false;
+    hal_uart_init();
+	printf("Initialized\r\n");
 	while (1) {
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
+        /* perform gpib tasks.  */
+		sys_tasks();
 		if(!usb_out_endpoint_has_data(2)) continue;
 		const unsigned char *out_buf;
-		size_t len;
 		len = usb_get_out_buffer(2, &out_buf);
-        if(len <= 0) usb_arm_out_endpoint(2);        
+        if(len <= 0) usb_arm_out_endpoint(2);
+        printf("received: %c, len: %d\r\n", out_buf[0], len);
 		if(read_line(out_buf, len) > 0){
 			/* complete line received. process. */
-			char *str;
 			devcmd cmd;
-			len = get_input_buffer(&str);
-			len = parse_input(&cmd, str, len);
+			/* process input and get the output buffer */
+			len = process_input(&str);
+			/* write the output buffer*/
             write_buffer_sync(str, len);
 		}
 		usb_arm_out_endpoint(2);
-		//gpib_tasks();
 	}
 	return 0;
 }
@@ -84,7 +92,6 @@ int main(void)
 /* Callbacks. These function names are set in usb_config.h. */
 void app_set_configuration_callback(uint8_t configuration)
 {
-
 }
 
 uint16_t app_get_device_status_callback()
@@ -142,7 +149,6 @@ void app_start_of_frame_callback(void)
 
 void app_usb_reset_callback(void)
 {
-
 }
 
 /* CDC Callbacks. See usb_cdc.h for documentation. */
@@ -164,14 +170,12 @@ void app_set_comm_feature_callback(uint8_t interface,
                                      bool idle_setting,
                                      bool data_multiplexed_state)
 {
-
 }
 
 void app_clear_comm_feature_callback(uint8_t interface,
                                        bool idle_setting,
                                        bool data_multiplexed_state)
 {
-
 }
 
 int8_t app_get_comm_feature_callback(uint8_t interface,
@@ -184,7 +188,6 @@ int8_t app_get_comm_feature_callback(uint8_t interface,
 void app_set_line_coding_callback(uint8_t interface,
                                     const struct cdc_line_coding *coding)
 {
-
 }
 
 int8_t app_get_line_coding_callback(uint8_t interface,

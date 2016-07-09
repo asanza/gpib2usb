@@ -4,8 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="hal" displayName="hal" projectFiles="true">
+        <itemPath>../src/hal/hal_uart.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>../src/sys/parser.h</itemPath>
+        <itemPath>../src/sys/input.h</itemPath>
+        <itemPath>../src/sys/sysdefs.h</itemPath>
+        <itemPath>../src/sys/utils.h</itemPath>
       </logicalFolder>
       <logicalFolder name="usb" displayName="usb" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
@@ -36,10 +42,12 @@
           <itemPath>../src/hal/fuses.c</itemPath>
           <itemPath>../src/hal/hal_sys.c</itemPath>
           <itemPath>../src/hal/hal_sys.h</itemPath>
+          <itemPath>../src/hal/hal_uart.c</itemPath>
         </logicalFolder>
         <logicalFolder name="sys" displayName="sys" projectFiles="true">
           <itemPath>../src/sys/parser.c</itemPath>
           <itemPath>../src/sys/input.c</itemPath>
+          <itemPath>../src/sys/utils.c</itemPath>
         </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <logicalFolder name="include" displayName="include" projectFiles="true">
