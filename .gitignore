@@ -32,3 +32,7 @@ MPLAB.X/nbproject/Makefile*
 *.emp
 *.wrl
 test/support/out.txt
+
+*.d
+*.p1
+test/support/simlog.txt

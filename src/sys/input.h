@@ -52,14 +52,6 @@ int read_line(const char* buffer, size_t size);
  */
 int process_input(char** str);
 
-/**
- * @brief      perform system tasks.
- *             call this function periodically in order to process the incomming
- *             usb string.
- */
-void sys_tasks(void);
-
-
 int get_input_buffer(char** str);
 
 #endif // input_H

@@ -55,6 +55,10 @@ static void write_buffer_sync(const char* str, int len){
 			usb_send_in_buffer(2, len);
 }
 
+static void write_char_sync(const char c){
+	write_buffer_sync(&c, 1);
+}
+
 int main(void)
 {
 	char *str;
@@ -69,8 +73,13 @@ int main(void)
 	while (1) {
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
-        /* perform gpib tasks.  */
-		sys_tasks();
+		/* check if data available from gpib bus */
+		if( sys_tasks() ){
+			/* send data */
+			write_char_sync(sys_get_data());
+			usb_arm_out_endpoint(2):
+			continue;
+		}
 		if(!usb_out_endpoint_has_data(2)) continue;
 		const unsigned char *out_buf;
 		len = usb_get_out_buffer(2, &out_buf);
