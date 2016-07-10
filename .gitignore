@@ -36,3 +36,13 @@ test/support/out.txt
 *.d
 *.p1
 test/support/simlog.txt
+
+MPLAB.X/MyConfig.mc3
+MPLAB.X/mcc_generated_files/
+doc/arch.asta
+pcb/cad/render.png
+pcb/cad/render_pvray.png
+pcb/gerber/gpib2usbV2.zip
+pcb/gpib_adapter.xml
+src/hal/HardwareProfile.h
+src_old/.gdbinit

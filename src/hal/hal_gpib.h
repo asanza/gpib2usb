@@ -1,9 +1,9 @@
 /*
- *  hal_gpib.h
+ * hal_gpib.h
  *
- * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
+ * Copyright (c) 2016, Diego F. Asanza. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
@@ -18,15 +18,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on September 14, 2015, 10:22 PM
+ * Created on June 29, 2016, 9:28 PM
  */
 
-#ifndef HAL_GPIB_H
-#define	HAL_GPIB_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+#ifndef hal_gpib_H
+#define hal_gpib_H
 
 /* exported pin interface */
 #define ATN_PIN     0x01
@@ -66,16 +63,14 @@ void hal_gpib_set_driver_direction(hal_gpib_data_direction direction);
 #define DC      9
 #define PE      10
 */
-    void hal_gpib_init(void);
-    int hal_gpib_is_signal_true(int pin);
-    void hal_gpib_set_signal_false(int pin);
-    void hal_gpib_set_signal_true(int pin);
-    void hal_gpib_put_data(char c);
-    char hal_gpib_read_data(void);
+void hal_gpib_init(void);
+int hal_gpib_is_signal_true(int pin);
+void hal_gpib_set_signal_false(int pin);
+void hal_gpib_set_signal_true(int pin);
+void hal_gpib_put_data(char c);
+char hal_gpib_read_data(void);
 void hal_gpib_set_driver_mode(hal_gpib_driver_mode mode);
-#ifdef	__cplusplus
-}
-#endif
 
-#endif	/* HAL_GPIB_H */
 
+
+#endif // hal_gpib_H
