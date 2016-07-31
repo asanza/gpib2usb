@@ -4,6 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="gpib" displayName="gpib" projectFiles="true">
+        <itemPath>../src/gpib/gpib.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="hal" displayName="hal" projectFiles="true">
         <itemPath>../src/hal/hal_uart.h</itemPath>
       </logicalFolder>
@@ -12,6 +15,7 @@
         <itemPath>../src/sys/input.h</itemPath>
         <itemPath>../src/sys/sysdefs.h</itemPath>
         <itemPath>../src/sys/utils.h</itemPath>
+        <itemPath>../src/sys/system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="usb" displayName="usb" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
@@ -38,6 +42,9 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="src" displayName="src" projectFiles="true">
+        <logicalFolder name="gpib" displayName="gpib" projectFiles="true">
+          <itemPath>../src/gpib/gpib.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="hal" displayName="hal" projectFiles="true">
           <itemPath>../src/hal/fuses.c</itemPath>
           <itemPath>../src/hal/hal_sys.c</itemPath>

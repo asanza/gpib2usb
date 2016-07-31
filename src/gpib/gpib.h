@@ -86,12 +86,21 @@ int GPIB_Init(int our_address);
 int GPIB_Send(GPIB_Command cmd, char data);
 
 /**
- * @brief      Return the last received character on the bus
+ * @brief      Set the bus to listen communications.
+ *             after calling this function, the bus changes to 
+ *             listen. It will listen on each GPIB_Task call. GPIB_
+ *             task then returns GPIB_EVT_DATA_AVAILABLE when new data
+ *             arrives. Call GPIB_Get to get the last received data.
  *
- * @return       prealocated char where the last received byte will be 
- * 			   copied.
  */
-char GPIB_Receive(void);
+void GPIB_Receive(void);
+
+/**
+ * @brief      get the last received byte
+ *
+ * @return     the last received byte
+ */
+char GPIB_Get(void);
 
 /**
  * @brief      Perform gpib tasks.

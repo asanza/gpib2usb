@@ -205,10 +205,13 @@ int GPIB_Send(GPIB_Command cmd, char data){
     return gpib_send_cmd(actual_st, code);
 }
 
-char GPIB_Receive(void){
+void GPIB_Receive(void){
     hal_gpib_set_driver_direction(LISTENER);
     hal_gpib_set_signal_true(NDAC_PIN);
     hal_gpib_set_signal_false(NRFD_PIN);
 	actual_st = DATA_AVAILABLE;
+}
+
+char GPIB_Get(void){
 	return buff;
 }

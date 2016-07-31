@@ -8,7 +8,7 @@ These old equipment often come with a GPIB interface, which allows to control th
 
 Here comes this little device to rescue. It is a gpib-to-usb adapter which after connected to the computer via the almighty usb port, it presents itself as a serial port and allows to send GPIB commands to connected GPIB devices.
 
-For now is yet a work in progress. So wait for updates.
+For now is yet a work in progress. 
 
 # USB Interface
 
