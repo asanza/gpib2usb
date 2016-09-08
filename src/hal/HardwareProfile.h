@@ -36,7 +36,10 @@
 #define _NRFD A, BIT3
 #define _NDAC A, BIT2
 
-#define _SYSLED C, BIT1
+/* LEDS */
+#define GREEN_LED   C, BIT2
+#define YELLOW_LED  C, BIT1
+#define RED_LED     C, BIT0
 
 /* Auxiliar macros */
 #define PinAsInput(val)        _PinAsInput(val)

@@ -68,6 +68,7 @@ int main(void)
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
+    hal_sys_green_led_on();
 	while (1) {
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
@@ -90,6 +91,7 @@ int main(void)
 			/* write the output buffer*/
             write_buffer_sync(str, len);
 		}
+        hal_sys_yellow_led_toggle();
 		usb_arm_out_endpoint(2);
 	}
 	return 0;
