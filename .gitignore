@@ -44,5 +44,4 @@ pcb/cad/render.png
 pcb/cad/render_pvray.png
 pcb/gerber/gpib2usbV2.zip
 pcb/gpib_adapter.xml
-src/hal/HardwareProfile.h
 src_old/.gdbinit
