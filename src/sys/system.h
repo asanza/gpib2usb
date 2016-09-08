@@ -7,7 +7,7 @@
 int sys_tasks(void);
 int sys_get_data(void);
 int sys_write_gpib(char* data, size_t size);
-int sys_listen(void);
+void sys_listen(void);
 /**
  * @brief      Set system address.
  *

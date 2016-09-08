@@ -68,8 +68,6 @@ int main(void)
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
-    hal_uart_init();
-	printf("Initialized\r\n");
 	while (1) {
 		if(!usb_is_configured()) continue;
 		if(usb_out_endpoint_halted(2)) continue;
@@ -77,14 +75,13 @@ int main(void)
 		if( sys_tasks() ){
 			/* send data */
 			write_char_sync(sys_get_data());
-			usb_arm_out_endpoint(2):
+			usb_arm_out_endpoint(2);
 			continue;
 		}
 		if(!usb_out_endpoint_has_data(2)) continue;
 		const unsigned char *out_buf;
 		len = usb_get_out_buffer(2, &out_buf);
         if(len <= 0) usb_arm_out_endpoint(2);
-        printf("received: %c, len: %d\r\n", out_buf[0], len);
 		if(read_line(out_buf, len) > 0){
 			/* complete line received. process. */
 			devcmd cmd;

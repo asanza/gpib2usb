@@ -82,7 +82,7 @@ int parse_input(devcmd* cmd, char* input, int size)
       if(offset == size) break;
       memmove(input, input+1, size - offset);
     }
-    printf("%x", *input);
+    //printf("%x", *input);
     return delchar(input, ESC, size - offset);
 }
 

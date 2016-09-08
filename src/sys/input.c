@@ -73,11 +73,11 @@ static int check_input(char** str, char* data, size_t sz){
         case CMD_MODE:              sprintf(ibuffer, "mode\r\n");
             break;
         case CMD_READ:
-            if( sys_listen() ){
+            //if( sys_listen() ){
                 sprintf(ibuffer, "Cannot Read\r\n");
-            } else {
-                ibuffer[0] = 0;
-            }             
+            //} else {
+            //    ibuffer[0] = 0;
+            //}             
             break;
         case CMD_READ_TMO_MS:       sprintf(ibuffer, "tmo\r\n");
             break;
