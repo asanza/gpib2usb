@@ -23,6 +23,7 @@
 
 #include "parser.h"
 #include "sysdefs.h"
+#include "utils.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -77,10 +78,10 @@ int parse_input(devcmd* cmd, char* input, int size)
     if (*cmd == CMD_COUNT) return delchar(input, ESC, size);
     memmove(input, input + offset, size - offset);
     /* clear spaces after command */
-    while(*input == ' ' || *input=='\t'){
-      offset++;
-      if(offset == size) break;
-      memmove(input, input+1, size - offset);
+    while (*input == ' ' || *input == '\t') {
+        offset++;
+        if (offset == size) break;
+        memmove(input, input + 1, size - offset);
     }
     //printf("%x", *input);
     return delchar(input, ESC, size - offset);
@@ -93,10 +94,10 @@ static int delchar(char* input, char val, int size)
     int count = 0;
     while (--size) {
         if (*s != val) {
-          *d++ = *s++;
-          count++;
+            *d++ = *s++;
+            count++;
         } else {
-          *s++;
+            *s++;
         }
     }
     return count + 1;
@@ -105,6 +106,14 @@ static int delchar(char* input, char val, int size)
 static int starts_with(const char *pre, const char *str)
 {
     size_t lenpre = strlen(pre),
-            lenstr = strlen(str);
+           lenstr = strlen(str);
     return lenstr < lenpre ? 0 : strncmp(pre, str, lenpre) == 0;
+}
+
+int parse_address(char* data, size_t size)
+{
+    assert(size > 0);
+    assert(data);
+    data[size] = 0;
+    return str2int(data);
 }

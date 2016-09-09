@@ -1,6 +1,8 @@
 #ifndef parser_H
 #define parser_H
 
+#include <stdlib.h>
+
     typedef enum {
         CMD_ADDR,
         CMD_AUTO,
@@ -32,5 +34,9 @@
      * Input string contains scape characters. Return pointer do not contain
      * escape characters. */
     int parse_input(devcmd* cmd, char* input, int buffer_size);
+
+
+    int parse_address(char* data, size_t size);
+
 
 #endif // parser_H

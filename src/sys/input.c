@@ -25,7 +25,6 @@
 #include "sysdefs.h"
 #include "system.h"
 #include "parser.h"
-#include "utils.h"
 #include <assert.h>
 #include <string.h>
 #include <stdio.h>
@@ -39,16 +38,16 @@ static int check_input(char** str, char* data, size_t sz){
     int len = parse_input(&cmd, data, sz);
 	switch(cmd){
         case CMD_ADDR:
-        	if(len > 0){
-                data[len] = 0;
-        		sz = str2int(data);
-               	if(sys_set_address(sz, 0)){
-               		sprintf(ibuffer, "Error: Invalid Address\r\n");
-            		*str = ibuffer;
-            		return strlen(ibuffer);
-            	}
+            if(len > 1){
+                sz = parse_address(data, len);
+                if(sys_set_address(sz,0)){
+                    sprintf(ibuffer, "Error: Invalid Address\r\n");
+                }else{
+                    sprintf(ibuffer, "OK\r\n");
+                }
+            } else {
+                sprintf(ibuffer, "%d\r\n", sys_get_address());
             }
-			sprintf(ibuffer, "%d\r\n", sys_get_address());
             break;
 	    case CMD_AUTO:              sprintf(ibuffer, "auto\r\n");
             break;
@@ -136,9 +135,4 @@ int read_line(const char* buffer, size_t size){
 
 int process_input(char** str){
 	return check_input(str, ibuffer, olen);
-}
-
-int get_input_buffer(char** str){
-    *str = ibuffer;
-    return olen;
 }

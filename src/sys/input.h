@@ -46,12 +46,12 @@ int read_line(const char* buffer, size_t size);
  * 			   call this function when readline returns 1 in order
  * 			   to process the incomming data.
  *
- * @param      str        the incomming data.
+ * @param      str  Pointer to the internal error buffer. The
+ * 				error buffer contains the error (or success) messa
+ * 				ge after processing the incoming data (string).
  *
- * @return     { len of data to be writen into serial port. }
+ * @return     { len of the internal error buffer. }
  */
-int process_input(char** str);
-
-int get_input_buffer(char** str);
+int process_input(char** out);
 
 #endif // input_H

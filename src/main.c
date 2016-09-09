@@ -88,7 +88,7 @@ int main(void)
 			devcmd cmd;
 			/* process input and get the output buffer */
 			len = process_input(&str);
-			/* write the output buffer*/
+			/* send response to usb */
             write_buffer_sync(str, len);
 		}
         hal_sys_yellow_led_toggle();
