@@ -102,6 +102,8 @@ static int check_input(char** str, char* data, size_t sz){
             len = sys_write_gpib(data, sz);
             if(len){
                 sprintf(ibuffer, "Error: cannot write\r\n");
+            }else{
+                return 0;
             }
             break;
     }

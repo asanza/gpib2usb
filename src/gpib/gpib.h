@@ -123,6 +123,11 @@ char GPIB_Get(void);
  */
 GPIB_Event GPIB_Tasks(void);
 
+/**
+ * @brief Reset GPIB Statemachine
+ */
+void GPIB_Reset(void);
+
 #endif
 
 

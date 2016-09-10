@@ -67,6 +67,10 @@ static st_function_t* const state_table[NUM_STATES] = {
 	st_no_data_available
 };
 
+void GPIB_Reset(void){
+    actual_st = GPIB_IDLE;
+}
+
 state_t GPIB_State(void){
 	return actual_st;
 }

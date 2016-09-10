@@ -22,7 +22,10 @@ static int do_sending(void);
 static int do_receiving(void);
 
 int timer_counter = 0;
-#define TIMER_COUNTER_OVERFLOW 1000
+long int timeout = 0;
+
+#define TIMEOUT 100000UL;
+#define TIMER_COUNTER_OVERFLOW 10000
 
 int sys_set_address(uint8_t address, uint8_t subaddress){
 	if(address > 32  || subaddress > 255 ) return -1;
@@ -57,14 +60,20 @@ int sys_tasks(void){
 	GPIB_Event evt = GPIB_Tasks();
 	switch (state) {
 		case SENDING:
-			if(GPIB_State() == GPIB_IDLE)
+            timeout--;
+			if(GPIB_State() == GPIB_IDLE){
+                timeout = TIMEOUT;
 				if(do_sending())
 					return -1;
+            }
 		break;
 		case RECEIVING:
-			if(GPIB_State() == GPIB_IDLE)
+            timeout--;
+			if(GPIB_State() == GPIB_IDLE){
+                timeout = TIMEOUT;
 				if(do_receiving())
 					return -1;
+            }
 		break;
 		case IDLE:
 			// toggle green led
@@ -72,8 +81,16 @@ int sys_tasks(void){
 				hal_sys_yellow_led_toggle();
 				timer_counter = 0;
 			}
+            timeout = TIMEOUT;
 		break;
 	}
+    if(!timeout && state != IDLE){
+        timeout = TIMEOUT;
+        sprintf(gpib_buffer, "Timeout\r\n");
+        bsz = strlen(gpib_buffer);
+        state = IDLE;
+        return -1;
+    }
 	return 0;
 }
 
@@ -97,7 +114,8 @@ static int do_receiving(void){
 		default: index = 0;
 	}
 	if(retval){
-			sprintf(gpib_buffer, "Reception error");
+			sprintf(gpib_buffer, "Reception error\r\n");
+        bsz = strlen(gpib_buffer);
 			state = IDLE;
 			index = 0;
 	}
@@ -122,7 +140,8 @@ static int do_sending(void){
 		default: index = 0;
 	}
 	if(retval){
-			sprintf(gpib_buffer, "Transmission error");
+			sprintf(gpib_buffer, "Transmission error\r\n");
+        bsz = strlen(gpib_buffer);
 			state = IDLE;
 			index = 0;
 	}

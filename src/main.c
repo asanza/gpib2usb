@@ -63,6 +63,7 @@ static void write_char_sync(const char c){
 int main(void)
 {
 	char *str;
+	const unsigned char *out_buf;
 	size_t len;
     hal_sys_init();
 #ifdef MULTI_CLASS_DEVICE
@@ -76,12 +77,13 @@ int main(void)
 		/* check if data available from gpib bus */
 		if( sys_tasks() ){
 			/* send data */
-			//write_char_sync(sys_get_data());
-			usb_arm_out_endpoint(2);
+            len = sys_read_gpib(&str);
+			write_buffer_sync(str, len);
 			continue;
 		}
-		if(!usb_out_endpoint_has_data(2)) continue;
-		const unsigned char *out_buf;
+		if(!usb_out_endpoint_has_data(2)) {
+            continue;
+        }
 		len = usb_get_out_buffer(2, &out_buf);
         if(len <= 0) usb_arm_out_endpoint(2);
 		if(read_line(out_buf, len) > 0){
@@ -92,7 +94,6 @@ int main(void)
 			/* send response to usb */
             write_buffer_sync(str, len);
 		}
-        hal_sys_yellow_led_toggle();
 		usb_arm_out_endpoint(2);
 	}
 	return 0;
