@@ -1,0 +1,8 @@
+{
+  "execPath": "/opt/microchip/xc8/v1.37/bin/xc8",
+  "gccDefaultCFlags": "-Wall",
+  "gccDefaultCppFlags": "-Wall",
+  "gccErrorLimit": 15,
+  "gccIncludePaths": ".,./src/gpib,./src,./vendor/ceedling/vendor/unity/src,./build/test/mocks,./src/hal,./src/sys,./src/usb,/opt/microchip/xc8/v1.37/include/",
+  "gccSuppressWarnings": true
+}
