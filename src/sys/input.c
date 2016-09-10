@@ -76,7 +76,7 @@ static int check_input(char** str, char* data, size_t sz){
                 sprintf(ibuffer, "Cannot Read\r\n");
             //} else {
             //    ibuffer[0] = 0;
-            //}             
+            //}
             break;
         case CMD_READ_TMO_MS:       sprintf(ibuffer, "tmo\r\n");
             break;
@@ -98,12 +98,11 @@ static int check_input(char** str, char* data, size_t sz){
             break;
         case CMD_HELP:              sprintf(ibuffer, "help\r\n");
             break;
-        default:                   
+        default:
             len = sys_write_gpib(data, sz);
             if(len){
                 sprintf(ibuffer, "Error: cannot write\r\n");
             }
-            ibuffer[0] = 0;
             break;
     }
     *str = ibuffer;
@@ -135,4 +134,9 @@ int read_line(const char* buffer, size_t size){
 
 int process_input(char** str){
 	return check_input(str, ibuffer, olen);
+}
+
+int get_input_buffer(char** buffer){
+	*buffer = &ibuffer[0];
+	return olen;
 }

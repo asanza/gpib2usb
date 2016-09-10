@@ -4,6 +4,8 @@ MPLAB.X/build
 
 build/
 
+*.gch
+
 *.bak
 *.elf
 *.eep

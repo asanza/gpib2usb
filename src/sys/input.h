@@ -35,8 +35,8 @@
  * @param[in]  size    The incomming data size (less than 256)
  *
  * @return     -1 if overflow, 0 if no linefeed or carriage
- * 				return received, 
- * 				1 if linefeed or 
+ * 				return received,
+ * 				1 if linefeed or
  * 				carriage return received.
  */
 int read_line(const char* buffer, size_t size);
@@ -53,5 +53,15 @@ int read_line(const char* buffer, size_t size);
  * @return     { len of the internal error buffer. }
  */
 int process_input(char** out);
+
+/**
+ * @brief      get a pointer to the internal buffer
+ * 			   this function should not be used. only here to make test easy.
+ *
+ * @param      str  Pointer to the internal buffer
+ *
+ * @return    len of the internal buffer
+ */
+int get_input_buffer(char** buffer);
 
 #endif // input_H

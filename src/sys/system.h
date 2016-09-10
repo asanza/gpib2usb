@@ -5,9 +5,12 @@
 #include <stdint.h>
 
 int sys_tasks(void);
-int sys_get_data(void);
-int sys_write_gpib(char* data, size_t size);
-void sys_listen(void);
+
+
+int sys_read_gpib(char* data, int size);
+
+int sys_write_gpib(char* data, int size);
+
 /**
  * @brief      Set system address.
  *
