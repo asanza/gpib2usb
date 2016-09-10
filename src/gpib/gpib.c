@@ -48,16 +48,7 @@
 #define PPE_CODE 0x60
 #define PPD_CODE 0x70
 
-typedef enum{
-	IDLE,
-	NO_READY_FOR_DATA,
-	NO_DATA_ACCEPTED,
-	DATA_AVAILABLE,
-	NO_DATA_AVAILABLE,
-	NUM_STATES
-}state_t;
-
-static state_t actual_st = IDLE;
+static state_t actual_st = GPIB_IDLE;
 static char buff;
 
 static GPIB_Event st_idle(state_t* state);
@@ -76,23 +67,27 @@ static st_function_t* const state_table[NUM_STATES] = {
 	st_no_data_available
 };
 
+state_t GPIB_State(void){
+	return actual_st;
+}
+
 GPIB_Event GPIB_Tasks(void){
 	return state_table[actual_st](&actual_st);
 }
 
 
 static GPIB_Event st_idle(state_t* state){
-	assert(*state == IDLE);
+	assert(*state == GPIB_IDLE);
 	return GPIB_EVT_NONE;
 }
 
 static GPIB_Event gpib_send(state_t* state, char data){
-	assert(*state == IDLE);
+	assert(*state == GPIB_IDLE);
 	hal_gpib_set_driver_direction(TALKER);
     hal_gpib_set_signal_false(DAV_PIN);
     if(!hal_gpib_is_signal_true(NRFD_PIN) &&
        !hal_gpib_is_signal_true(NDAC_PIN)){
-       	*state = IDLE;
+       	*state = GPIB_IDLE;
         return -1;
     }
     hal_gpib_put_data(data);
@@ -122,7 +117,7 @@ static GPIB_Event st_no_data_accepted(state_t* state){
 	/* TODO: check if this do what you think */
 	if(hal_gpib_is_signal_true(ATN_PIN))
 		hal_gpib_set_signal_false(ATN_PIN);
-	*state = IDLE;
+	*state = GPIB_IDLE;
 	return GPIB_EVT_NONE;
 }
 
@@ -145,7 +140,7 @@ static GPIB_Event st_no_data_available(state_t* state){
 }
 
 int GPIB_Send(GPIB_Command cmd, char data){
-	if(actual_st != IDLE) return -1;
+	if(actual_st != GPIB_IDLE) return -1;
     char code;
     switch(cmd){
     case ATN:
@@ -154,25 +149,25 @@ int GPIB_Send(GPIB_Command cmd, char data){
         else
             hal_gpib_set_signal_false(ATN_PIN);
         break;
-    case IFC: 
+    case IFC:
         if(data)
             hal_gpib_set_signal_true(IFC_PIN);
         else
             hal_gpib_set_signal_false(IFC_PIN);
         break;
-    case SRQ: 
+    case SRQ:
         if(data)
             hal_gpib_set_signal_true(SRQ_PIN);
         else
             hal_gpib_set_signal_false(SRQ_PIN);
         break;
-    case REN: 
+    case REN:
         if(data)
             hal_gpib_set_signal_true(REN_PIN);
         else
             hal_gpib_set_signal_false(REN_PIN);
         break;
-    case EOI: 
+    case EOI:
         if(data)
             hal_gpib_set_signal_true(EOI_PIN);
         else
@@ -188,7 +183,7 @@ int GPIB_Send(GPIB_Command cmd, char data){
     case LLO: code = LLO_CODE; break;
     case DCL: code = DCL_CODE; break;
     case PPU: code = PPU_CODE; break;
-    case _SPE: code = SPE_CODE; break; 
+    case _SPE: code = SPE_CODE; break;
     case SPD: code = SPD_CODE; break;
     case GTL: code = GTL_CODE; break;
     case SDC: code = SDC_CODE; break;
@@ -199,10 +194,10 @@ int GPIB_Send(GPIB_Command cmd, char data){
     case PPD: code = PPD_CODE; break;
     case DAB:
         hal_gpib_set_signal_false(ATN_PIN);
-        return gpib_send(actual_st, data);
+        return gpib_send(&actual_st, data);
     default: assert(0);
     }
-    return gpib_send_cmd(actual_st, code);
+    return gpib_send_cmd(&actual_st, code);
 }
 
 void GPIB_Receive(void){

@@ -4,10 +4,23 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+/**
+ * @brief perform periodic system tasks.
+ * return 1 if new data arrived by gpib interface
+ *        0 if nothing happened.
+ */
 int sys_tasks(void);
 
+/**
+ * @brief   get a pointer of the internal gpib buffer.
+ * @param[in] data variable where to copy the pointer.
+ *
+ * @return  length of the buffer
+ */
+int sys_read_gpib(char** data);
 
-int sys_read_gpib(char* data, int size);
+/* start a gpib read */
+void sys_start_read(void);
 
 int sys_write_gpib(char* data, int size);
 

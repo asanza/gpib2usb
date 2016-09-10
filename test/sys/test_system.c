@@ -1,5 +1,7 @@
 #include "unity.h"
 #include "system.h"
+#include <xc.h>
+#include <p18f4550.h>
 
 // disable watchdog
 #pragma WDT=OFF
@@ -30,7 +32,7 @@ void tearDown(void)
 {
 }
 
-void test_module_generator_needs_to_be_implemented(void)
+void test_sys_write_gpib(void)
 {
 	TEST_IGNORE_MESSAGE("Implement me!");
 }

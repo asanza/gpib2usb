@@ -23,6 +23,7 @@
 #include "hal/hal_sys.h"
 #include "sys/input.h"
 #include "sys/parser.h"
+#include "sys/system.h"
 #include <string.h>
 #include "usb_config.h"
 #include "usb_ch9.h"
@@ -75,7 +76,7 @@ int main(void)
 		/* check if data available from gpib bus */
 		if( sys_tasks() ){
 			/* send data */
-			write_char_sync(sys_get_data());
+			//write_char_sync(sys_get_data());
 			usb_arm_out_endpoint(2);
 			continue;
 		}

@@ -63,6 +63,17 @@ typedef enum {
 	GPIB_EVT_DATA_AVAILABLE = 0x01,
 } GPIB_Event;
 
+typedef enum{
+	GPIB_IDLE,
+	NO_READY_FOR_DATA,
+	NO_DATA_ACCEPTED,
+	DATA_AVAILABLE,
+	NO_DATA_AVAILABLE,
+	NUM_STATES
+}state_t;
+
+state_t GPIB_State(void);
+
 /**
  * @brief      Initializes the gpib driver with a given address.
  *
@@ -76,7 +87,7 @@ int GPIB_Init(int our_address);
  * @brief      Send a GPIB command to the attached bus.
  * 			   This is an asynchronous call. cmd and data are copied
  * 			   into a buffer, and then send sequentially by calling the
- * 			   GPIB_Task function. 
+ * 			   GPIB_Task function.
  *
  * @param[in]  cmd   The command
  * @param[in]  data  The data
@@ -87,7 +98,7 @@ int GPIB_Send(GPIB_Command cmd, char data);
 
 /**
  * @brief      Set the bus to listen communications.
- *             after calling this function, the bus changes to 
+ *             after calling this function, the bus changes to
  *             listen. It will listen on each GPIB_Task call. GPIB_
  *             task then returns GPIB_EVT_DATA_AVAILABLE when new data
  *             arrives. Call GPIB_Get to get the last received data.
@@ -109,7 +120,7 @@ char GPIB_Get(void);
  * 			   performed calling this functions.
  * @return 	   GPIB_EVT_DATA_AVAILABLE if data is available in the input buffer
  * 			   GPIB_EVT_TX_READY if the tx buffer is empty.
- */	
+ */
 GPIB_Event GPIB_Tasks(void);
 
 #endif
