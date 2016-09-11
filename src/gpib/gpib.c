@@ -153,7 +153,7 @@ static GPIB_Event st_no_data_available(state_t* state)
 	return GPIB_EVT_DATA_AVAILABLE;
 }
 
-int GPIB_Send(GPIB_Command cmd, char data)
+GPIB_Event GPIB_Send(GPIB_Command cmd, char data)
 {
 	if (actual_st != GPIB_IDLE) return GPIB_EVT_TX_ERROR;
 	char code;
