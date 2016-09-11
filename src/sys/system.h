@@ -17,7 +17,7 @@ int sys_tasks(void);
  *
  * @return  length of the buffer
  */
-int sys_read_gpib(char** data);
+int sys_get_gpib_buffer(char** data);
 
 /* start a gpib read */
 void sys_start_read(void);

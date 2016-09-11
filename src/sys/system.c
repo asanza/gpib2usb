@@ -39,7 +39,7 @@ int sys_get_address(void)
 	return addr;
 }
 
-int sys_read_gpib(char** data)
+int sys_get_gpib_buffer(char** data)
 {
 	*data = gpib_buffer;
 	return bsz;

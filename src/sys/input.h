@@ -64,4 +64,6 @@ int process_input(char** out);
  */
 int get_input_buffer(char** buffer);
 
+int set_input_buffer(char* data, int sz);
+
 #endif // input_H
