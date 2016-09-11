@@ -92,7 +92,7 @@ static GPIB_Event gpib_send(state_t* state, char data){
     if(!hal_gpib_is_signal_true(NRFD_PIN) &&
        !hal_gpib_is_signal_true(NDAC_PIN)){
        	*state = GPIB_IDLE;
-        return -1;
+        return GPIB_EVT_RX_ERROR;
     }
     hal_gpib_put_data(data);
 	*state = NO_READY_FOR_DATA;

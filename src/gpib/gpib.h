@@ -61,6 +61,8 @@ typedef enum {
 typedef enum {
 	GPIB_EVT_NONE = 0x00,
 	GPIB_EVT_DATA_AVAILABLE = 0x01,
+  GPIB_EVT_TX_ERROR = 0x02,
+  GPIB_EVT_RX_ERROR
 } GPIB_Event;
 
 typedef enum{
