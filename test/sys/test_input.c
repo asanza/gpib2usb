@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "input.h"
-#include "system.h"
+#include "mock_system.h"
 #include "parser.h"
 #include "utils.h"
 #include <string.h>
@@ -89,13 +89,24 @@ void test_accumulation(void){
 	TEST_ASSERT_EQUAL_MEMORY(T2, buffer + strlen(T1), strlen(T2));
 }
 
+char inbuf[20] = "Hello World!";
+
+static int sys_write_gpib_cb(char* data, int size){
+  int sz = strlen(inbuf);
+  TEST_ASSERT_EQUAL_MEMORY(inbuf, data, sz);
+  TEST_ASSERT_EQUAL(sz, size);
+  return 0;
+}
+
 void test_parse_command_write(void){
-  char inbuf*;
   char *outbuf;
-  int sz = strlen(inbuff);
-  sz = process_input(&inbuff);
-  TEST_ASSERT_EQUAL(0, sz);
-  sz = sys_get_gpib_buffer(&outbuf);
-  TEST_ASSERT_EQUAL(strlen(inbuff), sz);
-  TEST_ASSERT_EQUAL_MEMORY(inbuff, outbuf, sz);
+  int sz = strlen(inbuf);
+  int ret = 0;
+  sys_write_gpib_StubWithCallback(sys_write_gpib_cb);
+  set_input_buffer(inbuf, sz);
+  ret = process_input(&inbuf);
+  TEST_ASSERT_EQUAL(0, ret);
+  ret = get_input_buffer(&outbuf);
+  TEST_ASSERT_EQUAL(sz, ret);
+  TEST_ASSERT_EQUAL_MEMORY(inbuf, outbuf, sz);
 }

@@ -146,5 +146,6 @@ int get_input_buffer(char** buffer){
 int set_input_buffer(char* data, int sz){
 	if(sz > INPUT_SIZE) return -1;
 	memcpy(ibuffer, data, sz);
+	olen = sz;
 	return 0;
 }
