@@ -1,5 +1,6 @@
 #include "unity.h"
 #include "system.h"
+#include <string.h>
 #include <xc.h>
 #include <p18f4550.h>
 
@@ -34,5 +35,14 @@ void tearDown(void)
 
 void test_sys_write_gpib(void)
 {
-	TEST_IGNORE_MESSAGE("Implement me!");
+  char* buf[20] = "Hello World!";
+  char* outbuf;
+  int sz = strlen(buf);
+  int retval = sys_write_gpib(buf, 10000);
+  TEST_ASSERT_EQUAL(-1, retval);
+  retval = sys_write_gpib(buf, sz);
+  TEST_ASSERT_EQUAL(0, retval);
+  retval = sys_get_gpib_buffer(&outbuf);
+  TEST_ASSERT_EQUAL(sz, retval);
+  TEST_ASSERT_EQUAL_MEMORY(buf, outbuf, sz);
 }

@@ -11,11 +11,6 @@ static int addr;
 static char gpib_buffer[GPIB_BUFFER_SIZE];
 static int bsz = 0;
 static int bsent = 0;
-typedef enum {
-	SENDING,
-	RECEIVING,
-	IDLE
-} sys_state;
 
 static sys_state state = IDLE;
 static int do_sending(void);
@@ -32,6 +27,10 @@ int sys_set_address(uint8_t address, uint8_t subaddress)
 	if (address > 32  || subaddress > 255 ) return -1;
 	addr = address;
 	return 0;
+}
+
+sys_state sys_get_state(void){
+	return state;
 }
 
 int sys_get_address(void)

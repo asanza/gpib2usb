@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+typedef enum{
+	SENDING,
+	RECEIVING,
+	IDLE
+}sys_state;
+
+sys_state sys_get_state(void);
+
 /**
  * @brief perform periodic system tasks.
  * return 1 if new data arrived by gpib interface
