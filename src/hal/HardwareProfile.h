@@ -41,7 +41,7 @@
 #define YELLOW_LED  C, BIT1
 #define RED_LED     C, BIT0
 
-/* Auxiliar macros */
+/* Auxiliary macros */
 #define PinAsInput(val)        _PinAsInput(val)
 #define PinAsOutput(val)       _PinAsOutput(val)
 #define PinSetValue(val)        _PinSetValue(val)
