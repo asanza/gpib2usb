@@ -81,7 +81,7 @@ int main(void)
 		/* check if data available from gpib bus */
 		if ( sys_tasks() ) {
 			/* send data */
-			len = sys_read_gpib(&str);
+			len = sys_get_gpib_buffer(&str);
 			write_buffer_sync(str, len);
 			continue;
 		}
