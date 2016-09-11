@@ -91,22 +91,44 @@ void test_accumulation(void){
 
 char inbuf[20] = "Hello World!";
 
-static int sys_write_gpib_cb(char* data, int size){
+static int sys_write_gpib_ok_cb(char* data, int size){
   int sz = strlen(inbuf);
   TEST_ASSERT_EQUAL_MEMORY(inbuf, data, sz);
   TEST_ASSERT_EQUAL(sz, size);
   return 0;
 }
 
-void test_parse_command_write(void){
+void test_parse_command_write_ok(void){
   char *outbuf;
   int sz = strlen(inbuf);
   int ret = 0;
-  sys_write_gpib_StubWithCallback(sys_write_gpib_cb);
+  sys_write_gpib_StubWithCallback(sys_write_gpib_ok_cb);
   set_input_buffer(inbuf, sz);
   ret = process_input(&inbuf);
   TEST_ASSERT_EQUAL(0, ret);
   ret = get_input_buffer(&outbuf);
   TEST_ASSERT_EQUAL(sz, ret);
   TEST_ASSERT_EQUAL_MEMORY(inbuf, outbuf, sz);
+}
+
+static int sys_write_gpib_error_cb(char* data, int size){
+  int sz = strlen(inbuf);
+  TEST_ASSERT_EQUAL_MEMORY(inbuf, data, sz);
+  TEST_ASSERT_EQUAL(sz, size);
+  return strlen("Error: cannot write\r\n");
+}
+
+void test_parse_command_write_error(void){
+  char *outbuf;
+  int sz = strlen(inbuf);
+  char retbuf[25] = "Error: cannot write\r\n";
+  int retsz = strlen(retbuf);
+  int ret = 0;
+  sys_write_gpib_StubWithCallback(sys_write_gpib_error_cb);
+  set_input_buffer(inbuf, sz);
+  ret = process_input(&inbuf);
+  TEST_ASSERT_EQUAL(retsz, ret);
+  ret = get_input_buffer(&outbuf);
+  TEST_ASSERT_EQUAL(retsz, ret);
+  TEST_ASSERT_EQUAL_MEMORY(retbuf, outbuf, retsz);
 }

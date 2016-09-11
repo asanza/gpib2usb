@@ -108,7 +108,8 @@ static int check_input(char** str, char* data, size_t sz){
             break;
     }
     *str = ibuffer;
-    return strlen(ibuffer);
+		olen = strlen(ibuffer);
+    return olen;
 }
 
 int read_line(const char* buffer, size_t size){
