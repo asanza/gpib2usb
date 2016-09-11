@@ -64,7 +64,11 @@ int sys_write_gpib(char* data, int size)
 int sys_tasks(void)
 {
 	GPIB_Event evt = GPIB_Tasks();
-
+	if(evt == GPIB_EVT_DATA_AVAILABLE){
+		gpib_buffer[0] = GPIB_Get();
+		bsz = 1;
+		return -2;
+	}
 	switch (state) {
 	case SENDING:
 		timeout--;
@@ -111,16 +115,18 @@ static int do_receiving(void)
 	case 1: retval = GPIB_Send(TAD, addr); index++; break;
 	case 2: retval = GPIB_Send(MLA, 1); index++; break;
 	case 3: retval = GPIB_Receive(); break;
-	case 4: retval = GPIB_Send(UNT, 1); index++;
-	case 5: retval = GPIB_Send(UNL, 1); index = 0;
+	case 4: retval = GPIB_Send(UNT, 1); index++; break;
+	case 5: retval = GPIB_Send(UNL, 1); index = 0; break;
 	default: index = 0;
 	}
-	if (retval) {
+	if (retval != GPIB_EVT_NONE) {
 		sprintf(gpib_buffer, "Reception error\r\n");
 		bsz = strlen(gpib_buffer);
 		state = IDLE;
 		index = 0;
+		return -1;
 	}
+	return 0;
 }
 
 static int do_sending(void)
@@ -137,16 +143,19 @@ static int do_sending(void)
 			bsent = 0; bsz = 0;
 			index++;
 			state = IDLE;
+			return -1;
 		}
 		break;
 	case 4: retval = GPIB_Send(UNT, addr); index++;
 	case 5: retval = GPIB_Send(UNL, addr); index = 0;
 	default: index = 0;
 	}
-	if (retval) {
+	if (retval != GPIB_EVT_NONE) {
 		sprintf(gpib_buffer, "Transmission error\r\n");
 		bsz = strlen(gpib_buffer);
 		state = IDLE;
 		index = 0;
+		return -1;
 	}
+	return 0;
 }
