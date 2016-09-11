@@ -72,7 +72,7 @@ void GPIB_Reset(void){
 }
 
 state_t GPIB_State(void){
-								return actual_st;
+							return actual_st;
 }
 
 GPIB_Event GPIB_Tasks(void){
