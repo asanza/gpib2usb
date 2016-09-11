@@ -110,14 +110,7 @@ static int do_receiving(void)
 	case 0: retval = GPIB_Send(UNL, 1); index++; break;
 	case 1: retval = GPIB_Send(TAD, addr); index++; break;
 	case 2: retval = GPIB_Send(MLA, 1); index++; break;
-	//case 3: retval = GPIB_Receive(&gpib_bufer[bsz++]);
-	//	if ( ( bsz == GPIB_BUFFER_SIZE || gpib_buffer[bsz - 1] == '\n' )
-	//				&& !retval){
-	//		bsent = 0;
-	//		index++;
-	//		state = IDLE;
-	//	}
-	//	break;
+	case 3: retval = GPIB_Receive(); break;
 	case 4: retval = GPIB_Send(UNT, 1); index++;
 	case 5: retval = GPIB_Send(UNL, 1); index = 0;
 	default: index = 0;

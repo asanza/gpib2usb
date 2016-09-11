@@ -83,7 +83,7 @@ state_t GPIB_State(void);
  *
  * @return     -1 if address invalid.
  */
-int GPIB_Init(int our_address);
+GPIB_Event GPIB_Init(int our_address);
 
 /**
  * @brief      Send a GPIB command to the attached bus.
@@ -96,7 +96,7 @@ int GPIB_Init(int our_address);
  *
  * @return     0 if data could be sent. -1 if buffer is not empty.
  */
-int GPIB_Send(GPIB_Command cmd, char data);
+GPIB_Event GPIB_Send(GPIB_Command cmd, char data);
 
 /**
  * @brief      Set the bus to listen communications.
@@ -106,7 +106,7 @@ int GPIB_Send(GPIB_Command cmd, char data);
  *             arrives. Call GPIB_Get to get the last received data.
  *
  */
-void GPIB_Receive(void);
+GPIB_Event GPIB_Receive(void);
 
 /**
  * @brief      get the last received byte
