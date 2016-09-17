@@ -2,6 +2,11 @@ MPLAB.X/nbproject/private/
 MPLAB.X/dist
 MPLAB.X/build
 
+*.tags
+*.tags1
+
+todo.txt
+
 build/
 
 *.gch
