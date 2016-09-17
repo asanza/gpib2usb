@@ -1,17 +1,23 @@
 #include "unity.h"
 #include "gpib.h"
 
+#include "mock_hal_gpib.h"
+#include "mock_gpib_listen.h"
+#include "mock_gpib_talk.h"
+
 #include <xc.h>
 #include <p18f4550.h>
 
 // disable watchdog
 #pragma WDT=OFF
 
+#define TRUE 1
+#define FALSE 0
+
 void putch(char data)
 {
-    while( ! TXIF)
-        continue;
     TXREG = data;
+    while( ! TXIF);
 }
 
 void init_uart(void)
@@ -32,7 +38,10 @@ void tearDown(void)
 {
 }
 
-void test_needs_to_be_implemented(void)
+void test_gpib_state_machine_send_error(void)
 {
+}
 
+void test_gpib_state_machine_send_command(void)
+{
 }

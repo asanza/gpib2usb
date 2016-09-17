@@ -24,138 +24,78 @@
 #include "gpib.h"
 #include <sys/parser.h>
 #include "hal/hal_gpib.h"
+#include "gpib_talk.h"
+#include "gpib_listen.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MLA_CODE 0x20
-#define MTA_CODE 0x40
-#define LAD_CODE 0x20
-#define UNL_CODE 0x3F
-#define TAD_CODE 0x40
-#define UNT_CODE 0x5F
-#define SAD_CODE 0x60
-#define LLO_CODE 0x11
-#define DCL_CODE 0x14
-#define PPU_CODE 0x15
-#define SPE_CODE 0x18
-#define SPD_CODE 0x19
-#define GTL_CODE 0x01
-#define SDC_CODE 0x04
-#define PPC_CODE 0x05
-#define GET_CODE 0x08
-#define TCT_CODE 0x09
-#define PPE_CODE 0x60
-#define PPD_CODE 0x70
-
-static state_t actual_st = GPIB_IDLE;
+static GPIB_state_t state = GPIB_IDLE;
 static char buff;
 
-static GPIB_Event st_idle(state_t* state);
-static GPIB_Event st_no_ready_for_data(state_t* state);
-static GPIB_Event st_no_data_accepted(state_t* state);
-static GPIB_Event st_data_available(state_t* state);
-static GPIB_Event st_no_data_available(state_t* state);
+static GPIB_Event on_gpib_idle(void);
+static GPIB_Event on_gpib_talk(void);
+static GPIB_Event on_gpib_listen(void);
 
-typedef GPIB_Event st_function_t (state_t * state);
+static GPIB_Event gpib_send_data(char data);
+static GPIB_Event gpib_send_cmd(char cmd);
+
+typedef GPIB_Event st_function_t (void);
 
 static st_function_t* const state_table[NUM_STATES] = {
-	st_idle,
-	st_no_ready_for_data,
-	st_no_data_accepted,
-	st_data_available,
-	st_no_data_available
+	on_gpib_idle,
+	on_gpib_talk,
+	on_gpib_listen
 };
 
 void GPIB_Reset(void)
 {
-	actual_st = GPIB_IDLE;
+	state = GPIB_IDLE;
 }
 
-state_t GPIB_State(void)
+GPIB_state_t GPIB_State(void)
 {
-	return actual_st;
+	return state;
 }
 
 GPIB_Event GPIB_Tasks(void)
 {
-	return state_table[actual_st](&actual_st);
+	return state_table[state]();
 }
 
+static GPIB_Event on_gpib_talk(void){
 
-static GPIB_Event st_idle(state_t* state)
-{
-	assert(*state == GPIB_IDLE);
+}
+
+static GPIB_Event on_gpib_listen(void){
+
+}
+
+static GPIB_Event on_gpib_idle(void){
 	return GPIB_EVT_NONE;
 }
 
-static GPIB_Event gpib_send(state_t* state, char data)
+static GPIB_Event gpib_send_data(char data)
 {
-	assert(*state == GPIB_IDLE);
-	hal_gpib_set_driver_direction(TALKER);
-	hal_gpib_set_signal_false(DAV_PIN);
-	if (!hal_gpib_is_signal_true(NRFD_PIN) &&
-	    !hal_gpib_is_signal_true(NDAC_PIN)) {
-		*state = GPIB_IDLE;
-		return GPIB_EVT_RX_ERROR;
+	gpib_talk_error_t err;
+	err = gpib_talk(data);
+	if(err == GPIB_TALK_ERR_NONE){
+		state = GPIB_TALK;
+		return GPIB_EVT_NONE;
+	} else {
+		return GPIB_EVT_TX_ERROR;
 	}
-	hal_gpib_put_data(data);
-	*state = NO_READY_FOR_DATA;
-	return GPIB_EVT_NONE;
 }
 
-static GPIB_Event gpib_send_cmd(state_t* state, char cmd)
+static GPIB_Event gpib_send_cmd(char cmd)
 {
 	hal_gpib_set_signal_true(ATN_PIN);
-	return gpib_send(state, cmd);
-}
-
-static GPIB_Event st_no_ready_for_data(state_t* state)
-{
-	assert(*state == NO_READY_FOR_DATA);
-	if (hal_gpib_is_signal_true(NRFD_PIN))
-		return GPIB_EVT_NONE;
-	hal_gpib_set_signal_true(DAV_PIN);
-	*state = NO_DATA_ACCEPTED;
-	return GPIB_EVT_NONE;
-}
-
-static GPIB_Event st_no_data_accepted(state_t* state)
-{
-	assert(*state == NO_DATA_ACCEPTED);
-	if (hal_gpib_is_signal_true(NDAC_PIN))
-		return GPIB_EVT_NONE;
-	hal_gpib_set_signal_false(DAV_PIN);
-	/* TODO: check if this do what you think */
-	if (hal_gpib_is_signal_true(ATN_PIN))
-		hal_gpib_set_signal_false(ATN_PIN);
-	*state = GPIB_IDLE;
-	return GPIB_EVT_NONE;
-}
-
-static GPIB_Event st_data_available(state_t* state)
-{
-	assert(*state == DATA_AVAILABLE);
-	if (!hal_gpib_is_signal_true(DAV_PIN))
-		return GPIB_EVT_NONE;
-	hal_gpib_set_signal_true(NRFD_PIN);
-	buff = hal_gpib_read_data();
-	*state = NO_DATA_AVAILABLE;
-	return GPIB_EVT_NONE;
-}
-
-static GPIB_Event st_no_data_available(state_t* state)
-{
-	assert(*state == NO_DATA_AVAILABLE);
-	if (hal_gpib_is_signal_true(DAV_PIN))
-		return GPIB_EVT_NONE;
-	hal_gpib_set_signal_true(NDAC_PIN);
-	return GPIB_EVT_DATA_AVAILABLE;
+	return gpib_send_data(cmd);
 }
 
 GPIB_Event GPIB_Send(GPIB_Command cmd, char data)
 {
-	if (actual_st != GPIB_IDLE) return GPIB_EVT_TX_ERROR;
+	if (state != GPIB_IDLE) return GPIB_EVT_TX_ERROR;
 	char code;
 	switch (cmd) {
 	case ATN:
@@ -209,22 +149,23 @@ GPIB_Event GPIB_Send(GPIB_Command cmd, char data)
 	case PPD: code = PPD_CODE; break;
 	case DAB:
 		hal_gpib_set_signal_false(ATN_PIN);
-		return gpib_send(&actual_st, data);
+		return gpib_send_data(data);
 	default: assert(0);
 	}
-	return gpib_send_cmd(&actual_st, code);
+	return gpib_send_cmd(code);
 }
 
 GPIB_Event GPIB_Receive(void)
 {
-	hal_gpib_set_driver_direction(LISTENER);
-	hal_gpib_set_signal_true(NDAC_PIN);
-	hal_gpib_set_signal_false(NRFD_PIN);
-	actual_st = DATA_AVAILABLE;
+	gpib_listen_error_t err;
+	err = gpib_listen();
+	if(err != GPIB_LISTEN_ERR_NONE)
+		return GPIB_EVT_RX_ERROR;
+	state = GPIB_LISTEN;
 	return GPIB_EVT_NONE;
 }
 
 char GPIB_Get(void)
 {
-	return buff;
+	return gpib_listen_data();
 }

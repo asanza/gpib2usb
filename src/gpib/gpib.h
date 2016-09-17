@@ -24,9 +24,6 @@
 #ifndef gpib_H
 #define gpib_H
 
-#ifndef lib_gpib_h
-#define lib_gpib_h
-
 typedef enum {
     /* uniline */
     ATN,
@@ -67,14 +64,12 @@ typedef enum {
 
 typedef enum{
 	GPIB_IDLE,
-	NO_READY_FOR_DATA,
-	NO_DATA_ACCEPTED,
-	DATA_AVAILABLE,
-	NO_DATA_AVAILABLE,
+	GPIB_TALK,
+	GPIB_LISTEN,
 	NUM_STATES
-}state_t;
+}GPIB_state_t;
 
-state_t GPIB_State(void);
+GPIB_state_t GPIB_State(void);
 
 /**
  * @brief      Initializes the gpib driver with a given address.
@@ -130,7 +125,26 @@ GPIB_Event GPIB_Tasks(void);
  */
 void GPIB_Reset(void);
 
-#endif
 
+/* gpib definitions */
+#define MLA_CODE 0x20
+#define MTA_CODE 0x40
+#define LAD_CODE 0x20
+#define UNL_CODE 0x3F
+#define TAD_CODE 0x40
+#define UNT_CODE 0x5F
+#define SAD_CODE 0x60
+#define LLO_CODE 0x11
+#define DCL_CODE 0x14
+#define PPU_CODE 0x15
+#define SPE_CODE 0x18
+#define SPD_CODE 0x19
+#define GTL_CODE 0x01
+#define SDC_CODE 0x04
+#define PPC_CODE 0x05
+#define GET_CODE 0x08
+#define TCT_CODE 0x09
+#define PPE_CODE 0x60
+#define PPD_CODE 0x70
 
 #endif // gpib_H
