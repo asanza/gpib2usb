@@ -1,3 +1,26 @@
+/*
+ * system.c
+ *
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ *
+ * Created on September 18, 2016, 19:45 PM
+ */
+
 #include "system.h"
 #include "gpib/gpib.h"
 #include "hal/hal_sys.h"
@@ -29,7 +52,8 @@ int sys_set_address(uint8_t address, uint8_t subaddress)
 	return 0;
 }
 
-sys_state sys_get_state(void){
+sys_state sys_get_state(void)
+{
 	return state;
 }
 
@@ -63,7 +87,7 @@ int sys_write_gpib(char* data, int size)
 int sys_tasks(void)
 {
 	GPIB_Event evt = GPIB_Tasks();
-	if(evt == GPIB_EVT_DATA_AVAILABLE){
+	if (evt == GPIB_EVT_DATA_AVAILABLE) {
 		gpib_buffer[0] = GPIB_Get();
 		bsz = 1;
 		return -2;
@@ -73,16 +97,14 @@ int sys_tasks(void)
 		timeout--;
 		if (GPIB_State() == GPIB_IDLE) {
 			timeout = TIMEOUT;
-			if (do_sending())
-				return -1;
+			return do_sending();
 		}
 		break;
 	case RECEIVING:
 		timeout--;
 		if (GPIB_State() == GPIB_IDLE) {
 			timeout = TIMEOUT;
-			if (do_receiving())
-				return -1;
+			return do_receiving();
 		}
 		break;
 	case IDLE:
@@ -99,6 +121,7 @@ int sys_tasks(void)
 		sprintf(gpib_buffer, "Timeout\r\n");
 		bsz = strlen(gpib_buffer);
 		state = IDLE;
+		GPIB_Reset();
 		return -1;
 	}
 	return 0;
