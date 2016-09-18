@@ -68,7 +68,7 @@ static gpib_talk_error_t on_talk_idle(void){
 }
 
 static gpib_talk_error_t on_talk_wait_nrfd(void){
-	if(!hal_gpib_is_signal_true(NRFD_PIN)){
+	if(hal_gpib_is_signal_true(NRFD_PIN)){
 		return GPIB_TALK_ERR_NONE;
 	}
 	hal_gpib_set_signal_true(DAV_PIN);
