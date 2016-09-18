@@ -48,6 +48,7 @@ gpib_talk_error_t gpib_talk(char data){
 			!hal_gpib_is_signal_true(NRFD_PIN)){
 		return GPIB_TALK_ERR_DEVICE_NOT_PRESENT;
 	}
+	hal_gpib_set_driver_direction(TALKER);
 	hal_gpib_put_data(data);
 	state = GPIB_TALK_WAIT_NRFD;
 	return GPIB_TALK_ERR_NONE;

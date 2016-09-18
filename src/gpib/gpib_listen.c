@@ -48,6 +48,7 @@ gpib_listen_error_t gpib_listen(void){
 	hal_gpib_set_signal_true(NDAC_PIN);
 	hal_gpib_set_signal_false(NRFD_PIN);
 	state = GPIB_LISTEN_WAIT_FOR_DAV_TRUE;
+	hal_gpib_set_driver_direction(LISTENER);
 	return GPIB_LISTEN_ERR_NONE;
 }
 

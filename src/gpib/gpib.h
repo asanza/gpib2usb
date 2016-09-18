@@ -69,6 +69,8 @@ typedef enum{
 	NUM_STATES
 }GPIB_state_t;
 
+void GPIB_Mode(int mode);
+
 GPIB_state_t GPIB_State(void);
 
 /**

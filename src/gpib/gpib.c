@@ -48,6 +48,10 @@ static st_function_t* const state_table[NUM_STATES] = {
 	on_gpib_listen
 };
 
+void GPIB_Mode(int mode){
+	hal_gpib_set_driver_mode(CONTROLLER);
+}
+
 void GPIB_Reset(void)
 {
 	state = GPIB_IDLE;
