@@ -54,6 +54,8 @@ void GPIB_Mode(int mode){
 
 void GPIB_Reset(void)
 {
+	gpib_talk_reset();
+	gpib_listen_reset();
 	state = GPIB_IDLE;
 }
 

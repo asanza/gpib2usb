@@ -30,14 +30,14 @@
 #define REN_PIN     0x02
 #define IFC_PIN     0x04
 #define SRQ_PIN     0x08
-    
+
 #define DAV_PIN     0x10
 #define NDAC_PIN    0x20
 #define NRFD_PIN    0x40
 
 #define EOI_PIN     0x80
 
-    
+
 #define GPIO1   11
 #define GPIO2   12
 #define GPIO3   13
@@ -45,24 +45,18 @@
 #define GPIO5   15
 #define TXD     16
 #define RXD     17
-    
+
 typedef enum{
-    CONTROLLER = 0x01,
-            DEVICE = 0x02,
+  CONTROLLER = 0x01,
+  DEVICE = 0x02,
 }hal_gpib_driver_mode;
 
-       typedef enum{
-            TALKER = 0x04,
-            LISTENER = 0x08
+typedef enum{
+  TALKER = 0x04,
+  LISTENER = 0x08
 }hal_gpib_data_direction;
 
-void hal_gpib_set_driver_direction(hal_gpib_data_direction direction); 
-/*
-#define TE_DATA      18
-#define TE_CTRL      8
-#define DC      9
-#define PE      10
-*/
+void hal_gpib_set_driver_direction(hal_gpib_data_direction direction);
 void hal_gpib_init(void);
 int hal_gpib_is_signal_true(int pin);
 void hal_gpib_set_signal_false(int pin);
