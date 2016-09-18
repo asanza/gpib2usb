@@ -45,19 +45,23 @@ gpib_listen_error_t gpib_listen_tasks(void){
 }
 
 gpib_listen_error_t gpib_listen(void){
+	hal_gpib_set_signal_true(NDAC_PIN);
+	hal_gpib_set_signal_false(NRFD_PIN);
+	state = GPIB_LISTEN_WAIT_FOR_DAV_TRUE;
 	return GPIB_LISTEN_ERR_NONE;
 }
 
 gpib_listen_state_t gpib_listen_state(void){
-	return GPIB_LISTEN_ERR_NONE;
+	return state;
 }
 
 void gpib_listen_reset(void){
-
+	hal_gpib_set_signal_true(NDAC_PIN);
+	state = GPIB_LISTEN_IDLE;
 }
 
 char gpib_listen_data(void){
-
+	return gdata;
 }
 
 static gpib_listen_error_t on_listen_idle(void){
@@ -65,9 +69,24 @@ static gpib_listen_error_t on_listen_idle(void){
 }
 
 static gpib_listen_error_t on_listen_wait_for_dav_true(void){
+	if(!hal_gpib_is_signal_true(DAV_PIN)){
+		return GPIB_LISTEN_ERR_NONE;
+	}
+	hal_gpib_set_signal_true(NRFD_PIN);
+	if(hal_gpib_is_signal_true(EOI_PIN)){
+		// TODO: not sure what to do here
+	}
+	gdata = hal_gpib_read_data();
+	hal_gpib_set_signal_true(NDAC_PIN);
+	state = GPIB_LISTEN_WAIT_FOR_DAV_FALSE;
 	return GPIB_LISTEN_ERR_NONE;
 }
 
 static gpib_listen_error_t on_listen_wait_for_dav_false(void){
+	if(hal_gpib_is_signal_true(DAV_PIN)){
+		return GPIB_LISTEN_ERR_NONE;
+	}
+	hal_gpib_set_signal_true(NDAC_PIN);
+	state = GPIB_LISTEN_IDLE;
 	return GPIB_LISTEN_ERR_NONE;
 }
