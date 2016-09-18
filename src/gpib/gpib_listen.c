@@ -34,11 +34,11 @@ static gpib_listen_error_t on_listen_wait_for_dav_false(void);
 
 typedef gpib_listen_error_t le_function_t(void);
 
-static le_function_t const state_table[GPIB_LISTEN_NUM_STATES] = {
+static le_function_t* const state_table[GPIB_LISTEN_NUM_STATES] = {
 	on_listen_idle,
 	on_listen_wait_for_dav_true,
 	on_listen_wait_for_dav_false
-}
+};
 
 gpib_listen_error_t gpib_listen_tasks(void){
 	return state_table[state]();
@@ -57,7 +57,7 @@ void gpib_listen_reset(void){
 }
 
 char gpib_listen_data(void){
-	
+
 }
 
 static gpib_listen_error_t on_listen_idle(void){

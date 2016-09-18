@@ -32,11 +32,11 @@ static gpib_talk_error_t on_talk_wait_ndac(void);
 
 typedef gpib_talk_error_t te_function_t(void);
 
-static te_function_t const state_table[GPIB_TALK_NUM_STATES] = {
+static te_function_t* const state_table[GPIB_TALK_NUM_STATES] = {
 	on_talk_idle,
 	on_talk_wait_nrfd,
 	on_talk_wait_ndac
-}
+};
 
 gpib_talk_error_t gpib_talk_tasks(void){
 	return state_table[state]();
@@ -67,8 +67,8 @@ static gpib_talk_error_t on_talk_idle(void){
 	return GPIB_TALK_ERR_NONE;
 }
 
-static gpib_talk_error_t on_talk_wait_ndac(void){
-	if(hal_gpib_is_signal_true(NRFD_PIN)){
+static gpib_talk_error_t on_talk_wait_nrfd(void){
+	if(!hal_gpib_is_signal_true(NRFD_PIN)){
 		return GPIB_TALK_ERR_NONE;
 	}
 	hal_gpib_set_signal_true(DAV_PIN);

@@ -64,11 +64,35 @@ GPIB_Event GPIB_Tasks(void)
 }
 
 static GPIB_Event on_gpib_talk(void){
-
+	gpib_talk_error_t err;
+	err = gpib_talk_tasks();
+	if(err == GPIB_EVT_NONE){
+		if(gpib_talk_state() == GPIB_TALK_IDLE){
+			/* done with transmission */
+			state = GPIB_IDLE;
+		}
+		return GPIB_EVT_NONE;
+	} else {
+		state = GPIB_IDLE;
+		gpib_talk_reset();
+		return GPIB_EVT_TX_ERROR;
+	}
 }
 
 static GPIB_Event on_gpib_listen(void){
-
+	gpib_talk_error_t err;
+	err = gpib_listen_tasks();
+	if(err == GPIB_EVT_NONE){
+		if(gpib_listen_state() == GPIB_LISTEN_IDLE){
+			state = GPIB_IDLE;
+			return GPIB_EVT_DATA_AVAILABLE;
+		}
+		return GPIB_EVT_NONE;
+	} else {
+		state = GPIB_IDLE;
+		gpib_listen_reset();
+		return GPIB_EVT_RX_ERROR;
+	}
 }
 
 static GPIB_Event on_gpib_idle(void){
@@ -89,6 +113,9 @@ static GPIB_Event gpib_send_data(char data)
 
 static GPIB_Event gpib_send_cmd(char cmd)
 {
+	if(!cmd){
+		return GPIB_EVT_NONE;
+	}
 	hal_gpib_set_signal_true(ATN_PIN);
 	return gpib_send_data(cmd);
 }
@@ -96,7 +123,7 @@ static GPIB_Event gpib_send_cmd(char cmd)
 GPIB_Event GPIB_Send(GPIB_Command cmd, char data)
 {
 	if (state != GPIB_IDLE) return GPIB_EVT_TX_ERROR;
-	char code;
+	char code = 0x00;
 	switch (cmd) {
 	case ATN:
 		if (data)
