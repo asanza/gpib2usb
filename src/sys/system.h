@@ -5,19 +5,18 @@
 #include <stdint.h>
 
 typedef enum{
-	SENDING,
-	RECEIVING,
-	IDLE
-}sys_state;
-
-sys_state sys_get_state(void);
+	SYSEVT_IDLE,		// system is idle. Wait for new data
+	SYSEVT_DATA_RECEIVED, // new data received from gpib bus
+	SYSEVT_NO_DEVICE_ATTACHED,
+	SYSEVT_BUFFER_NOT_EMPTY
+}system_event_t;
 
 /**
  * @brief perform periodic system tasks.
- * return 1 if new data arrived by gpib interface
- *        0 if nothing happened.
+ * return SYSEVT_IDLE if system idle.
+ * 				SYSEVT_DATA_RECEIVED if data received
  */
-int sys_tasks(void);
+system_event_t sys_tasks(void);
 
 /**
  * @brief   get a pointer of the internal gpib buffer.
@@ -30,7 +29,7 @@ int sys_get_gpib_buffer(char** data);
 /* start a gpib read */
 void sys_start_read(void);
 
-int sys_write_gpib(char* data, int size);
+system_event_t sys_write_gpib(char* data, int size);
 
 /**
  * @brief      Set system address.

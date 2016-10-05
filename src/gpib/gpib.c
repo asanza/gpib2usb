@@ -48,8 +48,11 @@ static st_function_t* const state_table[NUM_STATES] = {
 	on_gpib_listen
 };
 
-void GPIB_Mode(int mode){
-	hal_gpib_set_driver_mode(CONTROLLER);
+void GPIB_Mode(GPIB_mode_t mode){
+	if(mode == GPIB_MODE_CONTROLLER)
+		hal_gpib_set_driver_mode(CONTROLLER);
+	else
+		hal_gpib_set_driver_mode(DEVICE);
 }
 
 void GPIB_Reset(void)

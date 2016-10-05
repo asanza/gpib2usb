@@ -69,7 +69,12 @@ typedef enum{
 	NUM_STATES
 }GPIB_state_t;
 
-void GPIB_Mode(int mode);
+typedef enum{
+	GPIB_MODE_DEVICE,
+	GPIB_MODE_CONTROLLER
+}GPIB_mode_t;
+
+void GPIB_Mode(GPIB_mode_t mode);
 
 GPIB_state_t GPIB_State(void);
 

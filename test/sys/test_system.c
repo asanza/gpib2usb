@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "system.h"
 #include <string.h>
+#include <mock_gpib.h>
 #include <xc.h>
 #include <p18f4550.h>
 
@@ -35,19 +36,5 @@ void tearDown(void)
 
 void test_sys_write_gpib(void)
 {
-  char* buf[20] = "Hello World!";
-  char* outbuf;
-  int sz = strlen(buf);
-  sys_state state;
-  int retval = sys_write_gpib(buf, 10000);
-  state = sys_get_state();
-  TEST_ASSERT_EQUAL(state, IDLE);
-  TEST_ASSERT_EQUAL(-1, retval);
-  retval = sys_write_gpib(buf, sz);
-  state = sys_get_state();
-  TEST_ASSERT_EQUAL(state, SENDING);
-  TEST_ASSERT_EQUAL(0, retval);
-  retval = sys_get_gpib_buffer(&outbuf);
-  TEST_ASSERT_EQUAL(sz, retval);
-  TEST_ASSERT_EQUAL_MEMORY(buf, outbuf, sz);
+
 }
