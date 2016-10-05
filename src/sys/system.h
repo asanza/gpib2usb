@@ -8,7 +8,11 @@ typedef enum{
 	SYSEVT_IDLE,		// system is idle. Wait for new data
 	SYSEVT_DATA_RECEIVED, // new data received from gpib bus
 	SYSEVT_NO_DEVICE_ATTACHED,
-	SYSEVT_BUFFER_NOT_EMPTY
+	SYSEVT_BUFFER_NOT_EMPTY,
+	SYSEVT_TX_ERROR,
+	SYSEVT_RX_ERROR,
+	SYSEVT_TRANSMITTING,
+	SYSEVT_RECEIVING,
 }system_event_t;
 
 /**

@@ -28,12 +28,20 @@
  #include <stdio.h>
  #include <assert.h>
 
+#define TRUE 1
+#define FALSE 0
+
 #define GPIB_BUFFER_SIZE	256
 static int addr;
+static int reading = FALSE;
 
+/* allocate memory for gpib buffer */
 static char gpib_buffer[GPIB_BUFFER_SIZE];
-static int buffer_size = 0;
-static int char_sent = 0;
+/* utility pointer */
+static char* buffer_ptr = gpib_buffer;
+
+void do_rx_sm(void); // rx state machine
+void do_tx_sm(void); // tx state machine
 
 int sys_set_address(uint8_t address, uint8_t subaddress)
 {
@@ -48,17 +56,58 @@ int sys_get_address(void)
 }
 
 void sys_start_read(void){
-
+	reading = true;
+	do_rx_sm();
 }
 
 system_event_t sys_write_gpib(char* data, int size){
-	if(buffer_size != 0) return SYSEVT_BUFFER_NOT_EMPTY;
+	if(gpib_buffer != buffer_ptr) return SYSEVT_BUFFER_NOT_EMPTY;
 	memcpy(gpib_buffer, data, size);
-	buffer_size = data;
-	char_sent = 0;
+	buffer_ptr = gpib_buffer + size;
+	return SYSEVT_IDLE;
 }
 
 
 system_event_t sys_tasks(void){
 	GPIB_Event evt = GPIB_Tasks();
+	if(evt == GPIB_EVT_DATA_AVAILABLE)
+		return SYSEVT_DATA_RECEIVED;
+	else if (evt == GPIB_EVT_TX_ERROR)
+		return SYSEVT_TX_ERROR;
+	else if (evt == GPIB_EVT_RX_ERROR);
+		return SYSEVT_RX_ERROR;
+	switch(GPIB_State()){
+		case GPIB_TALK: return SYSEVT_TRANSMITTING;
+		case GPIB_LISTEN: return SYSEVT_RECEIVING;
+		default: break;
+	}
+
+	if(buffer_ptr == gpib_buffer){
+		/* if set, eoi or lf not yet received */
+		if(reading) {
+			/* advance rx state machine */
+			do_rx_sm();
+			return SYSEVT_RECEIVING;
+		}
+		return SYSEVT_IDLE;
+	}
+	/* advance tx state machine  */
+	do_tx_sm();
+	return SYSEVT_TRANSMITTING;
+}
+
+void do_tx_sm(void){
+	static int state = 0;
+	switch(state){
+		case 0: GPIB_Send(UNL, 1); state++; break;
+		case 1: GPIB_Send(LAD, addr); state++; break;
+		case 2: GPIB_Send(MTA, 1); state++; break;
+		case 4:
+			GPIB_Send(DAB, *(--buffer_ptr));
+			if(buffer_ptr == gpib_buffer) state++;
+			break;
+		case 5: GPIB_Send(UNT, sysaddr); state++; break;
+		case 6: GPIB_Send(UNL, sysaddr); state = 0; break;
+		default: break;
+	}
 }
