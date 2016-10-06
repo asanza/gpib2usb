@@ -52,7 +52,8 @@ typedef enum {
     TCT,
     PPE,
     PPD,
-    DAB
+    DAB,
+		GPIB_COMMAND_COUNT
 } GPIB_Command;
 
 typedef enum {
