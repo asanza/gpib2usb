@@ -18,7 +18,6 @@
         <itemPath>../src/sys/input.h</itemPath>
         <itemPath>../src/sys/sysdefs.h</itemPath>
         <itemPath>../src/sys/utils.h</itemPath>
-        <itemPath>../src/sys/system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="usb" displayName="usb" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
@@ -47,6 +46,8 @@
       <logicalFolder name="src" displayName="src" projectFiles="true">
         <logicalFolder name="gpib" displayName="gpib" projectFiles="true">
           <itemPath>../src/gpib/gpib.c</itemPath>
+          <itemPath>../src/gpib/gpib_listen.c</itemPath>
+          <itemPath>../src/gpib/gpib_talk.c</itemPath>
         </logicalFolder>
         <logicalFolder name="hal" displayName="hal" projectFiles="true">
           <itemPath>../src/hal/fuses.c</itemPath>
@@ -58,7 +59,6 @@
           <itemPath>../src/sys/parser.c</itemPath>
           <itemPath>../src/sys/input.c</itemPath>
           <itemPath>../src/sys/utils.c</itemPath>
-          <itemPath>../src/sys/system.c</itemPath>
         </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <logicalFolder name="include" displayName="include" projectFiles="true">
