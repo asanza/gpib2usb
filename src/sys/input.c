@@ -23,7 +23,6 @@
 
 #include "input.h"
 #include "sysdefs.h"
-#include "system.h"
 #include "parser.h"
 #include <assert.h>
 #include <string.h>
@@ -67,5 +66,15 @@ int set_input_buffer(char* data, int sz)
 	if (sz > INPUT_SIZE) return -1;
 	memcpy(ibuffer, data, sz);
 	olen = sz;
+	return 0;
+}
+
+int process_input(char** str){
+	GPIB_Command cmd = parse_input(*str);
+	if(cmd == GPIB_COMMAND_COUNT){
+		sprintf(*str, "Error: Unknown Command\r\n");
+		return 0;
+	}
+	GPIB_Send(cmd, **str);
 	return 0;
 }

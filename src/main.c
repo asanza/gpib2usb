@@ -23,7 +23,7 @@
 #include "hal/hal_sys.h"
 #include "sys/input.h"
 #include "sys/parser.h"
-#include "sys/system.h"
+#include "gpib/gpib.h"
 #include <string.h>
 #include "usb_config.h"
 #include "usb_ch9.h"
@@ -79,10 +79,10 @@ int main(void)
 		if (!usb_is_configured()) continue;
 		if (usb_out_endpoint_halted(2)) continue;
 		/* check if data available from gpib bus */
-		if ( sys_tasks() ) {
+		if ( GPIB_Tasks() == GPIB_EVT_DATA_AVAILABLE ) {
 			/* send data */
-			len = sys_get_gpib_buffer(&str);
-			write_buffer_sync(str, len);
+			char c = GPIB_Get();
+			write_buffer_sync(c, 1);
 			continue;
 		}
 		if (!usb_out_endpoint_has_data(2))
@@ -90,10 +90,12 @@ int main(void)
 		len = usb_get_out_buffer(2, &out_buf);
 		if (len <= 0) usb_arm_out_endpoint(2);
 		if (read_line(out_buf, len) > 0) {
-			/* complete line received. process. */
-			devcmd cmd;
 			/* process input and get the output buffer */
-			len = process_input(&str);
+			if(GPIB_State() != GPIB_IDLE){
+				sprintf(str, "Error: Busy");
+			} else {
+				len = process_input(&str);
+			}
 			/* send response to usb */
 			write_buffer_sync(str, len);
 		}

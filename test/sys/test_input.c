@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "input.h"
-#include "mock_system.h"
-#include "parser.h"
+#include "mock_parser.h"
+#include "mock_gpib.h"
 #include "utils.h"
 #include <string.h>
 
@@ -52,83 +52,4 @@ void test_read_line_cr(void)
 	TEST_ASSERT_EQUAL(1, len);
 	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
 	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
-}
-
-
-void test_read_line_esc(void)
-{
-	char* T1 = "assdaf123jlafs\x1B\n\n";
-	int len = read_line(T1, strlen(T1));
-	char* buffer;
-	TEST_ASSERT_EQUAL(1, len);
-	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
-	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
-}
-
-
-void test_read_line_esc2(void)
-{
-	char* T1 = "\x1B\n\x1B\n\x1B\n\x1B\n\r";
-	int len = read_line(T1, strlen(T1));
-	char* buffer;
-	TEST_ASSERT_EQUAL(1, len);
-	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
-	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
-}
-
-void test_accumulation(void){
-	char* T1 = "\x1B\n\x1B\n\x1B\n\x1B\n";
-	char* T2 = "HELLO\n";
-	int len = read_line(T1, strlen(T1));
-	TEST_ASSERT_EQUAL(0, len);
-	len = read_line(T2, strlen(T2));
-	char* buffer;
-	TEST_ASSERT_EQUAL(1, len);
-	TEST_ASSERT_EQUAL(strlen(T1) + strlen(T2), get_input_buffer(&buffer));
-	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
-	TEST_ASSERT_EQUAL_MEMORY(T2, buffer + strlen(T1), strlen(T2));
-}
-
-char inbuf[20] = "Hello World!";
-
-static int sys_write_gpib_ok_cb(char* data, int size){
-  int sz = strlen(inbuf);
-  TEST_ASSERT_EQUAL_MEMORY(inbuf, data, sz);
-  TEST_ASSERT_EQUAL(sz, size);
-  return 0;
-}
-
-void test_parse_command_write_ok(void){
-  char *outbuf;
-  int sz = strlen(inbuf);
-  int ret = 0;
-  sys_write_gpib_StubWithCallback(sys_write_gpib_ok_cb);
-  set_input_buffer(inbuf, sz);
-  ret = process_input(&inbuf);
-  TEST_ASSERT_EQUAL(0, ret);
-  ret = get_input_buffer(&outbuf);
-  TEST_ASSERT_EQUAL(sz, ret);
-  TEST_ASSERT_EQUAL_MEMORY(inbuf, outbuf, sz);
-}
-
-static int sys_write_gpib_error_cb(char* data, int size){
-  int sz = strlen(inbuf);
-  TEST_ASSERT_EQUAL_MEMORY(inbuf, data, sz);
-  TEST_ASSERT_EQUAL(sz, size);
-  return strlen("Error: cannot write\r\n");
-}
-
-void test_parse_command_write_error(void){
-  char *outbuf;
-  int sz = strlen(inbuf);
-  char retbuf[25] = "Error: cannot write\r\n";
-  int retsz = strlen(retbuf);
-  int ret = 0;
-  sys_write_gpib_StubWithCallback(sys_write_gpib_error_cb);
-  set_input_buffer(inbuf, sz);
-  ret = process_input(&inbuf);
-  TEST_ASSERT_EQUAL(retsz, ret);
-  ret = get_input_buffer(&outbuf);
-  TEST_ASSERT_EQUAL(retsz, ret);
-  TEST_ASSERT_EQUAL_MEMORY(retbuf, outbuf, retsz);
 }

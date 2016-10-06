@@ -34,6 +34,7 @@ void test_gpib_talk_device_present_ndac_true(void){
 	TEST_ASSERT_EQUAL(GPIB_TALK_IDLE, gpib_talk_state());
 	hal_gpib_set_signal_false_Expect(DAV_PIN);
 	hal_gpib_is_signal_true_ExpectAndReturn(NDAC_PIN, TRUE);
+	hal_gpib_set_driver_direction_Expect(TALKER);
 	hal_gpib_put_data_Expect(tdat);
 	err = gpib_talk(tdat);
 	TEST_ASSERT_EQUAL(GPIB_TALK_ERR_NONE, err);
@@ -49,6 +50,7 @@ void test_gpib_talk_device_present_nrfd_true(void){
 	hal_gpib_set_signal_false_Expect(DAV_PIN);
 	hal_gpib_is_signal_true_ExpectAndReturn(NDAC_PIN, FALSE);
 	hal_gpib_is_signal_true_ExpectAndReturn(NRFD_PIN, TRUE);
+	hal_gpib_set_driver_direction_Expect(TALKER);
 	hal_gpib_put_data_Expect(tdat);
 	err = gpib_talk(tdat);
 	TEST_ASSERT_EQUAL(GPIB_TALK_ERR_NONE, err);
