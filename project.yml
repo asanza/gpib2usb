@@ -195,7 +195,7 @@
       #- "--errformat=%f:%l: error: (%n) %s"
       #- "--warnformat=%f:%l: warning: (%n) %s"
       #- "--msgformat=%f:%l: advisory: (%n) %s"
-      - --memorysummary "./build/test/memoryfile.xml"
+      - --memorysummary "./build/release/memoryfile.xml"
       - -o"./build/release/gpib2usb.elf"
       - "${1}"
 
