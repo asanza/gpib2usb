@@ -37,7 +37,9 @@ static char inbuff[INBUFFSIZE];
 static int buffpos = 0;
 
 #define ERROVERFLOW -1
-#define ERROK -2
+#define ERRNONE -2
+#define ISCMD -3
+#define ISDATA -4
 
 static int on_char_received(char c);
 
@@ -46,31 +48,43 @@ int sys_on_usb_data_received(char* str, int len){
 	int i = 0;
 	for(i = 0; i < len; i++){
 		switch(on_char_received(*data++)){
-			case ERROK: continue;
+			case ERRNONE: continue;
 			case ERROVERFLOW:
 				sprintf(str, "Error: Overflow\r\n");
+				buffpos = 0;
 				return strlen(str);
-			case SYS_ERR_COMMAND_UNKNOWN:
-				sprintf(str, "Error: Unknown Command\r\n");
-				return strlen(str);
-			case SYS_ERR_NONE:
-				return 0;
+			case ISCMD:
+				i = sys_process_command(inbuff, buffpos);
+				memcpy(str, inbuff, i);
+				buffpos = 0;
+				return i;
+			case ISDATA:
+				i = sys_process_input(inbuff, buffpos);
+				memcpy(str, inbuff, i);
+				buffpos = 0;
+				return i;
 		}
 	}
 }
 
 static int on_char_received(char c){
-	static int esc = 0;
-	int out = ERROK;
+	static int esc = 0, cmd = 0;
+	int out = ERRNONE;
 	if(buffpos > INBUFFSIZE){
-		buffpos = 0;
 		return ERROVERFLOW;
 	} else if( !esc && ( c==LF || c==CR )){
-		out = sys_process_input(inbuff, buffpos);
-		buffpos = 0;
+		if(cmd)
+			out = ISCMD;
+		else
+			out = ISDATA;
+		cmd = 0;
+		inbuff[buffpos] = 0;
+	} else if( !esc && c=='+' ){
+		cmd = 1;
+		inbuff[buffpos++] = c;
 	} else if( !esc && ( c==ESC )){
 		esc = 1;
-	} else{
+	} else {
 		inbuff[buffpos++] = c;
 		esc = 0;
 	}

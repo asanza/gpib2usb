@@ -1,55 +1,34 @@
 #include "unity.h"
 #include "input.h"
-#include "mock_parser.h"
-#include "mock_gpib.h"
-#include "utils.h"
-#include <string.h>
-
-#include <xc.h>
-#include <p18f4550.h>
-
-
-void putch(char data)
-{
-    while( ! TXIF)
-        continue;
-    TXREG = data;
-}
-
-void init_uart(void)
-{
-    SPBRG = 0x19;           // 9600 baud @ 4 MHz
-    TXEN = 1;               // enable transmitter
-    BRGH = 1;               // select high baud rate
-    SPEN = 1;               // enable serial port
-    CREN = 1;               // enable continuous operation
-}
+#include "mock_system.h"
+#include "support_uart.h"
 
 void setUp(void)
 {
-	init_uart();
+	support_init_uart();
 }
 
 void tearDown(void)
 {
 }
 
-void test_read_line(void)
+extern char inbuff[];
+
+void test_sys_on_usb_data_received(void)
 {
-	char* T1 = "assdaf123jlafs\n";
-	int len = read_line(T1, strlen(T1));
-	char* buffer;
-	TEST_ASSERT_EQUAL(1, len);
-	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
-	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
+	int ret = 0;
+	char testin[200] = {"HELLO WORLD\x1B\n\n"};
+	sys_process_input_ExpectAndReturn(inbuff, 12, SYS_ERR_NONE);
+	ret = sys_on_usb_data_received(testin, 14);
+	TEST_ASSERT_EQUAL(0, ret);
+	TEST_ASSERT_EQUAL_MEMORY("HELLO WORLD\n", inbuff, 12);
 }
 
-void test_read_line_cr(void)
-{
-	char* T1 = "assdaf123jlafs\r";
-	int len = read_line(T1, strlen(T1));
-	char* buffer;
-	TEST_ASSERT_EQUAL(1, len);
-	TEST_ASSERT_EQUAL(strlen(T1), get_input_buffer(&buffer));
-	TEST_ASSERT_EQUAL_MEMORY(T1, buffer, strlen(T1));
+void test_sys_on_usb_command_received(void){
+	int ret = 0;
+	char testin[200] = {"HE+LO WORLD\x1B\n\n"};
+	sys_process_command_ExpectAndReturn(inbuff, 12, SYS_ERR_NONE);
+	ret = sys_on_usb_data_received(testin, 14);
+	TEST_ASSERT_EQUAL(0, ret);
+	TEST_ASSERT_EQUAL_MEMORY("HE+LO WORLD\n", inbuff, 12);
 }

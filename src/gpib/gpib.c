@@ -22,7 +22,6 @@
  */
 
 #include "gpib.h"
-#include <sys/parser.h>
 #include "hal/hal_gpib.h"
 #include "gpib_talk.h"
 #include "gpib_listen.h"

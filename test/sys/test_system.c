@@ -1,8 +1,10 @@
 #include "unity.h"
 #include "system.h"
+#include "support_uart.h"
 
 void setUp(void)
 {
+		support_init_uart();
 }
 
 void tearDown(void)
