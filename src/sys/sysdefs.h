@@ -30,4 +30,14 @@
 	#define LF  0x0A
 	#define CR  0x0D
 
+
+	typedef struct sys_state_T{
+		int address;
+		int timeout;
+		int eos;
+		int eoi;
+		int _auto;
+	}sys_state_t;
+
+
 #endif
