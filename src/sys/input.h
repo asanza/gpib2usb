@@ -27,4 +27,8 @@
 /** returns len of error message on str */
 int sys_on_usb_data_received(char* str, int len);
 
+int sys_get_input(char** input, int* len);
+
+void sys_release_input(void);
+
 #endif // input_H

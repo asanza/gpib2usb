@@ -36,10 +36,15 @@ static char inbuff[INBUFFSIZE];
 
 static int buffpos = 0;
 
+static volatile int cmd_available = 0;
+static volatile int data_available = 0;
+static volatile int lock = 0;
+
 #define ERROVERFLOW -1
 #define ERRNONE -2
 #define ISCMD -3
 #define ISDATA -4
+#define ISBUSY -5
 
 static int on_char_received(char c);
 
@@ -54,23 +59,39 @@ int sys_on_usb_data_received(char* str, int len){
 				buffpos = 0;
 				return strlen(str);
 			case ISCMD:
-				i = sys_process_command(inbuff, buffpos);
-				memcpy(str, inbuff, i);
-				buffpos = 0;
-				return i;
+				cmd_available = 1;
+				return 0;
 			case ISDATA:
-				i = sys_process_input(inbuff, buffpos);
-				memcpy(str, inbuff, i);
-				buffpos = 0;
-				return i;
+				data_available = 1;
+				return 0;
+			case ISBUSY:
+				sprintf(str, "Error: Busy\r\n");
+				return strlen(str);
 		}
 	}
+}
+
+void sys_release_input(void){
+	lock = 0;
+	data_available = 0;
+	cmd_available = 0;
+	buffpos = 0;
+}
+
+int sys_get_input(char** buffer, int* len){
+	*buffer = inbuff;
+	*len = buffpos;
+	if ( data_available) return 1;
+	if ( cmd_available ) return 2;
+	else return 0;
 }
 
 static int on_char_received(char c){
 	static int esc = 0, cmd = 0;
 	int out = ERRNONE;
-	if(buffpos > INBUFFSIZE){
+	if(cmd_available || data_available || lock){
+		return ISBUSY;
+	} else	if(buffpos > INBUFFSIZE){
 		return ERROVERFLOW;
 	} else if( !esc && ( c==LF || c==CR )){
 		if(cmd)
