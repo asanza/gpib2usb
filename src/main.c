@@ -21,6 +21,7 @@
 
 #include "usb.h"
 #include "hal/hal_sys.h"
+#include "hal/hal_timer.h"
 #include "sys/input.h"
 #include "gpib/gpib.h"
 #include <string.h>
@@ -61,38 +62,42 @@ static void write_char_sync(const char c)
 {
 	write_buffer_sync(&c, 1);
 }
-
-int main(void)
-{
+static volatile int not_configured = 1;
+static void timer_task(void){
 	char *str;
 	const unsigned char *out_buf;
 	size_t len;
+    if (!usb_is_configured()){
+        not_configured = 1;
+        return;
+    };
+    if (usb_out_endpoint_halted(2)){
+        not_configured = 1;
+        return;
+    };
+    not_configured = 0;
+    if (!usb_out_endpoint_has_data(2))
+        return;        
+    len = usb_get_out_buffer(2, &out_buf);
+    write_buffer_sync(out_buf, len);
+    usb_arm_out_endpoint(2);
+}
 
+int main(void)
+{
 	hal_sys_init();
 #ifdef MULTI_CLASS_DEVICE
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
-	hal_sys_green_led_on();
+	hal_timer_init(1000, timer_task);
 	while (1) {
-		if (!usb_is_configured()) continue;
-		if (usb_out_endpoint_halted(2)) continue;
-		/* check if data available from gpib bus */
-		if ( GPIB_Tasks() == GPIB_EVT_DATA_AVAILABLE ) {
-			/* send data */
-			char c = GPIB_Get();
-			write_char_sync(c);
-			continue;
-		}
-		if (!usb_out_endpoint_has_data(2))
-			continue;
-		len = usb_get_out_buffer(2, &out_buf);
-		len = sys_on_usb_data_received(out_buf, len);
-		write_buffer_sync(out_buf, len);
-		usb_arm_out_endpoint(2);
+        if(not_configured) continue;
 	}
 	return 0;
 }
+
+
 
 /* Callbacks. These function names are set in usb_config.h. */
 void app_set_configuration_callback(uint8_t configuration)
@@ -216,5 +221,6 @@ int8_t app_send_break_callback(uint8_t interface, uint16_t duration)
 
 void interrupt high_priority isr()
 {
+    hal_timer_service();
 	usb_service();
 }
