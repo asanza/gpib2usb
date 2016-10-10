@@ -39,6 +39,10 @@ void hal_sys_red_led_on(void);
 void hal_sys_yellow_led_on(void);
 
 void hal_sys_yellow_led_toggle(void);
+
+void hal_sys_enter_critical(void);
+void hal_sys_exit_critical(void);
+
 #ifdef	__cplusplus
 }
 #endif

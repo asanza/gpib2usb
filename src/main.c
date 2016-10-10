@@ -101,13 +101,14 @@ int main(void)
 	while (1) {
     if(not_configured) continue;
 		switch(sysio_get_state()){
-			case SYSIO_EMPTY: continue;
+			case SYSIO_EMPTY: break;
 			case SYSIO_DATA_AVAILABLE: /* data */
-				//sysio_release();
-				continue;
+				hal_sys_green_led_toggle();
+				sysio_release();
+				break;
 			case SYSIO_CMD_AVAILABLE: /* cmd  */
-				//sysio_release();
-				continue;
+				sysio_release();
+				break;
 		}
 	}
 	return 0;

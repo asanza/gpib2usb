@@ -73,12 +73,18 @@ int sysio_data_received(char* str, int len){
 }
 
 void sysio_release(void){
+	hal_sys_enter_critical();
 	state = SYSIO_EMPTY;
+	hal_sys_exit_critical();
 	buffpos = 0;
 }
 
 sysio_state_t sysio_get_state(void){
-	return state;
+	sysio_state_t temp;
+	hal_sys_enter_critical();
+	temp = state;
+	hal_sys_exit_critical();
+	return temp;
 }
 
 static int on_char_received(char c){
@@ -93,6 +99,8 @@ static int on_char_received(char c){
 			out = ISCMD;
 		else
 			out = ISDATA;
+		cmd = 0;
+		esc = 0;
 		inbuff[buffpos] = 0;
 	} else if( !esc && c=='+' ){
 		cmd = 1;

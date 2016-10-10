@@ -71,3 +71,11 @@ void hal_sys_yellow_led_on(void){
 void hal_sys_yellow_led_toggle(void){
     PinToggleValue(YELLOW_LED);
 }
+
+void hal_sys_enter_critical(void){
+	INTCONbits.GIE = 0;	
+}
+
+void hal_sys_exit_critical(void){
+	INTCONbits.GIE = 1;
+}
