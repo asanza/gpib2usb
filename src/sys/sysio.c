@@ -45,7 +45,7 @@ static sysio_state_t state;
 
 static int on_char_received(char c);
 
-char* sysio_data_received(char* str, int len){
+int sysio_data_received(char* str, int len){
 	char* data = str;
 	int i = 0;
 	for(i = 0; i < len; i++){
@@ -54,18 +54,22 @@ char* sysio_data_received(char* str, int len){
 			case ERROVERFLOW:
 				sprintf(str, "Error: Overflow\r\n");
 				buffpos = 0;
-				return str;
+				return strlen(str);
 			case ISCMD:
 				state = SYSIO_CMD_AVAILABLE;
-				return NULL;
+				return 0;
 			case ISDATA:
 				state = SYSIO_DATA_AVAILABLE;
-				return NULL;
+				return 0;
 			case ISBUSY:
 				sprintf(str, "Error: Busy\r\n");
-				return str;
+				return strlen(str);
+			default:
+				sprintf(str, "Error: unknown\r\n");
+				return strlen(str);
 		}
 	}
+	return 0;
 }
 
 void sysio_release(void){
@@ -78,18 +82,17 @@ sysio_state_t sysio_get_state(void){
 }
 
 static int on_char_received(char c){
-	static int esc = 0, cmd = 0;
+	static int cmd = 0, esc = 0;
 	int out = ERRNONE;
 	if(state != SYSIO_EMPTY){
-		return ISBUSY;
+		out = ISBUSY;
 	} else	if(buffpos > INBUFFSIZE){
-		return ERROVERFLOW;
+		out = ERROVERFLOW;
 	} else if( !esc && ( c==LF || c==CR )){
 		if(cmd)
 			out = ISCMD;
 		else
 			out = ISDATA;
-		cmd = 0;
 		inbuff[buffpos] = 0;
 	} else if( !esc && c=='+' ){
 		cmd = 1;

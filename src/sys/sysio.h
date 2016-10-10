@@ -34,8 +34,8 @@ typedef enum{
 }sysio_state_t;
 
 
-/* returns NULL if data accepted in buffer, error message if not */
-char* sysio_data_received(char* data, int len);
+/* returns len of error message */
+int sysio_data_received(char* data, int len);
 sysio_state_t sysio_get_state(void);
 void sysio_release(void);
 

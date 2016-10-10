@@ -82,10 +82,10 @@ static void timer_task(void){
 			return;
 		} else {
 			len = usb_get_out_buffer(2, &out_buf);
-			//len = sysio_data_received(out_buf, len);
+			len = sysio_data_received(out_buf, len);
+			write_buffer_sync(out_buf, len);
+	    usb_arm_out_endpoint(2);
 		}
-		write_buffer_sync(out_buf, len);
-    usb_arm_out_endpoint(2);
 }
 
 int main(void)
@@ -101,13 +101,13 @@ int main(void)
 	while (1) {
     if(not_configured) continue;
 		switch(sysio_get_state()){
-			case SYSIO_EMPTY: return;
+			case SYSIO_EMPTY: continue;
 			case SYSIO_DATA_AVAILABLE: /* data */
-				sysio_release();
-			return;
+				//sysio_release();
+				continue;
 			case SYSIO_CMD_AVAILABLE: /* cmd  */
-				sysio_release();
-			return;
+				//sysio_release();
+				continue;
 		}
 	}
 	return 0;
