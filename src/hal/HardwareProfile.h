@@ -1,7 +1,7 @@
 #ifndef _HARDWAREPROFILE_H_
 #define _HARDWAREPROFILE_H_
 
-#include <p18f4550.h>
+#include <xc.h>
 
 #define BIT0 0x00
 #define BIT1 0x01

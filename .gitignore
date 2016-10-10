@@ -1,7 +1,8 @@
 MPLAB.X/nbproject/private/
 MPLAB.X/dist
 MPLAB.X/build
-
+MPLABXLog.*
+log*
 *.tags
 *.tags1
 

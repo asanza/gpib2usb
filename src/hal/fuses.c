@@ -21,7 +21,12 @@
  */
 
 // CONFIG1L
+#include <xc.h>
+#ifdef _18F2550
+#pragma config PLLDIV = 1
+#else
 #pragma config PLLDIV = 2      // PLL Prescaler Selection bits (Divide by 2 (8 MHz oscillator input))
+#endif
 #pragma config CPUDIV = OSC1_PLL2// System Clock Postscaler Selection bits ([Primary Oscillator Src: /1][96 MHz PLL Src: /2])
 #pragma config USBDIV = 2       // USB Clock Selection bit (used in Full-Speed USB mode only; UCFG:FSEN = 1) (USB clock source comes from the 96 MHz PLL divided by 2)
 
@@ -80,4 +85,3 @@
 
 // CONFIG7H
 #pragma config EBTRB = OFF      // Boot Block Table Read Protection bit (Boot block (000000-0007FFh) is not protected from table reads executed in other blocks)
-

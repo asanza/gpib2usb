@@ -18,7 +18,7 @@
 #  :use_assembly: FALSE
 
 :environment:
-  - :mcu: 18F4550
+  - :mcu: 18F2550
   - :path:
     - /bin
     - /usr/bin
