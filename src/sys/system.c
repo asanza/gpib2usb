@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "gpib/gpib.h"
 #include "utils.h"
 #include "system.h"
 #include "sysdefs.h"
@@ -51,8 +52,9 @@ static sys_state_t state = { 0, 3000,	0, 0, 1 };
 } while(0);
 
 int sys_process_input(char* str, int len){
-    sprintf(str, "Error: passing data not implemented\r\n");
-    return strlen(str);
+	GPIB_Mode(GPIB_MODE_CONTROLLER);
+  sprintf(str, "Error: passing data not implemented\r\n");
+  return strlen(str);
 }
 
 int sys_process_command(char*str, int len){
@@ -76,7 +78,7 @@ int sys_process_command(char*str, int len){
 	} else if ( !strcasecmp(token, "++trg") ){
     sprintf(str, "Error: ++trg not implemented\r\n");
 	} else if ( !strcasecmp(token, "++ver") ){
-    sprintf(str, "%s-%s\r\n",REPOVERSION, REPOBRANCH);
+//    sprintf(str, "%s-%s\r\n",REPOVERSION, REPOBRANCH);
 	} else if ( !strcasecmp(token, "++help") ){
   	sprintf(str, "Error: ++help not implemented\r\n");
 	} else if( !strcasecmp(token, "++read") ){

@@ -22,7 +22,7 @@
 #include "usb.h"
 #include "hal/hal_sys.h"
 #include "hal/hal_timer.h"
-#include "sys/input.h"
+#include "sys/sysio.h"
 #include "gpib/gpib.h"
 #include <string.h>
 #include "usb_config.h"
@@ -62,7 +62,9 @@ static void write_char_sync(const char c)
 {
 	write_buffer_sync(&c, 1);
 }
+
 static volatile int not_configured = 1;
+
 static void timer_task(void){
 	char *str;
 	const unsigned char *out_buf;
@@ -76,15 +78,20 @@ static void timer_task(void){
         return;
     };
     not_configured = 0;
-    if (!usb_out_endpoint_has_data(2))
-        return;        
-    len = usb_get_out_buffer(2, &out_buf);
-    write_buffer_sync(out_buf, len);
+    if (!usb_out_endpoint_has_data(2)) {
+			return;
+		} else {
+			len = usb_get_out_buffer(2, &out_buf);
+			//len = sysio_data_received(out_buf, len);
+		}
+		write_buffer_sync(out_buf, len);
     usb_arm_out_endpoint(2);
 }
 
 int main(void)
 {
+	char* input;
+	int len;
 	hal_sys_init();
 #ifdef MULTI_CLASS_DEVICE
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
@@ -92,7 +99,16 @@ int main(void)
 	usb_init();
 	hal_timer_init(1000, timer_task);
 	while (1) {
-        if(not_configured) continue;
+    if(not_configured) continue;
+		switch(sysio_get_state()){
+			case SYSIO_EMPTY: return;
+			case SYSIO_DATA_AVAILABLE: /* data */
+				sysio_release();
+			return;
+			case SYSIO_CMD_AVAILABLE: /* cmd  */
+				sysio_release();
+			return;
+		}
 	}
 	return 0;
 }
@@ -221,6 +237,6 @@ int8_t app_send_break_callback(uint8_t interface, uint16_t duration)
 
 void interrupt high_priority isr()
 {
-    hal_timer_service();
+  hal_timer_service();
 	usb_service();
 }

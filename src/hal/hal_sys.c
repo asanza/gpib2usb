@@ -49,11 +49,15 @@ PinClearValue(YELLOW_LED);
 		__asm volatile("ei");
 	#endif
 #endif
-    
+
 }
 
 void hal_sys_green_led_on(void){
     PinSetValue(GREEN_LED);
+}
+
+void hal_sys_green_led_toggle(void){
+    PinToggleValue(GREEN_LED);
 }
 
 void hal_sys_red_led_on(void){

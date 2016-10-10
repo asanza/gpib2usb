@@ -32,6 +32,7 @@ extern "C" {
     void hal_sys_init(void);
 
 void hal_sys_green_led_on(void);
+void hal_sys_green_led_toggle(void);
 
 void hal_sys_red_led_on(void);
 
@@ -43,4 +44,3 @@ void hal_sys_yellow_led_toggle(void);
 #endif
 
 #endif	/* HAL_SYS_H */
-
