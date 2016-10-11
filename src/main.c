@@ -79,13 +79,17 @@ static void timer_task(void){
     };
     not_configured = 0;
     if (!usb_out_endpoint_has_data(2)) {
-			return;
+			if(sys_gpib_has_data()){
+				len = sys_gpib_get_buffer(&out_buf);
+			} else {
+				return;
+			}
 		} else {
 			len = usb_get_out_buffer(2, &out_buf);
 			len = sysio_data_received(out_buf, len);
-			write_buffer_sync(out_buf, len);
-	    usb_arm_out_endpoint(2);
 		}
+		usb_arm_out_endpoint(2);
+		write_buffer_sync(out_buf, len);
 }
 
 int main(void)
