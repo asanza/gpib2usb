@@ -23,6 +23,7 @@
 
 #ifndef system_H
 #define system_H
+#include <stdbool.h>
 
 typedef enum{
 	SYS_ERR_NONE,
@@ -31,5 +32,8 @@ typedef enum{
 
 int sys_process_input(char* str, int len);
 int sys_process_command(char*str, int len);
+bool sys_gpib_has_data(void);
+int sys_gpib_get_buffer(char** out_buf);
+
 
 #endif // system_H
