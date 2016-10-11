@@ -35,6 +35,7 @@ int fifo_write(fifo_t * f, const void * buf, int nbytes){
      int i;
      const char * p;
      p = buf;
+		 hal_enter_critical();
      for(i=0; i < nbytes; i++){
            //first check to see if there is space in the buffer
            if( (f->head + 1 == f->tail) ||
@@ -48,5 +49,6 @@ int fifo_write(fifo_t * f, const void * buf, int nbytes){
                }
            }
      }
+		 hal_exit_critical();
      return nbytes;
 }

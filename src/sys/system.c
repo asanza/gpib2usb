@@ -63,7 +63,8 @@ void sys_init(void)
 
 int sys_process_input(char* str, int len)
 {
-	sprintf(str, "Error: passing data not implemented\r\n");
+	char* msg = "Error: passing data not implemented\r\n";
+	fifo_write(&gpib_fifo, msg, strlen(msg));
 	return strlen(str);
 }
 
