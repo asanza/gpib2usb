@@ -25,6 +25,7 @@
 #include <string.h>
 #include "gpib/gpib.h"
 #include "utils.h"
+#include "utils/fifo.h"
 #include "system.h"
 #include "sysdefs.h"
 
@@ -32,6 +33,10 @@
 #define REPOVERSION "1"
 #define REPOBRANCH "master"
 #endif
+
+#define GPIB_BUFFER_SIZE 200
+static fifo_t gpib_fifo;
+static char gpib_buffer[GPIB_BUFFER_SIZE];
 
 static sys_state_t state = { 0, 3000,	0, 0, 1 };
 
@@ -50,6 +55,10 @@ static sys_state_t state = { 0, 3000,	0, 0, 1 };
 		}																					\
 	}																						\
 } while(0);
+
+void sys_init(void){
+	fifo_init(&gpib_fifo, &gpib_buffer, GPIB_BUFFER_SIZE);
+}
 
 int sys_process_input(char* str, int len){
 	GPIB_Mode(GPIB_MODE_CONTROLLER);
@@ -78,7 +87,7 @@ int sys_process_command(char*str, int len){
 	} else if ( !strcasecmp(token, "++trg") ){
     sprintf(str, "Error: ++trg not implemented\r\n");
 	} else if ( !strcasecmp(token, "++ver") ){
-//    sprintf(str, "%s-%s\r\n",REPOVERSION, REPOBRANCH);
+    sprintf(str, "%s-%s\r\n",REPOVERSION, REPOBRANCH);
 	} else if ( !strcasecmp(token, "++help") ){
   	sprintf(str, "Error: ++help not implemented\r\n");
 	} else if( !strcasecmp(token, "++read") ){
@@ -89,4 +98,8 @@ int sys_process_command(char*str, int len){
     sprintf(str, "Error: Command Unknown\r\n");
   }
 	return strlen(str);
+}
+
+int sys_gpib_get_buffer(char* out_buf, int len){
+	int sz = fifo_read(&gpib_fifo, out_buf, len);
 }

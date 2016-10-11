@@ -23,6 +23,7 @@
 #include "hal/hal_sys.h"
 #include "hal/hal_timer.h"
 #include "sys/sysio.h"
+#include "sys/system.h"
 #include "gpib/gpib.h"
 #include <string.h>
 #include "usb_config.h"
@@ -52,7 +53,6 @@ static void send_string_sync(uint8_t endpoint, const char *str)
 static void write_buffer_sync(const char* str, int len)
 {
 	char *in_buf = (char*)usb_get_in_buffer(2);
-
 	while (usb_in_endpoint_busy(2)) ;
 	strncpy(in_buf, str, len);
 	usb_send_in_buffer(2, len);
@@ -67,29 +67,31 @@ static volatile int not_configured = 1;
 
 static void timer_task(void){
 	char *str;
-	const unsigned char *out_buf;
+	const unsigned char *out_buf, *in_buf;
 	size_t len;
-    if (!usb_is_configured()){
-        not_configured = 1;
-        return;
-    };
-    if (usb_out_endpoint_halted(2)){
-        not_configured = 1;
-        return;
-    };
-    not_configured = 0;
-    if (!usb_out_endpoint_has_data(2)) {
-			if(sys_gpib_has_data()){
-				len = sys_gpib_get_buffer(&out_buf);
-			} else {
-				return;
-			}
-		} else {
-			len = usb_get_out_buffer(2, &out_buf);
-			len = sysio_data_received(out_buf, len);
-		}
-		usb_arm_out_endpoint(2);
-		write_buffer_sync(out_buf, len);
+  if (!usb_is_configured()){
+      not_configured = 1;
+      return;
+  };
+  if (usb_out_endpoint_halted(2)){
+      not_configured = 1;
+      return;
+  };
+  not_configured = 0;
+	in_buf = (char*)usb_get_in_buffer(2);
+  if (!usb_out_endpoint_has_data(2)) {
+		while (usb_in_endpoint_busy(2)) ;
+		len = sys_gpib_get_buffer(in_buf, EP_2_IN_LEN);
+		if(len <= 0)
+			return;
+	} else {
+		len = usb_get_out_buffer(2, &out_buf);
+		len = sysio_data_received(out_buf, len);
+		while (usb_in_endpoint_busy(2)) ;
+	}
+	strncpy(in_buf, str, len);
+	usb_send_in_buffer(2, len);
+	usb_arm_out_endpoint(2);
 }
 
 int main(void)
@@ -97,6 +99,7 @@ int main(void)
 	char* input;
 	int len;
 	hal_sys_init();
+	sys_init();
 #ifdef MULTI_CLASS_DEVICE
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif

@@ -24,6 +24,7 @@
 #include "sysio.h"
 #include <stdio.h>
 #include "sysdefs.h"
+#include "hal/hal_sys.h"
 #include <string.h>
 
 #define INBUFFSIZE 200
@@ -72,6 +73,11 @@ int sysio_data_received(char* str, int len){
 	return 0;
 }
 
+int sysio_get_buffer(char** buffer){
+	*buffer = inbuff;
+	return buffpos;
+}
+
 void sysio_release(void){
 	hal_sys_enter_critical();
 	state = SYSIO_EMPTY;
@@ -101,7 +107,7 @@ static int on_char_received(char c){
 			out = ISDATA;
 		cmd = 0;
 		esc = 0;
-		inbuff[buffpos] = 0;
+		inbuff[buffpos++] = 0;
 	} else if( !esc && c=='+' ){
 		cmd = 1;
 		inbuff[buffpos++] = c;
