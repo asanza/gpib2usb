@@ -66,7 +66,6 @@ static void write_char_sync(const char c)
 static volatile int not_configured = 1;
 
 static void timer_task(void){
-	char *str;
 	const unsigned char *out_buf, *in_buf;
 	size_t len;
   if (!usb_is_configured()){
@@ -88,8 +87,8 @@ static void timer_task(void){
 		len = usb_get_out_buffer(2, &out_buf);
 		len = sysio_data_received(out_buf, len);
 		while (usb_in_endpoint_busy(2)) ;
+		strncpy(in_buf, out_buf, len);
 	}
-	strncpy(in_buf, str, len);
 	usb_send_in_buffer(2, len);
 	usb_arm_out_endpoint(2);
 }

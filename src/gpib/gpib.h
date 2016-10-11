@@ -56,94 +56,49 @@ typedef enum {
 		GPIB_COMMAND_COUNT
 } GPIB_Command;
 
-typedef enum {
-	GPIB_EVT_NONE = 0x00,
-	GPIB_EVT_DATA_AVAILABLE = 0x01,
-  GPIB_EVT_TX_ERROR = 0x02,
-  GPIB_EVT_RX_ERROR
-} GPIB_Event;
-
-typedef enum{
-	GPIB_IDLE,
-	GPIB_TALK,
-	GPIB_LISTEN,
-	NUM_STATES
-}GPIB_state_t;
-
 typedef enum{
 	GPIB_MODE_DEVICE,
 	GPIB_MODE_CONTROLLER
 }GPIB_mode_t;
 
-void GPIB_Mode(GPIB_mode_t mode);
-
-GPIB_state_t GPIB_State(void);
-
-/**
- * @brief      Send a GPIB command to the attached bus.
- * 			   This is an asynchronous call. cmd and data are copied
- * 			   into a buffer, and then send sequentially by calling the
- * 			   GPIB_Task function.
- *
- * @param[in]  cmd   The command
- * @param[in]  data  The data
- *
- * @return     0 if data could be sent. -1 if buffer is not empty.
+/* Initializes the GPIB driver with a given gpib address. 
+ * returns -1 in case of error.
  */
-GPIB_Event GPIB_Send(GPIB_Command cmd, char data);
+int GPIB_Init(int our_address);
 
-/**
- * @brief      Set the bus to listen communications.
- *             after calling this function, the bus changes to
- *             listen. It will listen on each GPIB_Task call. GPIB_
- *             task then returns GPIB_EVT_DATA_AVAILABLE when new data
- *             arrives. Call GPIB_Get to get the last received data.
- *
+/* sends a single character to the gpib device addressed
+ * by listen. returns -1 in case of error */
+int GPIB_Cmd(int listen, char what);
+
+/* sends a string of bytes to the gpib device addressed by listen.
+ * Returns -1 in case of error. */
+int GPIB_PutStr(int listen, char *string, int count);
+
+/* simply return the status of the GPIB status lines. These are
+ * encoded in the lower 8 bits of the return value as:
+ * IFC REN EOI SRQ NDAC NRF ATN DAV
  */
-GPIB_Event GPIB_Receive(void);
+int GPIB_Stat(void);
 
-/**
- * @brief      get the last received byte
- *
- * @return     the last received byte
- */
-char GPIB_Get(void);
+/* read a character from the GPIB device addressed by listen.
+ * Returns the character or -1 in case of error */
+int GPIB_Get(int listen);
 
-/**
- * @brief      Perform gpib tasks.
- * 			   This library provides an asynchronous interface to the gpib
- * 			   bus. As such, all function calls are non-blocking. I/O is
- * 			   performed calling this functions.
- * @return 	   GPIB_EVT_DATA_AVAILABLE if data is available in the input buffer
- * 			   GPIB_EVT_TX_READY if the tx buffer is empty.
- */
-GPIB_Event GPIB_Tasks(void);
+/* reads a string of data from the device addressed by listen.
+ * Returns the number of bytes read into buf or -1 if error. */
+int GPIB_GetStr(int listen, char*buf);
 
-/**
- * @brief Reset GPIB Statemachine
- */
-void GPIB_Reset(void);
+/* Returns the serial poll on the device at listen. Returnss
+ * the serial poll status in the lower 8 bits or -1 if error */
+int GPIB_SerPoll(int listen);
 
+/* puts value what out as an address byte. return -1 if error. */
+int GPIB_PutAdd(char what);
 
-/* gpib definitions */
-#define MLA_CODE 0x20
-#define MTA_CODE 0x40
-#define LAD_CODE 0x20
-#define UNL_CODE 0x3F
-#define TAD_CODE 0x40
-#define UNT_CODE 0x5F
-#define SAD_CODE 0x60
-#define LLO_CODE 0x11
-#define DCL_CODE 0x14
-#define PPU_CODE 0x15
-#define SPE_CODE 0x18
-#define SPD_CODE 0x19
-#define GTL_CODE 0x01
-#define SDC_CODE 0x04
-#define PPC_CODE 0x05
-#define GET_CODE 0x08
-#define TCT_CODE 0x09
-#define PPE_CODE 0x60
-#define PPD_CODE 0x70
+/* puts what on the gpib bus as data. returns -1 if error. */
+int GPIB_PutData(char what);
+
+/* read the value on the gpib bus as data value and returns it or -1 in case of error. */
+int GPIB_GetData(void);
 
 #endif // gpib_H

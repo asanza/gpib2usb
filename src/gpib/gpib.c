@@ -21,186 +21,161 @@
  * Created on October 8, 2015, 10:08 PM
  */
 
-#include "gpib.h"
-#include "hal/hal_gpib.h"
-#include "gpib_talk.h"
-#include "gpib_listen.h"
-#include <assert.h>
-#include <stdlib.h>
-#include <stdio.h>
+ #include "hal/hal_gpib.h"
+ #include "gpib.h"
+ #include <assert.h>
 
-static GPIB_state_t state = GPIB_IDLE;
-static char buff;
+ static char myAddress = 0xFF;
 
-static GPIB_Event on_gpib_idle(void);
-static GPIB_Event on_gpib_talk(void);
-static GPIB_Event on_gpib_listen(void);
+ /** Send GPIB Data
+  * @param data
+  * @param length
+  * @param atn 1 if atn should be true, false otherwise.
+  * @return -1 if error.
+  */
+ static int _gpib_write(char* data, int length, int atn);
 
-static GPIB_Event gpib_send_data(char data);
-static GPIB_Event gpib_send_cmd(char cmd);
+ int GPIB_Init(int our_address)
+ {
+     if (myAddress != 0xFF)
+         return -1; // already initialized
+     myAddress = our_address + 0x20;
+     /* initialize hardware stuff */
+     hal_gpib_init();
+     hal_gpib_set_signal_false(ATN_PIN);
+     hal_gpib_set_signal_false(IFC_PIN);
+     hal_gpib_set_signal_false(SRQ_PIN);
+     hal_gpib_set_signal_false(REN_PIN);
+     hal_gpib_set_signal_false(EOI_PIN);
+     hal_gpib_set_signal_false(DAV_PIN);
+     hal_gpib_set_signal_true(NRFD_PIN);
+     hal_gpib_set_signal_true(NDAC_PIN);
+     return 0;
+ }
 
-typedef GPIB_Event st_function_t (void);
+ static int _gpib_write(char* data, int length, int atn){
+     int i = 0;
+     if(atn){
+         hal_gpib_set_signal_true(ATN_PIN);
+     }
+     hal_gpib_set_signal_false(EOI_PIN);
+     hal_gpib_set_signal_false(DAV_PIN);
+     hal_gpib_set_signal_false(NRFD_PIN);
+ 	for (i = 0; i < length; i++) {
+         hal_gpib_set_signal_false(NDAC_PIN);
+ #ifdef WITH_TIMEOUT
+ 		timeout = s + 5;
+ 		//gpib_info();
+ 		while ((PIND & _BV(G_NDAC_PIN)) && (s <= timeout)) {
+ 			if (s == timeout) {
+ 				uart_puts("\n\rError: NDAC_PIN timeout\n\r");
+ 				//gpib_info();
+ 				debugshell();
+ 				return 0xff;
+ 			}
+ 		}
+ #else
+         while(!hal_gpib_is_signal_true(NDAC_PIN));
+ #endif
+ 		// put data on bus
+ 		hal_gpib_put_data(data[i]);
+ 		// wait until listeners release NRFD_PIN
+ 		//uart_puts("1");
+         hal_gpib_set_signal_false(NRFD_PIN);
+ #ifdef WITH_TIMEOUT
+ 		//gpib_info();
+ 		timeout = s + 5;
+ 		while (!(PIND & _BV(G_NRFD_PIN)) && (s <= timeout)) {
+ 			if (s == timeout) {
+ 				uart_puts("\n\rError: NRFD_PIN timeout\n\r");
+ 				//gpib_info();
+ 				debugshell();
+ 				return 0xff;
+ 			}
+ 		}
+ #else
+         while(!hal_gpib_is_signal_true(NRFD_PIN));
+ #endif
 
-static st_function_t* const state_table[NUM_STATES] = {
-	on_gpib_idle,
-	on_gpib_talk,
-	on_gpib_listen
-};
+ 		// assign EOI during transmission of only last byte
+ 		if ((i == length - 1) && !atn) {
+ 			//uart_puts("\n\rE\n\r");
+             hal_gpib_set_signal_true(EOI);
+ 		}
 
-void GPIB_Mode(GPIB_mode_t mode){
-	if(mode == GPIB_MODE_CONTROLLER)
-		hal_gpib_set_driver_mode(CONTROLLER);
-	else
-		hal_gpib_set_driver_mode(DEVICE);
-}
+ 		// assign DAV_PIN, data valid for listeners
+         hal_gpib_set_signal_true(DAV_PIN);
 
-void GPIB_Reset(void)
-{
-	gpib_talk_reset();
-	gpib_listen_reset();
-	state = GPIB_IDLE;
-}
+ 		// wait for NDAC_PIN release
+ 		//uart_puts("2");
+         hal_gpib_set_signal_false(NDAC_PIN);
+         while(!hal_gpib_is_signal_true(NDAC_PIN));
+ 		// release DAV_PIN, data not valid anymore
+         hal_gpib_set_signal_false(DAV_PIN);
+ 		//uart_puts("3\r\n");
+ 	}
 
-GPIB_state_t GPIB_State(void)
-{
-	return state;
-}
+ 	if (atn) {
+ 		// assign ATN_PIN_PIN for commands
+ 		hal_gpib_set_signal_false(ATN_PIN);
+ 	}
 
-GPIB_Event GPIB_Tasks(void)
-{
-	return state_table[state]();
-}
+ 	return 0x00;
 
-static GPIB_Event on_gpib_talk(void){
-	gpib_talk_error_t err;
-	err = gpib_talk_tasks();
-	if(err == GPIB_EVT_NONE){
-		if(gpib_talk_state() == GPIB_TALK_IDLE){
-			/* done with transmission */
-			state = GPIB_IDLE;
-		}
-		return GPIB_EVT_NONE;
-	} else {
-		state = GPIB_IDLE;
-		gpib_talk_reset();
-		return GPIB_EVT_TX_ERROR;
-	}
-}
+ }
 
-static GPIB_Event on_gpib_listen(void){
-	gpib_talk_error_t err;
-	err = gpib_listen_tasks();
-	if(err == GPIB_EVT_NONE){
-		if(gpib_listen_state() == GPIB_LISTEN_IDLE){
-			state = GPIB_IDLE;
-			return GPIB_EVT_DATA_AVAILABLE;
-		}
-		return GPIB_EVT_NONE;
-	} else {
-		state = GPIB_IDLE;
-		gpib_listen_reset();
-		return GPIB_EVT_RX_ERROR;
-	}
-}
+ int GPIB_Cmd(int listen, char what)
+ {
+     DIAG("0x%x ", what);
+     hal_gpib_set_signal_true(ATN_PIN);
+     return 0;
+ }
 
-static GPIB_Event on_gpib_idle(void){
-	return GPIB_EVT_NONE;
-}
+ int GPIB_PutStr(int listen, char *string, int count)
+ {
+     //_gpib_write(string, count, 0);
+     return 0;
+ }
 
-static GPIB_Event gpib_send_data(char data)
-{
-	gpib_talk_error_t err;
-	err = gpib_talk(data);
-	if(err == GPIB_TALK_ERR_NONE){
-		state = GPIB_TALK;
-		return GPIB_EVT_NONE;
-	} else {
-		return GPIB_EVT_TX_ERROR;
-	}
-}
+ int GPIB_Stat(void)
+ {
+     return 0;
+ }
 
-static GPIB_Event gpib_send_cmd(char cmd)
-{
-	if(!cmd){
-		return GPIB_EVT_NONE;
-	}
-	hal_gpib_set_signal_true(ATN_PIN);
-	return gpib_send_data(cmd);
-}
+ int GPIB_Get(int listen)
+ {
+     return 0;
+ }
 
-GPIB_Event GPIB_Send(GPIB_Command cmd, char data)
-{
-	if (state != GPIB_IDLE) return GPIB_EVT_TX_ERROR;
-	char code = 0x00;
-	switch (cmd) {
-	case ATN:
-		if (data)
-			hal_gpib_set_signal_true(ATN_PIN);
-		else
-			hal_gpib_set_signal_false(ATN_PIN);
-		break;
-	case IFC:
-		if (data)
-			hal_gpib_set_signal_true(IFC_PIN);
-		else
-			hal_gpib_set_signal_false(IFC_PIN);
-		break;
-	case SRQ:
-		if (data)
-			hal_gpib_set_signal_true(SRQ_PIN);
-		else
-			hal_gpib_set_signal_false(SRQ_PIN);
-		break;
-	case REN:
-		if (data)
-			hal_gpib_set_signal_true(REN_PIN);
-		else
-			hal_gpib_set_signal_false(REN_PIN);
-		break;
-	case EOI:
-		if (data)
-			hal_gpib_set_signal_true(EOI_PIN);
-		else
-			hal_gpib_set_signal_false(EOI_PIN);
-		break;
-	case MLA: code = MLA_CODE; break;
-	case MTA: code = MTA_CODE; break;
-	case LAD: code = LAD_CODE + data; break;
-	case UNL: code = UNL_CODE; break;
-	case TAD: code = TAD_CODE + data; break;
-	case UNT: code = UNT_CODE; break;
-	case SAD: code = SAD_CODE + data; break;
-	case LLO: code = LLO_CODE; break;
-	case DCL: code = DCL_CODE; break;
-	case PPU: code = PPU_CODE; break;
-	case _SPE: code = SPE_CODE; break;
-	case SPD: code = SPD_CODE; break;
-	case GTL: code = GTL_CODE; break;
-	case SDC: code = SDC_CODE; break;
-	case PPC: code = PPC_CODE; break;
-	case GET: code = GET_CODE; break;
-	case TCT: code = TCT_CODE; break;
-	case PPE: code = PPE_CODE; break;
-	case PPD: code = PPD_CODE; break;
-	case DAB:
-		hal_gpib_set_signal_false(ATN_PIN);
-		return gpib_send_data(data);
-	default: assert(0);
-	}
-	return gpib_send_cmd(code);
-}
+ int GPIB_GetStr(int listen, char*buf)
+ {
+     return 0;
+ }
 
-GPIB_Event GPIB_Receive(void)
-{
-	gpib_listen_error_t err;
-	err = gpib_listen();
-	if(err != GPIB_LISTEN_ERR_NONE)
-		return GPIB_EVT_RX_ERROR;
-	state = GPIB_LISTEN;
-	return GPIB_EVT_NONE;
-}
+ int GPIB_SerPoll(int listen)
+ {
+     return 0;
+ }
 
-char GPIB_Get(void)
-{
-	return gpib_listen_data();
-}
+ int GPIB_PutAdd(char what)
+ {
+     return 0;
+ }
+
+ int GPIB_PutData(char what)
+ {
+     hal_gpib_set_signal_false(DAV_PIN);
+     if (hal_gpib_is_signal_true(NRFD_PIN) || hal_gpib_is_signal_true(NDAC_PIN))
+         return -1;
+     hal_gpib_put_data(what);
+     while (hal_gpib_is_signal_true(NRFD_PIN));
+     hal_gpib_set_signal_true(DAV_PIN);
+     while (!hal_gpib_is_signal_true(NDAC_PIN));
+     hal_gpib_set_signal_false(DAV_PIN);
+     return 0;
+ }
+
+ int GPIB_GetData(void)
+ {
+     return 0;
+ }
