@@ -27,155 +27,148 @@
 
  static char myAddress = 0xFF;
 
- /** Send GPIB Data
-  * @param data
-  * @param length
-  * @param atn 1 if atn should be true, false otherwise.
-  * @return -1 if error.
-  */
- static int _gpib_write(char* data, int length, int atn);
+ #define MLA_CODE 0x20
+ #define MTA_CODE 0x40
+ #define LAD_CODE 0x20
+ #define UNL_CODE 0x3F
+ #define TAD_CODE 0x40
+ #define UNT_CODE 0x5F
+ #define SAD_CODE 0x60
+ #define LLO_CODE 0x11
+ #define DCL_CODE 0x14
+ #define PPU_CODE 0x15
+ #define SPE_CODE 0x18
+ #define SPD_CODE 0x19
+ #define GTL_CODE 0x01
+ #define SDC_CODE 0x04
+ #define PPC_CODE 0x05
+ #define GET_CODE 0x08
+ #define TCT_CODE 0x09
+ #define PPE_CODE 0x60
+ #define PPD_CODE 0x70
+
+ static int gpib_send(char data);
+ static int gpib_receive(char* data);
+ static int gpib_send_cmd(char data);
+
+ int GPIB_Receive(char* data){
+     return gpib_receive(data);
+ }
+
+ int GPIB_Send(GPIB_Command cmd, char data){
+     char code;
+     switch(cmd){
+     case ATN:
+         if(data)
+             hal_gpib_set_signal_true(ATN_PIN);
+         else
+             hal_gpib_set_signal_false(ATN_PIN);
+         break;
+     case IFC:
+         if(data)
+             hal_gpib_set_signal_true(IFC_PIN);
+         else
+             hal_gpib_set_signal_false(IFC_PIN);
+         break;
+     case SRQ:
+         if(data)
+             hal_gpib_set_signal_true(SRQ_PIN);
+         else
+             hal_gpib_set_signal_false(SRQ_PIN);
+         break;
+     case REN:
+         if(data)
+             hal_gpib_set_signal_true(REN_PIN);
+         else
+             hal_gpib_set_signal_false(REN_PIN);
+         break;
+     case EOI:
+         if(data)
+             hal_gpib_set_signal_true(EOI_PIN);
+         else
+             hal_gpib_set_signal_false(EOI_PIN);
+         break;
+     case MLA: code = MLA_CODE; break;
+     case MTA: code = MTA_CODE; break;
+     case LAD: code = LAD_CODE + data; break;
+     case UNL: code = UNL_CODE; break;
+     case TAD: code = TAD_CODE + data; break;
+     case UNT: code = UNT_CODE; break;
+     case SAD: code = SAD_CODE + data; break;
+     case LLO: code = LLO_CODE; break;
+     case DCL: code = DCL_CODE; break;
+     case PPU: code = PPU_CODE; break;
+     case _SPE: code = SPE_CODE; break;
+     case SPD: code = SPD_CODE; break;
+     case GTL: code = GTL_CODE; break;
+     case SDC: code = SDC_CODE; break;
+     case PPC: code = PPC_CODE; break;
+     case GET: code = GET_CODE; break;
+     case TCT: code = TCT_CODE; break;
+     case PPE: code = PPE_CODE; break;
+     case PPD: code = PPD_CODE; break;
+     case DAB:
+         hal_gpib_set_signal_false(ATN_PIN);
+         return gpib_send(data);
+     default: assert(0);
+     }
+     return gpib_send_cmd(code);
+ }
 
  int GPIB_Init(int our_address)
  {
      if (myAddress != 0xFF)
          return -1; // already initialized
      myAddress = our_address + 0x20;
-     /* initialize hardware stuff */
      hal_gpib_init();
-     hal_gpib_set_signal_false(ATN_PIN);
+     /* initialize hardware stuff */
+     /* TODO: Remove this stuff*/
+     hal_gpib_set_signal_true(REN_PIN);
+     hal_gpib_set_signal_true(IFC_PIN);
+     _delay_ms(100);
      hal_gpib_set_signal_false(IFC_PIN);
-     hal_gpib_set_signal_false(SRQ_PIN);
-     hal_gpib_set_signal_false(REN_PIN);
-     hal_gpib_set_signal_false(EOI_PIN);
+     /* default mode controller */
+     hal_gpib_set_driver_mode(CONTROLLER);
+     return 0;
+ }
+
+ static int gpib_send(char data){
+     hal_gpib_set_driver_direction(TALKER);
      hal_gpib_set_signal_false(DAV_PIN);
-     hal_gpib_set_signal_true(NRFD_PIN);
-     hal_gpib_set_signal_true(NDAC_PIN);
-     return 0;
- }
-
- static int _gpib_write(char* data, int length, int atn){
-     int i = 0;
-     if(atn){
-         hal_gpib_set_signal_true(ATN_PIN);
-     }
-     hal_gpib_set_signal_false(EOI_PIN);
-     hal_gpib_set_signal_false(DAV_PIN);
-     hal_gpib_set_signal_false(NRFD_PIN);
- 	for (i = 0; i < length; i++) {
-         hal_gpib_set_signal_false(NDAC_PIN);
- #ifdef WITH_TIMEOUT
- 		timeout = s + 5;
- 		//gpib_info();
- 		while ((PIND & _BV(G_NDAC_PIN)) && (s <= timeout)) {
- 			if (s == timeout) {
- 				uart_puts("\n\rError: NDAC_PIN timeout\n\r");
- 				//gpib_info();
- 				debugshell();
- 				return 0xff;
- 			}
- 		}
- #else
-         while(!hal_gpib_is_signal_true(NDAC_PIN));
- #endif
- 		// put data on bus
- 		hal_gpib_put_data(data[i]);
- 		// wait until listeners release NRFD_PIN
- 		//uart_puts("1");
-         hal_gpib_set_signal_false(NRFD_PIN);
- #ifdef WITH_TIMEOUT
- 		//gpib_info();
- 		timeout = s + 5;
- 		while (!(PIND & _BV(G_NRFD_PIN)) && (s <= timeout)) {
- 			if (s == timeout) {
- 				uart_puts("\n\rError: NRFD_PIN timeout\n\r");
- 				//gpib_info();
- 				debugshell();
- 				return 0xff;
- 			}
- 		}
- #else
-         while(!hal_gpib_is_signal_true(NRFD_PIN));
- #endif
-
- 		// assign EOI during transmission of only last byte
- 		if ((i == length - 1) && !atn) {
- 			//uart_puts("\n\rE\n\r");
-             hal_gpib_set_signal_true(EOI);
- 		}
-
- 		// assign DAV_PIN, data valid for listeners
-         hal_gpib_set_signal_true(DAV_PIN);
-
- 		// wait for NDAC_PIN release
- 		//uart_puts("2");
-         hal_gpib_set_signal_false(NDAC_PIN);
-         while(!hal_gpib_is_signal_true(NDAC_PIN));
- 		// release DAV_PIN, data not valid anymore
-         hal_gpib_set_signal_false(DAV_PIN);
- 		//uart_puts("3\r\n");
- 	}
-
- 	if (atn) {
- 		// assign ATN_PIN_PIN for commands
- 		hal_gpib_set_signal_false(ATN_PIN);
- 	}
-
- 	return 0x00;
-
- }
-
- int GPIB_Cmd(int listen, char what)
- {
-     DIAG("0x%x ", what);
-     hal_gpib_set_signal_true(ATN_PIN);
-     return 0;
- }
-
- int GPIB_PutStr(int listen, char *string, int count)
- {
-     //_gpib_write(string, count, 0);
-     return 0;
- }
-
- int GPIB_Stat(void)
- {
-     return 0;
- }
-
- int GPIB_Get(int listen)
- {
-     return 0;
- }
-
- int GPIB_GetStr(int listen, char*buf)
- {
-     return 0;
- }
-
- int GPIB_SerPoll(int listen)
- {
-     return 0;
- }
-
- int GPIB_PutAdd(char what)
- {
-     return 0;
- }
-
- int GPIB_PutData(char what)
- {
-     hal_gpib_set_signal_false(DAV_PIN);
-     if (hal_gpib_is_signal_true(NRFD_PIN) || hal_gpib_is_signal_true(NDAC_PIN))
+     if(!hal_gpib_is_signal_true(NRFD_PIN) &&
+        !hal_gpib_is_signal_true(NDAC_PIN)){
          return -1;
-     hal_gpib_put_data(what);
-     while (hal_gpib_is_signal_true(NRFD_PIN));
+     }
+     hal_gpib_put_data(data);
+     while(hal_gpib_is_signal_true(NRFD_PIN));
      hal_gpib_set_signal_true(DAV_PIN);
-     while (!hal_gpib_is_signal_true(NDAC_PIN));
+     while(hal_gpib_is_signal_true(NDAC_PIN));
      hal_gpib_set_signal_false(DAV_PIN);
      return 0;
  }
 
- int GPIB_GetData(void)
- {
+ static int gpib_send_cmd(char data){
+     hal_gpib_set_signal_true(ATN_PIN);
+     int val = gpib_send(data);
+     hal_gpib_set_signal_false(ATN_PIN);
+     return val;
+ }
+
+ static int gpib_receive(char* data){
+     hal_gpib_set_driver_direction(LISTENER);
+     hal_gpib_set_signal_true(NDAC_PIN);
+     hal_gpib_set_signal_false(NRFD_PIN);
+    //  hal_timer_init(65000,true);
+     while(!hal_gpib_is_signal_true(DAV_PIN)){
+        //  if(hal_timer_elapsed()){
+        //      DIAG("Timeout!");
+        //      return -1;
+        //  }
+     };
+     hal_gpib_set_signal_true(NRFD_PIN);
+     *data = hal_gpib_read_data();
+     hal_gpib_set_signal_false(NDAC_PIN);
+     while(hal_gpib_is_signal_true(DAV_PIN));
+     hal_gpib_set_signal_true(NDAC_PIN);
      return 0;
  }
