@@ -53,6 +53,7 @@ static void send_string_sync(uint8_t endpoint, const char *str)
 static void write_buffer_sync(const char* str, int len)
 {
 	char *in_buf = (char*)usb_get_in_buffer(2);
+
 	while (usb_in_endpoint_busy(2)) ;
 	strncpy(in_buf, str, len);
 	usb_send_in_buffer(2, len);
@@ -65,23 +66,27 @@ static void write_char_sync(const char c)
 
 static volatile int not_configured = 1;
 
-static void timer_task(void){
+static void timer_task(void)
+{
 	const unsigned char *out_buf, *in_buf;
 	size_t len;
-  if (!usb_is_configured()){
-      not_configured = 1;
-      return;
-  };
-  if (usb_out_endpoint_halted(2)){
-      not_configured = 1;
-      return;
-  };
-  not_configured = 0;
+
+	if (!usb_is_configured()) {
+		not_configured = 1;
+		return;
+	}
+	;
+	if (usb_out_endpoint_halted(2)) {
+		not_configured = 1;
+		return;
+	}
+	;
+	not_configured = 0;
 	in_buf = (char*)usb_get_in_buffer(2);
-  if (!usb_out_endpoint_has_data(2)) {
+	if (!usb_out_endpoint_has_data(2)) {
 		while (usb_in_endpoint_busy(2)) ;
 		len = sys_gpib_get_buffer(in_buf, EP_2_IN_LEN);
-		if(len <= 0)
+		if (len <= 0)
 			return;
 	} else {
 		len = usb_get_out_buffer(2, &out_buf);
@@ -97,6 +102,7 @@ int main(void)
 {
 	char* input;
 	int len;
+
 	hal_sys_init();
 	sys_init();
 #ifdef MULTI_CLASS_DEVICE
@@ -105,16 +111,16 @@ int main(void)
 	usb_init();
 	hal_timer_init(1000, timer_task);
 	while (1) {
-    if(not_configured) continue;
-		switch(sysio_get_state()){
-			case SYSIO_EMPTY: break;
-			case SYSIO_DATA_AVAILABLE: /* data */
-				hal_sys_green_led_toggle();
-				sysio_release();
-				break;
-			case SYSIO_CMD_AVAILABLE: /* cmd  */
-				sysio_release();
-				break;
+		if (not_configured) continue;
+		switch (sysio_get_state()) {
+		case SYSIO_EMPTY: break;
+		case SYSIO_DATA_AVAILABLE:         /* data */
+			hal_sys_green_led_toggle();
+			sysio_release();
+			break;
+		case SYSIO_CMD_AVAILABLE:         /* cmd  */
+			sysio_release();
+			break;
 		}
 	}
 	return 0;
@@ -244,6 +250,6 @@ int8_t app_send_break_callback(uint8_t interface, uint16_t duration)
 
 void interrupt high_priority isr()
 {
-  hal_timer_service();
+	hal_timer_service();
 	usb_service();
 }

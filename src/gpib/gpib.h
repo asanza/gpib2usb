@@ -25,34 +25,34 @@
 #define gpib_H
 
 typedef enum {
-    /* uniline */
-    ATN,
-    IFC,
-    REN,
-    SRQ,
-    EOI,
-    /* universal */
-    DCL,
-    LLO,
-    _SPE,
-    SPD,
-    PPU,
-    /* addressed */
-    MLA,
-    MTA,
-    LAD,
-    UNL,
-    TAD,
-    UNT,
-    SAD,
-    GTL,
-    SDC,
-    PPC,
-    GET,
-    TCT,
-    PPE,
-    PPD,
-    DAB
+	/* uniline */
+	ATN,
+	IFC,
+	REN,
+	SRQ,
+	EOI,
+	/* universal */
+	DCL,
+	LLO,
+	_SPE,
+	SPD,
+	PPU,
+	/* addressed */
+	MLA,
+	MTA,
+	LAD,
+	UNL,
+	TAD,
+	UNT,
+	SAD,
+	GTL,
+	SDC,
+	PPC,
+	GET,
+	TCT,
+	PPE,
+	PPD,
+	DAB
 } GPIB_Command;
 
 /* Initializes the GPIB driver with a given gpib address.

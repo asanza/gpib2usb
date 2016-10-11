@@ -10,7 +10,7 @@ Here comes this little device to rescue. It is a gpib-to-usb adapter which after
 
 For now is yet a work in progress.
 
-# USB Interface
+# Getting Started
 
 The device presents itself as a serial port. The commands are the same as the similar device sold by [Prologix LLC](http://prologix.biz/gpib-usb-controller.html), but compatibility is not guaranteed.
 
@@ -36,6 +36,9 @@ The device presents itself as a serial port. The commands are the same as the si
 To send binary data to instruments following characters must be escaped by preceding them with an ESC character:
 CR (ASCII 13), LF (ASCII 10), ESC (ASCII 27), ‘+’ (ASCII 43)
 
+# Contributing
+
+
 # Know issues
 
 ## Disable modem manager in linux.
@@ -52,4 +55,3 @@ with content:
 # gpib2usb converter
 ATTRS{idVendor}=="1209", ATTRS{idProduct}=="0001", ENV{ID_MM_DEVICE_IGNORE}="1"
 ```
-## Contributing

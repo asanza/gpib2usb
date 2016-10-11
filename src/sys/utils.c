@@ -4,12 +4,14 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int str2int(char* str){
+int str2int(char* str)
+{
 	char* t = str;
-	while(*str){
-		if(!isdigit(*str)){
-			if(*str != ' ' && *str != '\r' && *str != '\n'
-				&& *str != '\t' && *str != '-'){
+
+	while (*str) {
+		if (!isdigit(*str)) {
+			if (*str != ' ' && *str != '\r' && *str != '\n'
+			    && *str != '\t' && *str != '-') {
 				errno = EDOM;
 				return 0;
 			}
@@ -64,34 +66,34 @@ static const u_char charmap[] = {
 
 int
 strcasecmp(s1, s2)
-	const char *s1, *s2;
+const char *s1, *s2;
 {
 	register const u_char *cm = charmap,
-			*us1 = (const u_char *)s1,
-			*us2 = (const u_char *)s2;
+	*us1 = (const u_char*)s1,
+	*us2 = (const u_char*)s2;
 
 	while (cm[*us1] == cm[*us2++])
 		if (*us1++ == '\0')
-			return (0);
-	return (cm[*us1] - cm[*--us2]);
+			return 0;
+	return cm[*us1] - cm[*--us2];
 }
 
 int
 strncasecmp(s1, s2, n)
-	const char *s1, *s2;
-	register size_t n;
+const char *s1, *s2;
+register size_t n;
 {
 	if (n != 0) {
 		register const u_char *cm = charmap,
-				*us1 = (const u_char *)s1,
-				*us2 = (const u_char *)s2;
+		*us1 = (const u_char*)s1,
+		*us2 = (const u_char*)s2;
 
 		do {
 			if (cm[*us1] != cm[*us2++])
-				return (cm[*us1] - cm[*--us2]);
+				return cm[*us1] - cm[*--us2];
 			if (*us1++ == '\0')
 				break;
 		} while (--n != 0);
 	}
-	return (0);
+	return 0;
 }

@@ -23,13 +23,13 @@
 
 
 #ifndef HAL_SYS_H
-#define	HAL_SYS_H
+#define HAL_SYS_H
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 extern "C" {
 #endif
 
-    void hal_sys_init(void);
+void hal_sys_init(void);
 
 void hal_sys_green_led_on(void);
 void hal_sys_green_led_toggle(void);
@@ -43,8 +43,8 @@ void hal_sys_yellow_led_toggle(void);
 void hal_sys_enter_critical(void);
 void hal_sys_exit_critical(void);
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 }
 #endif
 
-#endif	/* HAL_SYS_H */
+#endif  /* HAL_SYS_H */

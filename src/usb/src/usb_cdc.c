@@ -30,7 +30,7 @@
 #include <usb.h>
 #include <usb_cdc.h>
 
-#define MIN(x,y) (((x)<(y))?(x):(y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 STATIC_SIZE_CHECK_EQUAL(sizeof(struct cdc_functional_descriptor_header), 5);
 STATIC_SIZE_CHECK_EQUAL(sizeof(struct cdc_acm_functional_descriptor), 4);
@@ -53,10 +53,10 @@ void cdc_set_interface_list(uint8_t *interfaces, uint8_t num_interfaces)
 static bool interface_is_cdc(uint8_t interface)
 {
 	uint8_t i;
-	for (i = 0; i < num_cdc_interfaces; i++) {
+
+	for (i = 0; i < num_cdc_interfaces; i++)
 		if (interface == cdc_interfaces[i])
 			break;
-	}
 
 	/* Return if interface is not in the list of CDC interfaces. */
 	if (i == num_cdc_interfaces)
@@ -69,8 +69,8 @@ static bool interface_is_cdc(uint8_t interface)
 static uint8_t transfer_interface;
 static union transfer_data {
 	#if defined(CDC_SET_COMM_FEATURE_CALLBACK) || \
-	    defined(CDC_CLEAR_COMM_FEATURE_CALLBACK) || \
-	    defined(CDC_GET_COMM_FEATURE_CALLBACK)
+	defined(CDC_CLEAR_COMM_FEATURE_CALLBACK) || \
+	defined(CDC_GET_COMM_FEATURE_CALLBACK)
 	uint16_t comm_feature;
 	#endif
 
@@ -93,25 +93,25 @@ static void set_or_clear_comm_feature_callback(bool transfer_ok, void *context)
 
 	if (set_or_clear_request == CDC_SET_COMM_FEATURE) {
 		CDC_SET_COMM_FEATURE_CALLBACK(transfer_interface,
-		                              idle_setting,
-		                              data_multiplexed_state);
-	}
-	else {
+					      idle_setting,
+					      data_multiplexed_state);
+	}else  {
 		/* request == CDC_CLEAR_COMM_FEATURE */
 		CDC_CLEAR_COMM_FEATURE_CALLBACK(transfer_interface,
-		                                idle_setting,
-		                                data_multiplexed_state);
+						idle_setting,
+						data_multiplexed_state);
 	}
 }
 #endif
 
 #if defined(CDC_SET_LINE_CODING_CALLBACK)
-static void set_line_coding(bool transfer_ok, void *context) {
+static void set_line_coding(bool transfer_ok, void *context)
+{
 	if (!transfer_ok)
 		return;
 
 	CDC_SET_LINE_CODING_CALLBACK(transfer_interface,
-	                             &transfer_data.line_coding);
+				     &transfer_data.line_coding);
 }
 #endif
 
@@ -136,7 +136,7 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 	    setup->REQUEST.bmRequestType == 0x21) {
 		int8_t res;
 		res = CDC_SEND_ENCAPSULATED_COMMAND_CALLBACK(interface,
-                                                             setup->wLength);
+							     setup->wLength);
 		if (res < 0)
 			return -1;
 		return 0;
@@ -152,15 +152,15 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 		void *context;
 
 		len = CDC_GET_ENCAPSULATED_RESPONSE_CALLBACK(
-		                                interface, setup->wLength,
-		                                &response, &callback,
-		                                &context);
+			interface, setup->wLength,
+			&response, &callback,
+			&context);
 		if (len < 0)
 			return -1;
 
 		usb_send_data_stage((void*)response,
-		                    min(len, setup->wLength),
-		                    callback, context);
+				    min(len, setup->wLength),
+				    callback, context);
 		return 0;
 	}
 #endif
@@ -170,16 +170,16 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 	    setup->REQUEST.bmRequestType == 0x21) {
 
 		/* Only ABSTRACT_STATE feature is supported. If you need
-		 * something else here, get in contact with Signal 11. */
+		* something else here, get in contact with Signal 11. */
 		if (setup->wValue != CDC_FEATURE_ABSTRACT_STATE)
 			return -1;
 
 		transfer_interface = interface;
 		set_or_clear_request = setup->bRequest;
-		usb_start_receive_ep0_data_stage((char*) &transfer_data.comm_feature,
-		                                 sizeof(transfer_data.comm_feature),
-		                                 set_or_clear_comm_feature_callback,
-		                                 NULL);
+		usb_start_receive_ep0_data_stage((char*)&transfer_data.comm_feature,
+						 sizeof(transfer_data.comm_feature),
+						 set_or_clear_comm_feature_callback,
+						 NULL);
 		return 0;
 	}
 #endif
@@ -189,16 +189,16 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 	    setup->REQUEST.bmRequestType == 0x21) {
 
 		/* Only ABSTRACT_STATE feature is supported. If you need
-		 * something else here, get in contact with Signal 11. */
+		* something else here, get in contact with Signal 11. */
 		if (setup->wValue != CDC_FEATURE_ABSTRACT_STATE)
 			return -1;
 
 		transfer_interface = interface;
 		set_or_clear_request = setup->bRequest;
 		usb_start_receive_ep0_data_stage((char*)&transfer_data.comm_feature,
-		                                 sizeof(transfer_data.comm_feature),
-		                                 set_or_clear_comm_feature_callback,
-		                                 NULL);
+						 sizeof(transfer_data.comm_feature),
+						 set_or_clear_comm_feature_callback,
+						 NULL);
 		return 0;
 	}
 #endif
@@ -211,25 +211,25 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 		int8_t res;
 
 		/* Only ABSTRACT_STATE feature is supported. If you need
-		 * something else here, get in contact with Signal 11. */
+		* something else here, get in contact with Signal 11. */
 		if (setup->wValue != CDC_FEATURE_ABSTRACT_STATE)
 			return -1;
 
 		res = CDC_GET_COMM_FEATURE_CALLBACK(
-		                                interface,
-		                                &idle_setting,
-		                                &data_multiplexed_state);
+			interface,
+			&idle_setting,
+			&data_multiplexed_state);
 		if (res < 0)
 			return -1;
 
 		transfer_data.comm_feature =
-			(uint16_t) idle_setting |
-				(uint16_t) data_multiplexed_state << 1;
+			(uint16_t)idle_setting |
+			(uint16_t)data_multiplexed_state << 1;
 
 		usb_send_data_stage((char*)&transfer_data.comm_feature,
-		                    min(setup->wLength,
-		                        sizeof(transfer_data.comm_feature)),
-		                    NULL/*callback*/, NULL);
+				    min(setup->wLength,
+					sizeof(transfer_data.comm_feature)),
+				    NULL /*callback*/, NULL);
 		return 0;
 	}
 #endif
@@ -240,10 +240,10 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 
 		transfer_interface = interface;
 		usb_start_receive_ep0_data_stage(
-		                      (char*)&transfer_data.line_coding,
-		                      min(setup->wLength,
-		                          sizeof(transfer_data.line_coding)),
-		                      set_line_coding, NULL);
+			(char*)&transfer_data.line_coding,
+			min(setup->wLength,
+			    sizeof(transfer_data.line_coding)),
+			set_line_coding, NULL);
 		return 0;
 	}
 #endif
@@ -254,15 +254,15 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 		int8_t res;
 
 		res = CDC_GET_LINE_CODING_CALLBACK(
-		                                interface,
-		                                &transfer_data.line_coding);
+			interface,
+			&transfer_data.line_coding);
 		if (res < 0)
 			return -1;
 
 		usb_send_data_stage((char*)&transfer_data.line_coding,
-		                    min(setup->wLength,
-		                        sizeof(transfer_data.line_coding)),
-		                    /*callback*/NULL, NULL);
+				    min(setup->wLength,
+					sizeof(transfer_data.line_coding)),
+		                    /*callback*/ NULL, NULL);
 		return 0;
 	}
 #endif
@@ -291,7 +291,7 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup)
 		int8_t res;
 
 		res = CDC_SEND_BREAK_CALLBACK(interface,
-		                              setup->wValue /*duration*/);
+					      setup->wValue /*duration*/);
 		if (res < 0)
 			return -1;
 

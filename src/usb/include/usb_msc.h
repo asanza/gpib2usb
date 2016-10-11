@@ -80,9 +80,9 @@
  * contact with Signal 11 if you need something specific.  */
 
 #if MSC_MAX_LUNS_PER_INTERFACE <= 8
-	typedef uint8_t msc_lun_mask_t;
+typedef uint8_t msc_lun_mask_t;
 #else
-	typedef uint16_t msc_lun_mask_t;
+typedef uint16_t msc_lun_mask_t;
 #endif
 
 
@@ -121,12 +121,12 @@ enum MSCDirection {
  * See BOT, 5.1
  */
 struct msc_command_block_wrapper {
-	uint32_t dCBWSignature; /* Set to 0x43425355 */
+	uint32_t dCBWSignature;                 /* Set to 0x43425355 */
 	uint32_t dCBWTag;
-	uint32_t dCBWDataTransferLength; /** Data to be transfered */
-	uint8_t bmCBWFlags; /** bit 0x80=data-in, 0x00=data-out */
-	uint8_t bCBWLUN; /**< Lower 4 bits only */
-	uint8_t bCBWCBLength ; /**< Lower 4 bits only; length of CBWCB */
+	uint32_t dCBWDataTransferLength;        /** Data to be transfered */
+	uint8_t bmCBWFlags;                     /** bit 0x80=data-in, 0x00=data-out */
+	uint8_t bCBWLUN;                        /**< Lower 4 bits only */
+	uint8_t bCBWCBLength;                   /**< Lower 4 bits only; length of CBWCB */
 	uint8_t CBWCB[16];
 };
 
@@ -138,7 +138,7 @@ struct msc_command_status_wrapper {
 	uint32_t dCSWSignature; /**< Set to 0x53425355 */
 	uint32_t dCSWTag;
 	uint32_t dCSWDataResidue;
-	uint8_t  bCSWStatus; /**< @see enum MSCStatus */
+	uint8_t bCSWStatus;  /**< @see enum MSCStatus */
 };
 
 /* SCSI Definitions and Structures */
@@ -165,7 +165,7 @@ enum MSCSCSICommands {
 
 struct msc_scsi_inquiry_command {
 	uint8_t operation_code; /* 0x12 */
-	uint8_t evpd; /* bit 0 only */
+	uint8_t evpd;           /* bit 0 only */
 	uint8_t page_code;
 	uint16_t allocation_length;
 	uint8_t control;
@@ -173,7 +173,7 @@ struct msc_scsi_inquiry_command {
 
 struct msc_scsi_request_sense_command {
 	uint8_t operation_code; /* 0x3 */
-	uint8_t desc; /* bit 0 only */
+	uint8_t desc;           /* bit 0 only */
 	uint8_t reserved[2];
 	uint8_t allocation_length;
 	uint8_t control;
@@ -182,7 +182,7 @@ struct msc_scsi_request_sense_command {
 struct msc_scsi_mode_sense_6_command {
 	uint8_t operation_code; /* 0x1a */
 	uint8_t dbd_reserved;
-	uint8_t pc_page_code; /* bits 6-7: PC, bits 0-5: Page Code */
+	uint8_t pc_page_code;   /* bits 6-7: PC, bits 0-5: Page Code */
 	uint8_t subpage_code;
 	uint8_t allocation_length;
 	uint8_t control;
@@ -190,9 +190,9 @@ struct msc_scsi_mode_sense_6_command {
 
 struct msc_scsi_start_stop_unit {
 	uint8_t operation_code;
-	uint8_t immed; /* Bit 0 only */
+	uint8_t immed;          /* Bit 0 only */
 	uint8_t reserved[2];
-	uint8_t command; /* bit 0: start, bit 1: LOEJ, bits 4-7: power cond */
+	uint8_t command;        /* bit 0: start, bit 1: LOEJ, bits 4-7: power cond */
 	uint8_t control;
 };
 
@@ -221,15 +221,15 @@ enum MSCSCSIVersion {
 
 
 struct scsi_inquiry_response {
-	uint8_t peripheral; /**< Set to 0x0 */
-	uint8_t rmb; /**< 0x80 for removable media */
-	uint8_t version; /**< enum MSCSCSIVersion */
-	uint8_t response_data_format; /**< Set to 0x2 */
-	uint8_t additional_length; /**< 4 less than sizeof(inquiry_response) */
-	uint8_t unused[3]; /**< Not used in our implementation */
-	char vendor[8]; /**< ASCII, no zero-termination */
-	char product[16]; /**< ASCII, no zero-termination */
-	char revision[4]; /**< ASCII, no zero-termination */
+	uint8_t peripheral;             /**< Set to 0x0 */
+	uint8_t rmb;                    /**< 0x80 for removable media */
+	uint8_t version;                /**< enum MSCSCSIVersion */
+	uint8_t response_data_format;   /**< Set to 0x2 */
+	uint8_t additional_length;      /**< 4 less than sizeof(inquiry_response) */
+	uint8_t unused[3];              /**< Not used in our implementation */
+	char vendor[8];                 /**< ASCII, no zero-termination */
+	char product[16];               /**< ASCII, no zero-termination */
+	char revision[4];               /**< ASCII, no zero-termination */
 };
 
 struct scsi_capacity_response {
@@ -251,10 +251,10 @@ enum SCSISenseFlags {
 };
 
 struct scsi_mode_sense_response {
-	uint8_t mode_data_length; /**< sizeof(scsi_mode_sense_response) - 1 */
-	uint8_t medium_type; /**< Set to 0x00 for SBC devices */
-	uint8_t device_specific_parameter; /**< set to 0x80 for write-protect, else 0x0 */
-	uint8_t block_descriptor_length; /**< Set to 0x0 */
+	uint8_t mode_data_length;               /**< sizeof(scsi_mode_sense_response) - 1 */
+	uint8_t medium_type;                    /**< Set to 0x00 for SBC devices */
+	uint8_t device_specific_parameter;      /**< set to 0x80 for write-protect, else 0x0 */
+	uint8_t block_descriptor_length;        /**< Set to 0x0 */
 };
 
 enum SCSISenseKeys {
@@ -285,10 +285,10 @@ enum SCSIAdditionalSenseCodes {
 };
 
 struct scsi_sense_response {
-	uint8_t response_code; /**< 0x70=current_errors, 0x71=deferred_errors
+	uint8_t response_code;  /**< 0x70=current_errors, 0x71=deferred_errors
 	                         *  0x80 bit = information_valid */
 	uint8_t obsolete;
-	uint8_t flags; /**< Bitmask of SCSISenseFlags OR'd with one from SCSISenseKeys */
+	uint8_t flags;          /**< Bitmask of SCSISenseFlags OR'd with one from SCSISenseKeys */
 	uint32_t information;
 	uint8_t additional_sense_length;
 	uint32_t command_specific_information;
@@ -313,11 +313,11 @@ struct scsi_sense_response {
  */
 enum MSCApplicationStates {
 	MSC_IDLE,
-	MSC_DATA_TRANSPORT_IN,  /**< Next transactions will be data sent */
-	MSC_DATA_TRANSPORT_OUT, /**< Next transactions will be data received */
-	MSC_STALL,              /**< Next transaction needs to stall */
-	MSC_CSW,                /**< Next transaction will contain the CSW */
-	MSC_NEEDS_RESET_RECOVERY, /**< Reset recovery is required */
+	MSC_DATA_TRANSPORT_IN,          /**< Next transactions will be data sent */
+	MSC_DATA_TRANSPORT_OUT,         /**< Next transactions will be data received */
+	MSC_STALL,                      /**< Next transaction needs to stall */
+	MSC_CSW,                        /**< Next transaction will contain the CSW */
+	MSC_NEEDS_RESET_RECOVERY,       /**< Reset recovery is required */
 };
 
 /** Return codes used by application callbacks.
@@ -326,13 +326,13 @@ enum MSCApplicationStates {
  */
 enum MSCReturnCodes {
 	MSC_SUCCESS                  =  0,
-	MSC_ERROR_MEDIUM_NOT_PRESENT = -1, /**< The medium is not physically present */
-	MSC_ERROR_INVALID_LUN        = -2, /**< The LUN is out of range */
-	MSC_ERROR_INVALID_ADDRESS    = -3, /**< The LBA address is out of range */
-	MSC_ERROR_WRITE_PROTECTED    = -4, /**< The medium is write protected */
-	MSC_ERROR_READ               = -5, /**< Error while reading the medium */
-	MSC_ERROR_WRITE              = -6, /**< Error while writing the medium */
-	MSC_ERROR_MEDIUM             = -7, /**< Unspecified medium error */
+	MSC_ERROR_MEDIUM_NOT_PRESENT = -1,      /**< The medium is not physically present */
+	MSC_ERROR_INVALID_LUN        = -2,      /**< The LUN is out of range */
+	MSC_ERROR_INVALID_ADDRESS    = -3,      /**< The LBA address is out of range */
+	MSC_ERROR_WRITE_PROTECTED    = -4,      /**< The medium is write protected */
+	MSC_ERROR_READ               = -5,      /**< Error while reading the medium */
+	MSC_ERROR_WRITE              = -6,      /**< Error while writing the medium */
+	MSC_ERROR_MEDIUM             = -7,      /**< Unspecified medium error */
 };
 
 /* Forward declare struct msc_application_data to enable the following:
@@ -350,8 +350,8 @@ struct msc_application_data;
  * @param transfer_ok   @a true if transaction completed successfully, or
  *                      @a false if there was an error
  */
-typedef void (*msc_completion_callback) (struct msc_application_data *app_data,
-                                         bool transfer_ok);
+typedef void (*msc_completion_callback)(struct msc_application_data *app_data,
+					bool transfer_ok);
 
 /** MSC Applicaiton Data
  *
@@ -372,11 +372,11 @@ struct msc_application_data {
 	uint8_t max_lun; /**< The maximally numbered LUN. One-less than the number of LUNs. */
 	uint8_t in_endpoint;
 	uint8_t out_endpoint;
-	uint8_t in_endpoint_size; /**< Size in bytes for IN endpoint */
+	uint8_t in_endpoint_size;               /**< Size in bytes for IN endpoint */
 	msc_lun_mask_t media_is_removable_mask; /**< bitmask, one bit for each LUN */
-	const char *vendor; /**< SCSI-assigned vendor. Pointer to global or constant. */
-	const char *product; /**< Pointer to global or constant. */
-	const char *revision; /**< Pointer to global or constant. */
+	const char *vendor;                     /**< SCSI-assigned vendor. Pointer to global or constant. */
+	const char *product;                    /**< Pointer to global or constant. */
+	const char *revision;                   /**< Pointer to global or constant. */
 
 	/* MSC Class handler will initialize and use the following. The
 	 * applicaiton should ignore these: */
@@ -387,25 +387,25 @@ struct msc_application_data {
 	uint8_t additional_sense_code;
 	/* CSW fields */
 	uint32_t residue;
-	uint8_t status; /**< enum MSCStatus */
+	uint8_t status;                 /**< enum MSCStatus */
 	/* READ command handling fields */
-	uint32_t requested_bytes; /* Bytes requested by SCSI */
-	uint32_t requested_bytes_cbw; /* Bytes requested by the MSC (CBW) */
+	uint32_t requested_bytes;       /* Bytes requested by SCSI */
+	uint32_t requested_bytes_cbw;   /* Bytes requested by the MSC (CBW) */
 	uint32_t transferred_bytes;
 	/* Block size for each LUN */
 	uint32_t block_size[MSC_MAX_LUNS_PER_INTERFACE];
 
 	/* Asynchronous transmit/receive data */
 	union {
-		const uint8_t *tx_buf; /**< Data to be sent to the host. */
-		uint8_t *rx_buf;       /**< Data received from the host. */
+		const uint8_t *tx_buf;          /**< Data to be sent to the host. */
+		uint8_t *rx_buf;                /**< Data received from the host. */
 	};
-	uint16_t tx_len_remaining; /**< TX data remaining in the current block */
+	uint16_t tx_len_remaining;              /**< TX data remaining in the current block */
 #ifdef MSC_WRITE_SUPPORT
-	uint8_t *rx_buf_cur; /**< Current position in the RX buffer */
-	size_t rx_buf_len;   /**< Length of the application's block RX buffer */
+	uint8_t *rx_buf_cur;                    /**< Current position in the RX buffer */
+	size_t rx_buf_len;                      /**< Length of the application's block RX buffer */
 	/* Endpoint buffer management. */
-	uint8_t out_ep_missed_transactions; /**< Number of out transactions not processed */
+	uint8_t out_ep_missed_transactions;     /**< Number of out transactions not processed */
 #endif
 	msc_completion_callback operation_complete_callback;
 };
@@ -515,8 +515,8 @@ void msc_out_transaction_complete(uint8_t endpoint_num);
  *   Returns 0 if the transmission could be started or -1 if it could not.
  */
 uint8_t msc_start_send_to_host(struct msc_application_data *app_data,
-                               const uint8_t *data, uint16_t len,
-                               msc_completion_callback completion_callback);
+			       const uint8_t *data, uint16_t len,
+			       msc_completion_callback completion_callback);
 
 /** Notify the MSC class that a Read Operation has Completed
  *
@@ -535,8 +535,8 @@ uint8_t msc_start_send_to_host(struct msc_application_data *app_data,
  * @param passed         Whether the read operation completed successfully
  */
 void msc_notify_read_operation_complete(
-                                    struct msc_application_data *app_data,
-                                    bool passed);
+	struct msc_application_data *app_data,
+	bool passed);
 
 #ifdef MSC_WRITE_SUPPORT
 /** Notify Write Data Handled
@@ -590,8 +590,8 @@ void msc_notify_write_data_handled(struct msc_application_data *app_data);
  *                         host.
  */
 void msc_notify_write_operation_complete(struct msc_application_data *app_data,
-                                         bool passed,
-                                         uint32_t bytes_processed);
+					 bool passed,
+					 uint32_t bytes_processed);
 #endif
 
 /** MSC Bulk-Only Mass Storage Reset callback
@@ -640,11 +640,11 @@ extern int8_t MSC_BULK_ONLY_MASS_STORAGE_RESET_CALLBACK(uint8_t interface);
  *   an error to be returned to the host.
  */
 extern int8_t MSC_GET_STORAGE_INFORMATION(
-			const struct msc_application_data *app_data,
-			uint8_t lun,
-			uint32_t *block_size,
-			uint32_t *num_blocks,
-			bool *write_protect);
+	const struct msc_application_data *app_data,
+	uint8_t lun,
+	uint32_t *block_size,
+	uint32_t *num_blocks,
+	bool *write_protect);
 #else
 #error "You must define MSC_GET_STORAGE_INFORMATION in your usb_config.h"
 #endif
@@ -666,8 +666,8 @@ extern int8_t MSC_GET_STORAGE_INFORMATION(
  *   an error to be returned to the host.
  */
 extern int8_t MSC_UNIT_READY(
-			const struct msc_application_data *app_data,
-			uint8_t lun);
+	const struct msc_application_data *app_data,
+	uint8_t lun);
 #else
 #error "You must define MSC_UNIT_READY in your usb_config.h"
 #endif
@@ -700,10 +700,10 @@ extern int8_t MSC_UNIT_READY(
  *   an error to be returned to the host.
  */
 extern int8_t MSC_START_STOP_UNIT(
-			const struct msc_application_data *app_data,
-			uint8_t lun,
-			bool start,
-			bool load_eject);
+	const struct msc_application_data *app_data,
+	uint8_t lun,
+	bool start,
+	bool load_eject);
 #else
 #error "You must define MSC_START_STOP_UNIT in your usb_config.h"
 #endif
@@ -734,10 +734,10 @@ extern int8_t MSC_START_STOP_UNIT(
  *   an error to be returned to the host.
  */
 extern int8_t MSC_START_READ(
-		struct msc_application_data *app_data,
-		uint8_t lun,
-		uint32_t lba_address,
-		uint16_t num_blocks);
+	struct msc_application_data *app_data,
+	uint8_t lun,
+	uint32_t lba_address,
+	uint16_t num_blocks);
 #else
 #error "You must define MSC_START_READ in your usb_config.h"
 #endif
@@ -777,17 +777,17 @@ extern int8_t MSC_START_READ(
  *   an error to be returned to the host.
  */
 extern int8_t MSC_START_WRITE(
-		struct msc_application_data *app_data,
-		uint8_t lun,
-		uint32_t lba_address,
-		uint16_t num_blocks,
-		uint8_t **buffer,
-		size_t *buffer_len,
-		msc_completion_callback *callback);
+	struct msc_application_data *app_data,
+	uint8_t lun,
+	uint32_t lba_address,
+	uint16_t num_blocks,
+	uint8_t **buffer,
+	size_t *buffer_len,
+	msc_completion_callback *callback);
 #else
 #error "You must either define MSC_START_WRITE in your usb_config.h or make this MSC class read-only."
-#endif /* MSC_START_WRITE */
-#endif /* MSC_WRITE_SUPPORT */
+#endif  /* MSC_START_WRITE */
+#endif  /* MSC_WRITE_SUPPORT */
 
 /* Doxygen end-of-group for msc_items */
 /** @}*/

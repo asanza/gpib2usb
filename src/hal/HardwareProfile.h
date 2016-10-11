@@ -48,27 +48,27 @@
 #define PinClearValue(val)      _PinClearValue(val)
 #define PinToggleValue(val)     _PinToggleValue(val)
 #define PinReadValue(val)       _PinReadValue(val)
-#define PinDirection(val)		_PinDirection(val)
+#define PinDirection(val)               _PinDirection(val)
 
 #define PortAsInput(val)       _PortAsInput(val)
 #define PortAsOutput(val)      _PortAsOutput(val)
-#define PortDirection(val)	   _PortDirection(val)
+#define PortDirection(val)         _PortDirection(val)
 #define PortSetValue(port, val)       _PortSetValue(port, val)
 #define PortReadValue(port)      _PortReadValue(port)
 
-#define _PinAsInput(port, pin) TRIS##port |= _BV(pin)
-#define _PinAsOutput(port, pin) TRIS##port &= ~_BV(pin)
-#define _PinToggleValue(port, pin) LAT##port ^= _BV(pin)
-#define _PinSetValue(port, pin) LAT##port |= _BV(pin)
-#define _PinClearValue(port, pin) LAT##port &= ~_BV(pin)
-#define _PinReadValue(port, pin) PORT##port & _BV(pin)
-#define _PinDirection(port, pin) TRIS##port &= _BV(pin)
+#define _PinAsInput(port, pin) TRIS ## port |= _BV(pin)
+#define _PinAsOutput(port, pin) TRIS ## port &= ~_BV(pin)
+#define _PinToggleValue(port, pin) LAT ## port ^= _BV(pin)
+#define _PinSetValue(port, pin) LAT ## port |= _BV(pin)
+#define _PinClearValue(port, pin) LAT ## port &= ~_BV(pin)
+#define _PinReadValue(port, pin) PORT ## port & _BV(pin)
+#define _PinDirection(port, pin) TRIS ## port &= _BV(pin)
 
-#define _PortAsInput(port) TRIS##port = 0x00
-#define _PortAsOutput(port) TRIS##port = 0xFF
-#define _PortSetValue(port, value) LAT##port = value
-#define _PortReadValue(port) PORT##port
-#define _PortDirection(port) TRIS##port
+#define _PortAsInput(port) TRIS ## port = 0x00
+#define _PortAsOutput(port) TRIS ## port = 0xFF
+#define _PortSetValue(port, value) LAT ## port = value
+#define _PortReadValue(port) PORT ## port
+#define _PortDirection(port) TRIS ## port
 
 
 #endif /*_HARDWAREPROFILE_H_*/

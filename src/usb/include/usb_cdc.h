@@ -58,15 +58,15 @@
  */
 
 /* CDC Specification 1.1 document sections are listed in the comments */
-#define CDC_DEVICE_CLASS 0x02 /* 4.1 */
-#define CDC_COMMUNICATION_INTERFACE_CLASS 0x02 /* 4.2 */
-#define CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS 0x02 /* 4.3 */
+#define CDC_DEVICE_CLASS 0x02                                   /* 4.1 */
+#define CDC_COMMUNICATION_INTERFACE_CLASS 0x02                  /* 4.2 */
+#define CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS 0x02     /* 4.3 */
 /* Many of the subclass codes (section 4.3) are omitted here. Get in
  * contact with Signal 11 if you need something specific. */
 
-#define CDC_DATA_INTERFACE_CLASS 0x0a /* 4.5 */
-#define CDC_DATA_INTERFACE_CLASS_PROTOCOL_NONE 0x0 /* 4.7 */
-#define CDC_DATA_INTERFACE_CLASS_PROTOCOL_VENDOR 0xff /* 4.7 */
+#define CDC_DATA_INTERFACE_CLASS 0x0a                   /* 4.5 */
+#define CDC_DATA_INTERFACE_CLASS_PROTOCOL_NONE 0x0      /* 4.7 */
+#define CDC_DATA_INTERFACE_CLASS_PROTOCOL_VENDOR 0xff   /* 4.7 */
 /* Many of the protocol codes (section 4.7) are omitted here. Get in
  * contact with Signal 11 if you need something specific. */
 
@@ -166,10 +166,10 @@ enum CDCNotifications {
  * See section 5.2.3.1 of the CDC Specification, version 1.1.
  */
 struct cdc_functional_descriptor_header {
-	uint8_t bFunctionLength; /**< Size of this functional  descriptor (5) */
-	uint8_t bDescriptorType; /**< Use DESC_CS_INTERFACE */
-	uint8_t bDescriptorSubtype; /**< CDC_DESCRIPTOR_SUBTYPE_HEADER */
-	uint16_t bcdCDC; /**< CDC version in BCD format. Use 0x0101 (1.1). */
+	uint8_t bFunctionLength;        /**< Size of this functional  descriptor (5) */
+	uint8_t bDescriptorType;        /**< Use DESC_CS_INTERFACE */
+	uint8_t bDescriptorSubtype;     /**< CDC_DESCRIPTOR_SUBTYPE_HEADER */
+	uint16_t bcdCDC;                /**< CDC version in BCD format. Use 0x0101 (1.1). */
 };
 
 /** CDC Abstract Control Management Functional Descriptor
@@ -177,10 +177,10 @@ struct cdc_functional_descriptor_header {
  * See Section 5.2.3.3 of the CDC Specification, version 1.1.
  */
 struct cdc_acm_functional_descriptor {
-	uint8_t bFunctionLength; /**< Size of this functional descriptor (4) */
-	uint8_t bDescriptorType; /**< Use DESC_CS_INTERFACE */
-	uint8_t bDescriptorSubtype; /**< CDC_DESCRIPTOR_SUBTYPE_ACM */
-	uint8_t bmCapabilities; /**< See CDC_ACM_CAPABILITY* definitions */
+	uint8_t bFunctionLength;        /**< Size of this functional descriptor (4) */
+	uint8_t bDescriptorType;        /**< Use DESC_CS_INTERFACE */
+	uint8_t bDescriptorSubtype;     /**< CDC_DESCRIPTOR_SUBTYPE_ACM */
+	uint8_t bmCapabilities;         /**< See CDC_ACM_CAPABILITY* definitions */
 };
 
 /** CDC Union Functional Registor
@@ -188,9 +188,9 @@ struct cdc_acm_functional_descriptor {
  * See Section 5.2.3.8 of the CDC Specification, version 1.1.
  */
 struct cdc_union_functional_descriptor {
-	uint8_t bFunctionLength; /**< Size of this functional descriptor */
-	uint8_t bDescriptorType; /**< Use DESC_CS_INTERFACE */
-	uint8_t bDescriptorSubtype; /**< CDC_DESCRIPTOR_SUBTYPE_ACM */
+	uint8_t bFunctionLength;        /**< Size of this functional descriptor */
+	uint8_t bDescriptorType;        /**< Use DESC_CS_INTERFACE */
+	uint8_t bDescriptorSubtype;     /**< CDC_DESCRIPTOR_SUBTYPE_ACM */
 	uint8_t bMasterInterface;
 	uint8_t bSlaveInterface0;
 	/* More bSlaveInterfaces cound go here, but you'll have to pack them
@@ -206,9 +206,9 @@ struct cdc_union_functional_descriptor {
 struct cdc_notification_header {
 	union {
 		struct {
-			uint8_t destination : 5; /**< @see enum DestinationType */
-			uint8_t type : 2;        /**< @see enum RequestType */
-			uint8_t direction : 1;   /**< 0=out, 1=in */
+			uint8_t destination : 5;        /**< @see enum DestinationType */
+			uint8_t type : 2;               /**< @see enum RequestType */
+			uint8_t direction : 1;          /**< 0=out, 1=in */
 		};
 		uint8_t bmRequestType;
 	} REQUEST;
@@ -227,8 +227,8 @@ struct cdc_serial_state_notification {
 	struct cdc_notification_header header;
 	union {
 		struct {
-			uint16_t bRxCarrier : 1; /**< Indicates DCD */
-			uint16_t bTxCarrier : 1; /**< Indicates DSR */
+			uint16_t bRxCarrier : 1;        /**< Indicates DCD */
+			uint16_t bTxCarrier : 1;        /**< Indicates DSR */
 			uint16_t bBreak : 1;
 			uint16_t bRingSignal : 1;
 			uint16_t bFraming : 1;
@@ -251,10 +251,10 @@ struct cdc_serial_state_notification {
  * See Section 6.2.13 of the CDC Specification, version 1.1.
  */
 struct cdc_line_coding {
-	uint32_t dwDTERate; /**< Data Terminal Rate (bits per second) */
-	uint8_t bCharFormat; /**< Stop bits: @see CDCCharFormat */
-	uint8_t bParityType; /**< Parity Type: @see CDCParityType */
-	uint8_t bDataBits; /**< Data Bits: 5, 6, 7, 8 or 16 */
+	uint32_t dwDTERate;     /**< Data Terminal Rate (bits per second) */
+	uint8_t bCharFormat;    /**< Stop bits: @see CDCCharFormat */
+	uint8_t bParityType;    /**< Parity Type: @see CDCParityType */
+	uint8_t bDataBits;      /**< Data Bits: 5, 6, 7, 8 or 16 */
 };
 
 
@@ -305,7 +305,7 @@ uint8_t process_cdc_setup_request(const struct setup_packet *setup);
  *   will cause STALL to be returned to the host.
  */
 extern int8_t CDC_SEND_ENCAPSULATED_COMMAND_CALLBACK(uint8_t interface,
-                                                     uint16_t length);
+						     uint16_t length);
 
 #ifdef CDC_GET_ENCAPSULATED_RESPONSE_CALLBACK
 /** CDC GET_ENCAPSULATED_RESPONSE callback
@@ -337,9 +337,9 @@ extern int8_t CDC_SEND_ENCAPSULATED_COMMAND_CALLBACK(uint8_t interface,
  *   will cause STALL to be returned to the host.
  */
 extern int16_t CDC_GET_ENCAPSULATED_RESPONSE_CALLBACK(uint8_t interface,
-                               uint16_t length, const void **response,
-                               usb_ep0_data_stage_callback *callback,
-                               void **context);
+						      uint16_t length, const void **response,
+						      usb_ep0_data_stage_callback *callback,
+						      void **context);
 #endif
 
 #ifdef CDC_SET_COMM_FEATURE_CALLBACK
@@ -358,8 +358,8 @@ extern int16_t CDC_GET_ENCAPSULATED_RESPONSE_CALLBACK(uint8_t interface,
  *                                state. True = clear the multiplexed state.
  */
 extern void CDC_SET_COMM_FEATURE_CALLBACK(uint8_t interface,
-                                            bool idle_setting,
-                                            bool data_multiplexed_state);
+					  bool idle_setting,
+					  bool data_multiplexed_state);
 #endif
 
 #ifdef CDC_CLEAR_COMM_FEATURE_CALLBACK
@@ -378,8 +378,8 @@ extern void CDC_SET_COMM_FEATURE_CALLBACK(uint8_t interface,
  *                                state. True = clear the multiplexed state.
  */
 extern void CDC_CLEAR_COMM_FEATURE_CALLBACK(uint8_t interface,
-                                            bool idle_setting,
-                                            bool data_multiplexed_state);
+					    bool idle_setting,
+					    bool data_multiplexed_state);
 #endif
 
 #ifdef CDC_GET_COMM_FEATURE_CALLBACK
@@ -399,9 +399,9 @@ extern void CDC_CLEAR_COMM_FEATURE_CALLBACK(uint8_t interface,
  *   will cause STALL to be returned to the host.
  */
 extern int8_t CDC_GET_COMM_FEATURE_CALLBACK(
-                               uint8_t interface,
-                               bool *idle_setting,
-                               bool *data_multiplexed_state);
+	uint8_t interface,
+	bool *idle_setting,
+	bool *data_multiplexed_state);
 #endif
 
 #ifdef CDC_SET_LINE_CODING_CALLBACK
@@ -418,7 +418,7 @@ extern int8_t CDC_GET_COMM_FEATURE_CALLBACK(
  *
  */
 extern void CDC_SET_LINE_CODING_CALLBACK(uint8_t interface,
-                                         const struct cdc_line_coding *coding);
+					 const struct cdc_line_coding *coding);
 #endif
 
 #ifdef CDC_GET_LINE_CODING_CALLBACK
@@ -444,7 +444,7 @@ extern void CDC_SET_LINE_CODING_CALLBACK(uint8_t interface,
  *   will cause STALL to be returned to the host.
  */
 extern int8_t CDC_GET_LINE_CODING_CALLBACK(uint8_t interface,
-                                           struct cdc_line_coding *coding);
+					   struct cdc_line_coding *coding);
 #endif
 
 #ifdef CDC_SET_CONTROL_LINE_STATE_CALLBACK
@@ -463,7 +463,7 @@ extern int8_t CDC_GET_LINE_CODING_CALLBACK(uint8_t interface,
  *   will cause STALL to be returned to the host.
  */
 extern int8_t CDC_SET_CONTROL_LINE_STATE_CALLBACK(uint8_t interface,
-                                                  bool dtr, bool dts);
+						  bool dtr, bool dts);
 #endif
 
 #ifdef CDC_SEND_BREAK_CALLBACK

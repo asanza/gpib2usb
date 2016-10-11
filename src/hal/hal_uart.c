@@ -27,18 +27,18 @@
 
 void putch(char data)
 {
-    while( ! TXIF)
-        continue;
-    TXREG = data;
+	while ( !TXIF)
+		continue;
+	TXREG = data;
 }
 
 void hal_uart_init(void)
 {
-    SPBRG = 78;           // 9600 baud @ 4 MHz
-    SYNC = 0;
-    TXEN = 1;               // enable transmitter
-    BRGH = 0;               // select high baud rate
-    BRG16 = 0;
-    SPEN = 1;               // enable serial port
-    CREN = 1;               // enable continuous operation
+	SPBRG = 78;             // 9600 baud @ 4 MHz
+	SYNC = 0;
+	TXEN = 1;               // enable transmitter
+	BRGH = 0;               // select high baud rate
+	BRG16 = 0;
+	SPEN = 1;               // enable serial port
+	CREN = 1;               // enable continuous operation
 }

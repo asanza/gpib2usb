@@ -32,9 +32,9 @@
 /* Functions for automatic WinUSB support */
 
 uint16_t m_stack_winusb_get_microsoft_compat(uint8_t interface,
-                                              const void **descriptor);
+					     const void **descriptor);
 
 uint16_t m_stack_winusb_get_microsoft_property(uint8_t interface,
-                                                const void **descriptor);
+					       const void **descriptor);
 
 #endif /* USB_WINUSB_H__ */

@@ -50,23 +50,23 @@
 #include "usb_winusb.h"
 
 #if _PIC14E && __XC8
-	/* This is necessary to avoid a warning about ep0_data_stage_callback
-	 * never being assigned to anything other than NULL. Since this is a
-	 * library, it's possible (and likely) that the application will not
-	 * make use of data stage callbacks, or control transfers at all. This
-	 * is only an issue on PIC16F parts (so far) on XC8.
-	 */
+/* This is necessary to avoid a warning about ep0_data_stage_callback
+ * never being assigned to anything other than NULL. Since this is a
+ * library, it's possible (and likely) that the application will not
+ * make use of data stage callbacks, or control transfers at all. This
+ * is only an issue on PIC16F parts (so far) on XC8.
+ */
 	#pragma warning disable 1088
 #endif
 
 #ifdef __XC8
-	/* XC8 gives bogus warnings (at least on PIC18) about
-	 * ep0_data_stage_callback() being called when NULL. The code does
-	 * check for NULL, and is safe. */
+/* XC8 gives bogus warnings (at least on PIC18) about
+ * ep0_data_stage_callback() being called when NULL. The code does
+ * check for NULL, and is safe. */
 	#pragma warning disable 1471
 #endif
 
-#define MIN(x,y) (((x)<(y))?(x):(y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
 /* Even though they're the same, It's convenient below (for the buffer
  * macros) to have separate #defines for IN and OUT EP 0 lengths which
@@ -157,23 +157,23 @@ STATIC_SIZE_CHECK_EQUAL(sizeof(struct buffer_descriptor), 4);
 #if PPB_MODE == PPB_EPO_OUT_ONLY
 	#define BDS0OUT(oe) bds[0 + oe]
 	#define BDS0IN(oe) bds[2]
-	#define BDSnOUT(EP,oe) bds[(EP) * 2 + 1]
-	#define BDSnIN(EP,oe) bds[(EP) * 2 + 2]
+	#define BDSnOUT(EP, oe) bds[(EP) * 2 + 1]
+	#define BDSnIN(EP, oe) bds[(EP) * 2 + 2]
 #elif PPB_MODE == PPB_EPN_ONLY
 	#define BDS0OUT(oe) bds[0]
 	#define BDS0IN(oe) bds[1]
-	#define BDSnOUT(EP,oe) bds[(EP) * 4 - 2 + (oe)]
-	#define BDSnIN(EP,oe) bds[(EP) * 4 + (oe)]
+	#define BDSnOUT(EP, oe) bds[(EP) * 4 - 2 + (oe)]
+	#define BDSnIN(EP, oe) bds[(EP) * 4 + (oe)]
 #elif PPB_MODE == PPB_NONE
 	#define BDS0OUT(oe) bds[0]
 	#define BDS0IN(oe) bds[1]
-	#define BDSnOUT(EP,oe) bds[(EP) * 2]
-	#define BDSnIN(EP,oe) bds[(EP) * 2 + 1]
+	#define BDSnOUT(EP, oe) bds[(EP) * 2]
+	#define BDSnIN(EP, oe) bds[(EP) * 2 + 1]
 #elif PPB_MODE == PPB_ALL
 	#define BDS0OUT(oe) bds[0 + oe]
 	#define BDS0IN(oe) bds[2 + oe]
-	#define BDSnOUT(EP,oe) bds[(EP) * 4 + (oe)]
-	#define BDSnIN(EP,oe) bds[(EP) * 4 + 2 + (oe)]
+	#define BDSnOUT(EP, oe) bds[(EP) * 4 + (oe)]
+	#define BDSnIN(EP, oe) bds[(EP) * 4 + 2 + (oe)]
 #else
 #error "Must select a valid PPB_MODE"
 #endif
@@ -183,7 +183,7 @@ STATIC_SIZE_CHECK_EQUAL(sizeof(struct buffer_descriptor), 4);
 #endif
 
 #ifdef AUTOMATIC_WINUSB_SUPPORT
-	/* Make sure the Microsoft descriptor functions aren't defined */
+/* Make sure the Microsoft descriptor functions aren't defined */
 	#ifdef MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC
 		#error "Must not define MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC when using Automatic WinUSB"
 	#endif
@@ -191,8 +191,8 @@ STATIC_SIZE_CHECK_EQUAL(sizeof(struct buffer_descriptor), 4);
 		#error "Must not define MICROSOFT_CUSTOM_PROPERTY_DESCRIPTOR_FUNC when using Automatic WinUSB"
 	#endif
 
-	/* Define the Microsoft descriptor functions to the handlers
-	 * implemented in usb_winusb.c */
+/* Define the Microsoft descriptor functions to the handlers
+ * implemented in usb_winusb.c */
 	#define MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC m_stack_winusb_get_microsoft_compat
 	#define MICROSOFT_CUSTOM_PROPERTY_DESCRIPTOR_FUNC m_stack_winusb_get_microsoft_property
 #endif
@@ -206,10 +206,10 @@ static struct buffer_descriptor bds[NUM_BD] BD_ATTR_TAG;
 /* This addr is for the PIC18F4550 */
 #pragma udata usb_buffers=0x500
 #elif defined(__XC16__) || defined(__XC32__)
-	/* Buffers can go anywhere on PIC24/PIC32 parts which are supported
-	   (so far). */
+/* Buffers can go anywhere on PIC24/PIC32 parts which are supported
+   (so far). */
 #elif __XC8
-	/* Addresses are set by BD_ADDR and BUF_ADDR below. */
+/* Addresses are set by BD_ADDR and BUF_ADDR below. */
 #else
 	#error compiler not supported
 #endif
@@ -218,16 +218,16 @@ static struct {
 /* Set up the EP_BUF() macro for EP0 */
 #if defined(PPB_EP0_IN) && defined(PPB_EP0_OUT)
 	#define EP_BUF(n) \
-		unsigned char ep_##n##_out_buf[2][EP_##n##_OUT_LEN]; \
-		unsigned char ep_##n##_in_buf[2][EP_##n##_IN_LEN];
+	unsigned char ep_ ## n ## _out_buf[2][EP_ ## n ## _OUT_LEN]; \
+	unsigned char ep_ ## n ## _in_buf[2][EP_ ## n ## _IN_LEN];
 #elif !defined(PPB_EP0_IN) && defined(PPB_EP0_OUT)
 	#define EP_BUF(n) \
-		unsigned char ep_##n##_out_buf[2][EP_##n##_OUT_LEN]; \
-		unsigned char ep_##n##_in_buf[1][EP_##n##_IN_LEN];
+	unsigned char ep_ ## n ## _out_buf[2][EP_ ## n ## _OUT_LEN]; \
+	unsigned char ep_ ## n ## _in_buf[1][EP_ ## n ## _IN_LEN];
 #elif !defined(PPB_EP0_IN) && !defined(PPB_EP0_OUT)
 	#define EP_BUF(n) \
-		unsigned char ep_##n##_out_buf[1][EP_##n##_OUT_LEN]; \
-		unsigned char ep_##n##_in_buf[1][EP_##n##_IN_LEN];
+	unsigned char ep_ ## n ## _out_buf[1][EP_ ## n ## _OUT_LEN]; \
+	unsigned char ep_ ## n ## _in_buf[1][EP_ ## n ## _IN_LEN];
 #else
 	#error "Nonsense condition detected"
 #endif
@@ -240,12 +240,12 @@ static struct {
 #undef EP_BUF
 #ifdef PPB_EPn
 	#define EP_BUF(n) \
-		unsigned char ep_##n##_out_buf[2][EP_##n##_OUT_LEN]; \
-		unsigned char ep_##n##_in_buf[2][EP_##n##_IN_LEN];
+	unsigned char ep_ ## n ## _out_buf[2][EP_ ## n ## _OUT_LEN]; \
+	unsigned char ep_ ## n ## _in_buf[2][EP_ ## n ## _IN_LEN];
 #else
 	#define EP_BUF(n) \
-		unsigned char ep_##n##_out_buf[1][EP_##n##_OUT_LEN]; \
-		unsigned char ep_##n##_in_buf[1][EP_##n##_IN_LEN];
+	unsigned char ep_ ## n ## _out_buf[1][EP_ ## n ## _OUT_LEN]; \
+	unsigned char ep_ ## n ## _in_buf[1][EP_ ## n ## _IN_LEN];
 #endif
 
 #if NUM_ENDPOINT_NUMBERS >= 1
@@ -298,30 +298,30 @@ static struct {
 } ep_buffers XC8_BUFFER_ADDR_TAG;
 
 struct ep_buf {
-	unsigned char * const out; /* buffers for the even buffer descriptor */
-	unsigned char * const in;  /* ie: ppbi = 0 */
+	unsigned char * const out;      /* buffers for the even buffer descriptor */
+	unsigned char * const in;       /* ie: ppbi = 0 */
 #ifdef PPB_EPn
-	unsigned char * const out1; /* buffers for the odd buffer descriptor */
-	unsigned char * const in1;  /* ie: ppbi = 1 */
+	unsigned char * const out1;     /* buffers for the odd buffer descriptor */
+	unsigned char * const in1;      /* ie: ppbi = 1 */
 #endif
 	const uint8_t out_len;
 	const uint8_t in_len;
 
 #define EP_OUT_HALT_FLAG 0x1
 #define EP_IN_HALT_FLAG 0x2
-#define EP_RX_DTS 0x4  /* The DTS of the _next_ packet */
+#define EP_RX_DTS 0x4   /* The DTS of the _next_ packet */
 #define EP_TX_DTS 0x8
 #define EP_RX_PPBI 0x10 /* Represents the next buffer which will be need to be
-                           reset and given back to the SIE. */
+	                   reset and given back to the SIE. */
 #define EP_TX_PPBI 0x20 /* Represents the _next_ buffer to write into. */
 	uint8_t flags;
 };
 
 struct ep0_buf {
-	unsigned char * const out; /* buffers for the even buffer descriptor */
-	unsigned char * const in;  /* ie: ppbi = 0 */
+	unsigned char * const out;      /* buffers for the even buffer descriptor */
+	unsigned char * const in;       /* ie: ppbi = 0 */
 #ifdef PPB_EP0_OUT
-	unsigned char * const out1; /* buffer for the odd buffer descriptor */
+	unsigned char * const out1;     /* buffer for the odd buffer descriptor */
 #endif
 #ifdef PPB_EP0_IN
 	unsigned char * const in1;  /* buffer for the odd buffer descriptor */
@@ -337,18 +337,18 @@ struct ep0_buf {
 
 #if defined(PPB_EP0_IN) && defined(PPB_EP0_OUT)
 	#define EP_BUFS0() { ep_buffers.ep_0_out_buf[0], \
-	                     ep_buffers.ep_0_in_buf[0], \
-	                     ep_buffers.ep_0_out_buf[1], \
-	                     ep_buffers.ep_0_in_buf[1] }
+			     ep_buffers.ep_0_in_buf[0],	\
+			     ep_buffers.ep_0_out_buf[1], \
+			     ep_buffers.ep_0_in_buf[1] }
 
 #elif !defined(PPB_EP0_IN) && defined(PPB_EP0_OUT)
 	#define EP_BUFS0() { ep_buffers.ep_0_out_buf[0], \
-	                     ep_buffers.ep_0_in_buf[0], \
-	                     ep_buffers.ep_0_out_buf[1] }
+			     ep_buffers.ep_0_in_buf[0],	\
+			     ep_buffers.ep_0_out_buf[1] }
 
 #elif !defined(PPB_EP0_IN) && !defined(PPB_EP0_OUT)
 	#define EP_BUFS0() { ep_buffers.ep_0_out_buf[0], \
-	                     ep_buffers.ep_0_in_buf[0] }
+			     ep_buffers.ep_0_in_buf[0] }
 
 #else
 	#error "Nonsense condition detected"
@@ -356,22 +356,22 @@ struct ep0_buf {
 
 
 #ifdef PPB_EPn
-	#define EP_BUFS(n) { ep_buffers.ep_##n##_out_buf[0], \
-	                     ep_buffers.ep_##n##_in_buf[0], \
-	                     ep_buffers.ep_##n##_out_buf[1], \
-	                     ep_buffers.ep_##n##_in_buf[1], \
-	                     EP_##n##_OUT_LEN, \
-	                     EP_##n##_IN_LEN },
+	#define EP_BUFS(n) { ep_buffers.ep_ ## n ## _out_buf[0], \
+			     ep_buffers.ep_ ## n ## _in_buf[0],	\
+			     ep_buffers.ep_ ## n ## _out_buf[1], \
+			     ep_buffers.ep_ ## n ## _in_buf[1],	\
+			     EP_ ## n ## _OUT_LEN, \
+			     EP_ ## n ## _IN_LEN },
 #else
-	#define EP_BUFS(n) { ep_buffers.ep_##n##_out_buf[0], \
-	                     ep_buffers.ep_##n##_in_buf[0], \
-	                     EP_##n##_OUT_LEN, \
-	                     EP_##n##_IN_LEN },
+	#define EP_BUFS(n) { ep_buffers.ep_ ## n ## _out_buf[0], \
+			     ep_buffers.ep_ ## n ## _in_buf[0],	\
+			     EP_ ## n ## _OUT_LEN, \
+			     EP_ ## n ## _IN_LEN },
 #endif
 
 static struct ep0_buf ep0_buf = EP_BUFS0();
 
-static struct ep_buf ep_buf[NUM_ENDPOINT_NUMBERS+1] = {
+static struct ep_buf ep_buf[NUM_ENDPOINT_NUMBERS + 1] = {
 #if NUM_ENDPOINT_NUMBERS >= 0
 	{ NULL, NULL },
 	/* TODO wasted space here */
@@ -437,7 +437,7 @@ static bool returning_short;
 static usb_ep0_data_stage_callback ep0_data_stage_callback;
 static char   *ep0_data_stage_in_buffer; /* XC8 v1.12 fails if this is const on PIC16 */
 static char   *ep0_data_stage_out_buffer;
-static size_t  ep0_data_stage_buf_remaining;
+static size_t ep0_data_stage_buf_remaining;
 static void   *ep0_data_stage_context;
 static uint8_t ep0_data_stage_direc; /*1=IN, 0=OUT, Same as USB spec.*/
 
@@ -456,7 +456,7 @@ static uint8_t ep0_data_stage_direc; /*1=IN, 0=OUT, Same as USB spec.*/
 static uint16_t pic16_linear_addr(void *ptr)
 {
 	uint8_t high, low;
-	uint16_t addr = (uint16_t) ptr;
+	uint16_t addr = (uint16_t)ptr;
 
 	/* Addresses over 0x2000 are already linear addresses. */
 	if (addr >= 0x2000)
@@ -467,7 +467,7 @@ static uint16_t pic16_linear_addr(void *ptr)
 
 	return 0x2000 +
 	       (low & 0x7f) - 0x20 +
-	       ((high << 1) + (low & 0x80)? 1: 0) * 0x50;
+	       ((high << 1) + (low & 0x80) ? 1 : 0) * 0x50;
 }
 #endif
 
@@ -514,41 +514,41 @@ static void init_endpoints(void)
 
 	/* Setup endpoint 0 Output buffer descriptor.
 	   Input and output are from the HOST perspective. */
-	BDS0OUT(0).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep0_buf.out);
+	BDS0OUT(0).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep0_buf.out);
 	SET_BDN(BDS0OUT(0), BDNSTAT_UOWN, EP_0_LEN);
 
 #ifdef PPB_EP0_OUT
-	BDS0OUT(1).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep0_buf.out1);
+	BDS0OUT(1).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep0_buf.out1);
 	SET_BDN(BDS0OUT(1), BDNSTAT_UOWN, EP_0_LEN);
 #endif
 
 	/* Setup endpoint 0 Input buffer descriptor.
 	   Input and output are from the HOST perspective. */
-	BDS0IN(0).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep0_buf.in);
+	BDS0IN(0).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep0_buf.in);
 	SET_BDN(BDS0IN(0), 0, EP_0_LEN);
 #ifdef PPB_EP0_IN
-	BDS0IN(1).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep0_buf.in1);
+	BDS0IN(1).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep0_buf.in1);
 	SET_BDN(BDS0IN(1), 0, EP_0_LEN);
 #endif
 
 	for (i = 1; i <= NUM_ENDPOINT_NUMBERS; i++) {
 		/* Setup endpoint 1 Output buffer descriptor.
 		   Input and output are from the HOST perspective. */
-		BDSnOUT(i,0).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep_buf[i].out);
-		SET_BDN(BDSnOUT(i,0), BDNSTAT_UOWN|BDNSTAT_DTSEN, ep_buf[i].out_len);
+		BDSnOUT(i, 0).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep_buf[i].out);
+		SET_BDN(BDSnOUT(i, 0), BDNSTAT_UOWN | BDNSTAT_DTSEN, ep_buf[i].out_len);
 #ifdef PPB_EPn
 		/* Initialize EVEN buffers when in ping-pong mode. */
-		BDSnOUT(i,1).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep_buf[i].out1);
-		SET_BDN(BDSnOUT(i,1), BDNSTAT_UOWN|BDNSTAT_DTSEN|BDNSTAT_DTS, ep_buf[i].out_len);
+		BDSnOUT(i, 1).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep_buf[i].out1);
+		SET_BDN(BDSnOUT(i, 1), BDNSTAT_UOWN | BDNSTAT_DTSEN | BDNSTAT_DTS, ep_buf[i].out_len);
 #endif
 		/* Setup endpoint 1 Input buffer descriptor.
 		   Input and output are from the HOST perspective. */
-		BDSnIN(i,0).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep_buf[i].in);
-		SET_BDN(BDSnIN(i,0), 0, ep_buf[i].in_len);
+		BDSnIN(i, 0).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep_buf[i].in);
+		SET_BDN(BDSnIN(i, 0), 0, ep_buf[i].in_len);
 #ifdef PPB_EPn
 		/* Initialize EVEN buffers when in ping-pong mode. */
-		BDSnIN(i,1).BDnADR = (BDNADR_TYPE) PHYS_ADDR(ep_buf[i].in1);
-		SET_BDN(BDSnIN(i,1), 0, ep_buf[i].in_len);
+		BDSnIN(i, 1).BDnADR = (BDNADR_TYPE)PHYS_ADDR(ep_buf[i].in1);
+		SET_BDN(BDSnIN(i, 1), 0, ep_buf[i].in_len);
 #endif
 	}
 
@@ -572,14 +572,14 @@ void usb_init(void)
 #endif
 	SFR_USB_INTERRUPT_EN = 0x0;
 	SFR_USB_EXTENDED_INTERRUPT_EN = 0x0;
-	
+
 	SFR_USB_EN = 1; /* enable USB module */
 
 #ifdef USE_OTG
 	SFR_OTGEN = 1;
 #endif
 
-	
+
 #ifdef NEEDS_PULL
 	SFR_PULL_EN = 1;  /* pull-up enable */
 #endif
@@ -600,11 +600,11 @@ void usb_init(void)
 	CLEAR_ALL_USB_IF();
 
 #ifdef USB_USE_INTERRUPTS
-	SFR_TRANSFER_IE = 1; /* USB Transfer Interrupt Enable */
-	SFR_STALL_IE = 1;    /* USB Stall Interrupt Enable */
-	SFR_RESET_IE = 1;    /* USB Reset Interrupt Enable */
+	SFR_TRANSFER_IE = 1;    /* USB Transfer Interrupt Enable */
+	SFR_STALL_IE = 1;       /* USB Stall Interrupt Enable */
+	SFR_RESET_IE = 1;       /* USB Reset Interrupt Enable */
 #ifdef START_OF_FRAME_CALLBACK
-	SFR_SOF_IE = 1;      /* USB Start-Of-Frame Interrupt Enable */
+	SFR_SOF_IE = 1;         /* USB Start-Of-Frame Interrupt Enable */
 #endif
 #endif
 
@@ -644,25 +644,25 @@ void usb_init(void)
 #endif
 
 	/* These are the UEP/U1EP endpoint management registers. */
-	
+
 	/* Clear them all out. This is important because a bootloader
 	   could have set them to non-zero */
 	memset(SFR_EP_MGMT(0), 0x0, sizeof(*SFR_EP_MGMT(0)) * 16);
-	
+
 	/* Set up Endpoint zero */
-	SFR_EP_MGMT(0)->SFR_EP_MGMT_HANDSHAKE = 1; /* Endpoint handshaking enable */
-	SFR_EP_MGMT(0)->SFR_EP_MGMT_CON_DIS = 0; /* 1=Disable control operations */
-	SFR_EP_MGMT(0)->SFR_EP_MGMT_OUT_EN = 1; /* Endpoint Out Transaction Enable */
-	SFR_EP_MGMT(0)->SFR_EP_MGMT_IN_EN = 1; /* Endpoint In Transaction Enable */
-	SFR_EP_MGMT(0)->SFR_EP_MGMT_STALL = 0; /* Stall */
+	SFR_EP_MGMT(0)->SFR_EP_MGMT_HANDSHAKE = 1;      /* Endpoint handshaking enable */
+	SFR_EP_MGMT(0)->SFR_EP_MGMT_CON_DIS = 0;        /* 1=Disable control operations */
+	SFR_EP_MGMT(0)->SFR_EP_MGMT_OUT_EN = 1;         /* Endpoint Out Transaction Enable */
+	SFR_EP_MGMT(0)->SFR_EP_MGMT_IN_EN = 1;          /* Endpoint In Transaction Enable */
+	SFR_EP_MGMT(0)->SFR_EP_MGMT_STALL = 0;          /* Stall */
 
 	for (i = 1; i <= NUM_ENDPOINT_NUMBERS; i++) {
 		volatile SFR_EP_MGMT_TYPE *ep = SFR_EP_MGMT(i);
-		ep->SFR_EP_MGMT_HANDSHAKE = 1; /* Endpoint handshaking enable */
-		ep->SFR_EP_MGMT_CON_DIS = 1; /* 1=Disable control operations */
-		ep->SFR_EP_MGMT_OUT_EN = 1; /* Endpoint Out Transaction Enable */
-		ep->SFR_EP_MGMT_IN_EN = 1; /* Endpoint In Transaction Enable */
-		ep->SFR_EP_MGMT_STALL = 0; /* Stall */
+		ep->SFR_EP_MGMT_HANDSHAKE = 1;  /* Endpoint handshaking enable */
+		ep->SFR_EP_MGMT_CON_DIS = 1;    /* 1=Disable control operations */
+		ep->SFR_EP_MGMT_OUT_EN = 1;     /* Endpoint Out Transaction Enable */
+		ep->SFR_EP_MGMT_IN_EN = 1;      /* Endpoint In Transaction Enable */
+		ep->SFR_EP_MGMT_STALL = 0;      /* Stall */
 	}
 
 	/* Reset the Address. */
@@ -685,7 +685,7 @@ void usb_init(void)
 #ifdef USB_USE_INTERRUPTS
 	SFR_USB_IE = 1;     /* USB Interrupt enable */
 #endif
-	
+
 	//UIRbits.URSTIF = 0; /* Clear USB Reset on Start */
 }
 
@@ -705,11 +705,11 @@ static void stall_ep0(void)
 {
 	/* Stall Endpoint 0. It's important that DTSEN and DTS are zero. */
 #ifdef PPB_EP0_IN
-	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
-	SET_BDN(BDS0IN(ppbi), BDNSTAT_UOWN|BDNSTAT_BSTALL, EP_0_LEN);
+	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
+	SET_BDN(BDS0IN(ppbi), BDNSTAT_UOWN | BDNSTAT_BSTALL, EP_0_LEN);
 	/* The PPBI does not advance for STALL. */
 #else
-	SET_BDN(BDS0IN(0), BDNSTAT_UOWN|BDNSTAT_BSTALL, EP_0_LEN);
+	SET_BDN(BDS0IN(0), BDNSTAT_UOWN | BDNSTAT_BSTALL, EP_0_LEN);
 #endif
 }
 
@@ -719,7 +719,7 @@ static void clear_ep0_stall(void)
 	/* Clear Endpoint 0 Stall and UOWN. This is supposed to be done by
 	 * the hardware, but it isn't on PIC16 and PIC18. */
 #ifdef PPB_EP0_IN
-	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
 	SET_BDN(BDS0IN(ppbi), 0, EP_0_LEN);
 	/* The PPBI does not advance for STALL. */
 #else
@@ -733,9 +733,9 @@ static void stall_ep_in(uint8_t ep)
 	/* Stall Endpoint. It's important that DTSEN and DTS are zero.
 	 * Although the datasheet doesn't stay it, the only safe way to do this
 	 * is to set BSTALL on BOTH buffers when in ping-pong mode. */
-	SET_BDN(BDSnIN(ep, 0), BDNSTAT_UOWN|BDNSTAT_BSTALL, ep_buf[ep].in_len);
+	SET_BDN(BDSnIN(ep, 0), BDNSTAT_UOWN | BDNSTAT_BSTALL, ep_buf[ep].in_len);
 #ifdef PPB_EPn
-	SET_BDN(BDSnIN(ep, 1), BDNSTAT_UOWN|BDNSTAT_BSTALL, ep_buf[ep].in_len);
+	SET_BDN(BDSnIN(ep, 1), BDNSTAT_UOWN | BDNSTAT_BSTALL, ep_buf[ep].in_len);
 #endif
 }
 
@@ -744,22 +744,22 @@ static void stall_ep_out(uint8_t ep)
 	/* Stall Endpoint. It's important that DTSEN and DTS are zero.
 	 * Although the datasheet doesn't stay it, the only safe way to do this
 	 * is to set BSTALL on BOTH buffers when in ping-pong mode. */
-	SET_BDN(BDSnOUT(ep, 0), BDNSTAT_UOWN|BDNSTAT_BSTALL , 0);
+	SET_BDN(BDSnOUT(ep, 0), BDNSTAT_UOWN | BDNSTAT_BSTALL, 0);
 #ifdef PPB_EPn
-	SET_BDN(BDSnOUT(ep, 1), BDNSTAT_UOWN|BDNSTAT_BSTALL , 0);
+	SET_BDN(BDSnOUT(ep, 1), BDNSTAT_UOWN | BDNSTAT_BSTALL, 0);
 #endif
 }
 
 static void send_zero_length_packet_ep0()
 {
 #ifdef PPB_EP0_IN
-	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
 	BDS0IN(ppbi).STAT.BDnSTAT = 0;
-	SET_BDN(BDS0IN(ppbi), BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, 0);
+	SET_BDN(BDS0IN(ppbi), BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, 0);
 	ep0_buf.flags ^= EP_TX_PPBI;
 #else
 	BDS0IN(0).STAT.BDnSTAT = 0;
-	SET_BDN(BDS0IN(0), BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, 0);
+	SET_BDN(BDS0IN(0), BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, 0);
 #endif
 }
 
@@ -768,31 +768,31 @@ static void usb_send_in_buffer_0(size_t len)
 	if (!usb_in_endpoint_halted(0)) {
 #ifdef PPB_EP0_IN
 		struct buffer_descriptor *bd;
-		uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
-		uint8_t pid = (ep0_buf.flags & EP_TX_DTS)? 1 : 0;
+		uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
+		uint8_t pid = (ep0_buf.flags & EP_TX_DTS) ? 1 : 0;
 		bd = &BDS0IN(ppbi);
 		bd->STAT.BDnSTAT = 0;
 
 		if (pid)
 			SET_BDN(*bd,
-				BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, len);
 		else
 			SET_BDN(*bd,
-				BDNSTAT_UOWN|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTSEN, len);
 
 		ep0_buf.flags ^= EP_TX_PPBI;
 		ep0_buf.flags ^= EP_TX_DTS;
 #else
 		uint8_t pid;
-		pid = (ep0_buf.flags & EP_TX_DTS)? 1 : 0;
+		pid = (ep0_buf.flags & EP_TX_DTS) ? 1 : 0;
 		BDS0IN(0).STAT.BDnSTAT = 0;
 
 		if (pid)
 			SET_BDN(BDS0IN(0),
-				BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, len);
 		else
 			SET_BDN(BDS0IN(0),
-				BDNSTAT_UOWN|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTSEN, len);
 
 		ep0_buf.flags ^= EP_TX_DTS;
 #endif
@@ -807,7 +807,8 @@ static void usb_send_in_buffer_0(size_t len)
 #ifdef PPB_EP0_IN
 static void copy_to_ep0_in_buf(const void *ptr, size_t len)
 {
-	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
+
 	if (ppbi)
 		memcpy_from_rom(ep0_buf.in1, ptr, len);
 	else
@@ -837,6 +838,7 @@ static void copy_to_ep0_in_buf(const void *ptr, size_t len)
 static void start_control_return(const void *ptr, size_t len, size_t bytes_asked_for)
 {
 	uint8_t bytes_to_send = MIN(len, EP_0_IN_LEN);
+
 	bytes_to_send = MIN(bytes_to_send, bytes_asked_for);
 	returning_short = len < bytes_asked_for;
 	if (bytes_to_send > 0)
@@ -856,11 +858,11 @@ static inline int8_t handle_standard_control_request()
 
 #ifdef PPB_EP0_OUT
 	if (SFR_USB_STATUS_PPBI)
-		setup = (struct setup_packet*) ep0_buf.out1;
+		setup = (struct setup_packet*)ep0_buf.out1;
 	else
-		setup = (struct setup_packet*) ep0_buf.out;
+		setup = (struct setup_packet*)ep0_buf.out;
 #else
-	setup = (struct setup_packet*) ep0_buf.out;
+	setup = (struct setup_packet*)ep0_buf.out;
 #endif
 
 	if (setup->bRequest == GET_DESCRIPTOR &&
@@ -873,8 +875,7 @@ static inline int8_t handle_standard_control_request()
 
 			/* Return Device Descriptor */
 			start_control_return(&USB_DEVICE_DESCRIPTOR, USB_DEVICE_DESCRIPTOR.bLength, setup->wLength);
-		}
-		else if (descriptor == DESC_CONFIGURATION) {
+		}else if (descriptor == DESC_CONFIGURATION) {
 			const struct configuration_descriptor *desc;
 			if (descriptor_index >= NUMBER_OF_CONFIGURATIONS)
 				stall_ep0();
@@ -882,8 +883,7 @@ static inline int8_t handle_standard_control_request()
 				desc = USB_CONFIG_DESCRIPTOR_MAP[descriptor_index];
 				start_control_return(desc, desc->wTotalLength, setup->wLength);
 			}
-		}
-		else if (descriptor == DESC_STRING) {
+		}else if (descriptor == DESC_STRING) {
 #ifdef MICROSOFT_OS_DESC_VENDOR_CODE
 			if (descriptor_index == 0xee) {
 				/* Microsoft descriptor Requested */
@@ -894,16 +894,15 @@ static inline int8_t handle_standard_control_request()
 				#endif
 				struct microsoft_os_descriptor os_descriptor =
 				{
-					0x12,                          /* bLength */
-					0x3,                           /* bDescriptorType */
-					{'M','S','F','T','1','0','0'}, /* qwSignature */
-					MICROSOFT_OS_DESC_VENDOR_CODE, /* bMS_VendorCode */
-					0x0,                           /* bPad */
+					0x12,                                   /* bLength */
+					0x3,                                    /* bDescriptorType */
+					{ 'M', 'S', 'F', 'T', '1', '0', '0' },  /* qwSignature */
+					MICROSOFT_OS_DESC_VENDOR_CODE,          /* bMS_VendorCode */
+					0x0,                                    /* bPad */
 				};
 
 				start_control_return(&os_descriptor, sizeof(os_descriptor), setup->wLength);
-			}
-			else
+			}else
 #endif
 			{
 #ifdef USB_STRING_DESCRIPTOR_FUNC
@@ -914,8 +913,7 @@ static inline int8_t handle_standard_control_request()
 					if (len < 0) {
 						stall_ep0();
 						SERIAL("Unsupported string descriptor requested");
-					}
-					else
+					}else
 						start_control_return(desc, len, setup->wLength);
 				}
 #else
@@ -923,8 +921,7 @@ static inline int8_t handle_standard_control_request()
 				stall_ep0();
 #endif
 			}
-		}
-		else {
+		}else  {
 #ifdef UNKNOWN_GET_DESCRIPTOR_CALLBACK
 			int16_t len;
 			const void *desc;
@@ -932,8 +929,7 @@ static inline int8_t handle_standard_control_request()
 			if (len < 0) {
 				stall_ep0();
 				SERIAL("Unsupported descriptor requested");
-			}
-			else
+			}else
 				start_control_return(desc, len, setup->wLength);
 #else
 			/* Unknown Descriptor. Stall the endpoint. */
@@ -942,16 +938,14 @@ static inline int8_t handle_standard_control_request()
 			SERIAL_VAL(descriptor);
 #endif
 		}
-	}
-	else if (setup->bRequest == SET_ADDRESS) {
+	}else if (setup->bRequest == SET_ADDRESS) {
 		/* Mark the ADDR as pending. The address gets set only
 		   after the transaction is complete. */
 		addr_pending = 1;
 		addr = setup->wValue;
 
 		send_zero_length_packet_ep0();
-	}
-	else if (setup->bRequest == SET_CONFIGURATION) {
+	}else if (setup->bRequest == SET_CONFIGURATION) {
 		/* Set the configuration. wValue is the configuration.
 		 * A value of 0 means to un-set the configuration and
 		 * go back to the ADDRESS state. */
@@ -971,15 +965,13 @@ static inline int8_t handle_standard_control_request()
 
 		SERIAL("Set configuration to");
 		SERIAL_VAL(req);
-	}
-	else if (setup->bRequest == GET_CONFIGURATION) {
+	}else if (setup->bRequest == GET_CONFIGURATION) {
 		/* Return the current Configuration. */
 		SERIAL("Get Configuration. Returning:");
 		SERIAL_VAL(g_configuration);
 
 		start_control_return(&g_configuration, 1, setup->wLength);
-	}
-	else if (setup->bRequest == GET_STATUS) {
+	}else if (setup->bRequest == GET_STATUS) {
 
 		SERIAL("Get Status (dst, index):");
 		SERIAL_VAL(setup->REQUEST.destination);
@@ -995,41 +987,35 @@ static inline int8_t handle_standard_control_request()
 			ret = 0x0000;
 #endif
 			start_control_return(&ret, 2, setup->wLength);
-		}
-		else if (setup->REQUEST.destination == 2 /*2=endpoint*/) {
+		}else if (setup->REQUEST.destination == 2 /*2=endpoint*/) {
 			/* Status of endpoint */
 			uint8_t ep_num = setup->wIndex & 0x0f;
 			if (ep_num <= NUM_ENDPOINT_NUMBERS) {
 				uint8_t flags = ep_buf[ep_num].flags;
 				uint8_t ret[2];
 				ret[0] = ((setup->wIndex & 0x80) ?
-					flags & EP_IN_HALT_FLAG :
-					flags & EP_OUT_HALT_FLAG) != 0;
+					  flags & EP_IN_HALT_FLAG :
+					  flags & EP_OUT_HALT_FLAG) != 0;
 				ret[1] = 0;
 				start_control_return(ret, 2, setup->wLength);
-			}
-			else {
+			}else
 				/* Endpoint doesn't exist. STALL. */
 				stall_ep0();
-			}
-		}
-		else {
+		}else  {
 			stall_ep0();
 			SERIAL("Stalling. Status Requested for destination:");
 			SERIAL_VAL(setup->REQUEST.destination);
 		}
 
-	}
-	else if (setup->bRequest == SET_INTERFACE) {
+	}else if (setup->bRequest == SET_INTERFACE) {
 		/* Set the alternate setting for an interface.
 		 * wIndex is the interface.
 		 * wValue is the alternate setting. */
 #ifdef SET_INTERFACE_CALLBACK
 		int8_t res;
 		res = SET_INTERFACE_CALLBACK(setup->wIndex, setup->wValue);
-		if (res < 0) {
+		if (res < 0)
 			stall_ep0();
-		}
 		else
 			send_zero_length_packet_ep0();
 #else
@@ -1038,8 +1024,7 @@ static inline int8_t handle_standard_control_request()
 		 * interface. */
 		send_zero_length_packet_ep0();
 #endif
-	}
-	else if (setup->bRequest == GET_INTERFACE) {
+	}else if (setup->bRequest == GET_INTERFACE) {
 		int8_t ret;
 		SERIAL("Get Interface");
 		SERIAL_VAL(setup->bRequest);
@@ -1050,11 +1035,11 @@ static inline int8_t handle_standard_control_request()
 		ret = GET_INTERFACE_CALLBACK(setup->wIndex);
 		if (ret < 0)
 			stall_ep0();
-		else {
+		else
 			/* Return the current alternate setting
 			   as a single byte in the return packet. */
 			start_control_return(&ret, 1, setup->wLength);
-		}
+
 #else
 		/* If there's no callback, then assume that
 		 * we only have one alternate setting per
@@ -1063,30 +1048,25 @@ static inline int8_t handle_standard_control_request()
 		ret = 0;
 		start_control_return(&ret, 1, setup->wLength);
 #endif
-	}
-	else if (setup->bRequest == CLEAR_FEATURE || setup->bRequest == SET_FEATURE) {
+	}else if (setup->bRequest == CLEAR_FEATURE || setup->bRequest == SET_FEATURE) {
 		uint8_t stall = 1;
-		if (setup->REQUEST.destination == 0/*0=device*/) {
+		if (setup->REQUEST.destination == 0 /*0=device*/)
 			SERIAL("Set/Clear feature for device");
 			/* TODO Remote Wakeup flag */
-		}
 
-		if (setup->REQUEST.destination == 2/*2=endpoint*/) {
-			if (setup->wValue == 0/*0=ENDPOINT_HALT*/) {
+		if (setup->REQUEST.destination == 2 /*2=endpoint*/) {
+			if (setup->wValue == 0 /*0=ENDPOINT_HALT*/) {
 				uint8_t ep_num = setup->wIndex & 0x0f;
 				uint8_t ep_dir = setup->wIndex & 0x80;
 				if (ep_num <= NUM_ENDPOINT_NUMBERS) {
 					if (setup->bRequest == SET_FEATURE) {
 						/* Set Endpoint Halt Feature.
 						   Stall the affected endpoint. */
-						if (ep_dir) {
+						if (ep_dir)
 							usb_halt_ep_in(ep_num);
-						}
-						else {
+						else
 							usb_halt_ep_out(ep_num);
-						}
-					}
-					else {
+					}else  {
 						/* Clear Endpoint Halt Feature.
 						   Clear the STALL on the affected endpoint. */
 						if (ep_dir) {
@@ -1100,18 +1080,17 @@ static inline int8_t handle_standard_control_request()
 							ep_buf[ep_num].flags &= ~EP_TX_DTS;
 
 							ep_buf[ep_num].flags &= ~(EP_IN_HALT_FLAG);
-						}
-						else {
+						}else  {
 #ifdef PPB_EPn
-							uint8_t ppbi = (ep_buf[ep_num].flags & EP_RX_PPBI)? 1 : 0;
+							uint8_t ppbi = (ep_buf[ep_num].flags & EP_RX_PPBI) ? 1 : 0;
 							/* Put the current buffer at DTS 0, and the next (opposite) buffer at DTS 1 */
-							SET_BDN(BDSnOUT(ep_num, ppbi), BDNSTAT_UOWN|BDNSTAT_DTSEN, ep_buf[ep_num].out_len);
-							SET_BDN(BDSnOUT(ep_num, !ppbi), BDNSTAT_UOWN|BDNSTAT_DTSEN|BDNSTAT_DTS, ep_buf[ep_num].out_len);
+							SET_BDN(BDSnOUT(ep_num, ppbi), BDNSTAT_UOWN | BDNSTAT_DTSEN, ep_buf[ep_num].out_len);
+							SET_BDN(BDSnOUT(ep_num, !ppbi), BDNSTAT_UOWN | BDNSTAT_DTSEN | BDNSTAT_DTS, ep_buf[ep_num].out_len);
 
 							/* Clear DTS */
 							ep_buf[ep_num].flags &= ~EP_RX_DTS;
 #else
-							SET_BDN(BDSnOUT(ep_num, 0), BDNSTAT_UOWN|BDNSTAT_DTSEN, ep_buf[ep_num].out_len);
+							SET_BDN(BDSnOUT(ep_num, 0), BDNSTAT_UOWN | BDNSTAT_DTSEN, ep_buf[ep_num].out_len);
 
 							/* Set DTS */
 							ep_buf[ep_num].flags |= EP_RX_DTS;
@@ -1127,13 +1106,11 @@ static inline int8_t handle_standard_control_request()
 			}
 		}
 
-		if (!stall) {
+		if (!stall)
 			send_zero_length_packet_ep0();
-		}
 		else
 			stall_ep0();
-	}
-	else {
+	}else  {
 		res = -1;
 
 		SERIAL("unsupported request (req, dest, type, dir) ");
@@ -1151,11 +1128,11 @@ static inline void handle_ep0_setup()
 	FAR struct setup_packet *setup;
 #ifdef PPB_EP0_OUT
 	if (SFR_USB_STATUS_PPBI)
-		setup = (struct setup_packet*) ep0_buf.out1;
+		setup = (struct setup_packet*)ep0_buf.out1;
 	else
-		setup = (struct setup_packet*) ep0_buf.out;
+		setup = (struct setup_packet*)ep0_buf.out;
 #else
-	setup = (struct setup_packet*) ep0_buf.out;
+	setup = (struct setup_packet*)ep0_buf.out;
 #endif
 
 	ep0_data_stage_direc = setup->REQUEST.direction;
@@ -1180,15 +1157,15 @@ static inline void handle_ep0_setup()
 	 * Only one ping-pong buffer is cleared (instead of both) because
 	 * M-Stack only puts one transfer at a time on the control IN endpoint.
 	 */
-	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep0_buf.flags & EP_TX_PPBI) ? 1 : 0;
 	if (BDS0IN(!ppbi).STAT.UOWN) {
 		SET_BDN(BDS0IN(!ppbi), 0, EP_0_LEN);
 		ep0_buf.flags ^= EP_TX_PPBI;
 	}
 #else
-	if (BDS0IN(0).STAT.UOWN) {
+	if (BDS0IN(0).STAT.UOWN)
 		SET_BDN(BDS0IN(0), 0, EP_0_LEN);
-	}
+
 #endif
 
 	if (ep0_data_stage_buf_remaining) {
@@ -1197,7 +1174,7 @@ static inline void handle_ep0_setup()
 		 * If this was an application-controlled transfer (and
 		 * there's a callback), notify the application of this. */
 		if (ep0_data_stage_callback)
-			ep0_data_stage_callback(0/*fail*/, ep0_data_stage_context);
+			ep0_data_stage_callback(0 /*fail*/, ep0_data_stage_context);
 
 		reset_ep0_data_stage();
 	}
@@ -1217,9 +1194,8 @@ static inline void handle_ep0_setup()
 			len = MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC(
 				setup->wValue,
 				&desc);
-		}
-		else if (setup->REQUEST.bmRequestType == 0xC1 &&
-		         setup->wIndex == 0x0005) {
+		}else if (setup->REQUEST.bmRequestType == 0xC1 &&
+			  setup->wIndex == 0x0005) {
 			len = MICROSOFT_CUSTOM_PROPERTY_DESCRIPTOR_FUNC(
 				setup->wValue,
 				&desc);
@@ -1267,17 +1243,16 @@ static inline void handle_ep0_out()
 #else
 	uint8_t pkt_len = BDN_LENGTH(BDS0OUT(0));
 #endif
-	if (ep0_data_stage_direc == 1/*1=IN*/) {
+	if (ep0_data_stage_direc == 1 /*1=IN*/) {
 		/* An empty OUT packet on an IN control transfer
 		 * means the STATUS stage of the control
 		 * transfer has completed (possibly early). */
 
 		/* Notify the application (if applicable) */
 		if (ep0_data_stage_callback)
-			ep0_data_stage_callback(1/*true*/, ep0_data_stage_context);
+			ep0_data_stage_callback(1 /*true*/, ep0_data_stage_context);
 		reset_ep0_data_stage();
-	}
-	else {
+	}else  {
 		/* A packet received as part of the data stage of
 		 * a control transfer. Pack what data we received
 		 * into the application's buffer (if it has
@@ -1310,13 +1285,11 @@ static inline void handle_ep0_out()
 					/* The buffer provided by the application was too short */
 					stall_ep0();
 					if (ep0_data_stage_callback)
-						ep0_data_stage_callback(0/*false*/, ep0_data_stage_context);
+						ep0_data_stage_callback(0 /*false*/, ep0_data_stage_context);
 					reset_ep0_data_stage();
-				}
-				else {
+				}else
 					/* The data stage has completed. Set up the status stage. */
 					send_zero_length_packet_ep0();
-				}
 			}
 		}
 	}
@@ -1346,20 +1319,18 @@ static inline void handle_ep0_in()
 			control_need_zlp = 1;
 
 		usb_send_in_buffer_0(bytes_to_send);
-	}
-	else if (control_need_zlp) {
+	}else if (control_need_zlp) {
 		usb_send_in_buffer_0(0);
 		control_need_zlp = 0;
 		reset_ep0_data_stage();
-	}
-	else {
-		if (ep0_data_stage_direc == 0/*OUT*/) {
+	}else  {
+		if (ep0_data_stage_direc == 0 /*OUT*/) {
 			/* An IN on the control endpoint with no data pending
 			 * and during an OUT transfer means the STATUS stage
 			 * of the control transfer has completed. Notify the
 			 * application, if applicable. */
 			if (ep0_data_stage_callback)
-				ep0_data_stage_callback(1/*true*/, ep0_data_stage_context);
+				ep0_data_stage_callback(1 /*true*/, ep0_data_stage_context);
 			reset_ep0_data_stage();
 		}
 	}
@@ -1378,7 +1349,7 @@ void usb_service(void)
 		CLEAR_USB_RESET_IF();
 		SERIAL("USB Reset");
 	}
-	
+
 	if (SFR_USB_STALL_IF) {
 		/* On PIC24/32, EPSTALL bits must be cleared, or else the
 		 * stalled endpoint's opposite direction (eg: EP1 IN => EP1
@@ -1403,7 +1374,7 @@ void usb_service(void)
 
 		//struct ustat_bits ustat = *((struct ustat_bits*)&USTAT);
 
-		if (SFR_USB_STATUS_EP == 0 && SFR_USB_STATUS_DIR == 0/*OUT*/) {
+		if (SFR_USB_STATUS_EP == 0 && SFR_USB_STATUS_DIR == 0 /*OUT*/) {
 			/* An OUT or SETUP transaction has completed on
 			 * Endpoint 0.  Handle the data that was received.
 			 */
@@ -1412,16 +1383,13 @@ void usb_service(void)
 #else
 			uint8_t pid = BDS0OUT(0).STAT.PID;
 #endif
-			if (pid == PID_SETUP) {
+			if (pid == PID_SETUP)
 				handle_ep0_setup();
-			}
 			else if (pid == PID_IN) {
 				/* Nonsense condition:
 				   (PID IN on SFR_USB_STATUS_DIR == OUT) */
-			}
-			else if (pid == PID_OUT) {
+			}else if (pid == PID_OUT)
 				handle_ep0_out();
-			}
 			else {
 				/* Unsupported PID. Stall the Endpoint. */
 				SERIAL("Unsupported PID. Stall.");
@@ -1429,14 +1397,12 @@ void usb_service(void)
 			}
 
 			reset_bd0_out();
-		}
-		else if (SFR_USB_STATUS_EP == 0 && SFR_USB_STATUS_DIR == 1/*1=IN*/) {
+		}else if (SFR_USB_STATUS_EP == 0 && SFR_USB_STATUS_DIR == 1 /*1=IN*/)
 			/* An IN transaction has completed. The endpoint
 			 * needs to be re-loaded with the next transaction's
 			 * data if there is any.
 			 */
 			handle_ep0_in();
-		}
 		else if (SFR_USB_STATUS_EP > 0 && SFR_USB_STATUS_EP <= NUM_ENDPOINT_NUMBERS) {
 			if (SFR_USB_STATUS_DIR == 1 /*1=IN*/) {
 				/* An IN transaction has completed. */
@@ -1448,8 +1414,7 @@ void usb_service(void)
 					IN_TRANSACTION_COMPLETE_CALLBACK(SFR_USB_STATUS_EP);
 #endif
 				}
-			}
-			else {
+			}else  {
 				/* An OUT transaction has completed. */
 				SERIAL("OUT transaction received on non-EP0");
 				if (ep_buf[SFR_USB_STATUS_EP].flags & EP_OUT_HALT_FLAG)
@@ -1460,16 +1425,14 @@ void usb_service(void)
 #endif
 				}
 			}
-		}
-		else {
+		}else
 			/* Transaction completed on an endpoint not used.
 			 * This should never happen. */
 			SERIAL("Transaction completed for unknown endpoint");
-		}
 
 		CLEAR_USB_TOKEN_IF();
 	}
-	
+
 	/* Check for Start-of-Frame interrupt. */
 	if (SFR_USB_SOF_IF) {
 #ifdef START_OF_FRAME_CALLBACK
@@ -1479,9 +1442,8 @@ void usb_service(void)
 	}
 
 	/* Check for USB Interrupt. */
-	if (SFR_USB_IF) {
+	if (SFR_USB_IF)
 		SFR_USB_IF = 0;
-	}
 }
 
 uint8_t usb_get_configuration(void)
@@ -1511,32 +1473,32 @@ void usb_send_in_buffer(uint8_t endpoint, size_t len)
 		uint8_t pid;
 		struct buffer_descriptor *bd;
 #ifdef PPB_EPn
-		uint8_t ppbi = (ep_buf[endpoint].flags & EP_TX_PPBI)? 1 : 0;
+		uint8_t ppbi = (ep_buf[endpoint].flags & EP_TX_PPBI) ? 1 : 0;
 
-		bd = &BDSnIN(endpoint,ppbi);
-		pid = (ep_buf[endpoint].flags & EP_TX_DTS)? 1 : 0;
+		bd = &BDSnIN(endpoint, ppbi);
+		pid = (ep_buf[endpoint].flags & EP_TX_DTS) ? 1 : 0;
 		bd->STAT.BDnSTAT = 0;
 
 		if (pid)
-			SET_BDN(BDSnIN(endpoint,ppbi),
-				BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, len);
+			SET_BDN(BDSnIN(endpoint, ppbi),
+				BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, len);
 		else
-			SET_BDN(BDSnIN(endpoint,ppbi),
-				BDNSTAT_UOWN|BDNSTAT_DTSEN, len);
+			SET_BDN(BDSnIN(endpoint, ppbi),
+				BDNSTAT_UOWN | BDNSTAT_DTSEN, len);
 
 		ep_buf[endpoint].flags ^= EP_TX_PPBI;
 		ep_buf[endpoint].flags ^= EP_TX_DTS;
 #else
-		bd = &BDSnIN(endpoint,0);
-		pid = (ep_buf[endpoint].flags & EP_TX_DTS)? 1 : 0;
+		bd = &BDSnIN(endpoint, 0);
+		pid = (ep_buf[endpoint].flags & EP_TX_DTS) ? 1 : 0;
 		bd->STAT.BDnSTAT = 0;
 
 		if (pid)
 			SET_BDN(*bd,
-				BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN, len);
 		else
 			SET_BDN(*bd,
-				BDNSTAT_UOWN|BDNSTAT_DTSEN, len);
+				BDNSTAT_UOWN | BDNSTAT_DTSEN, len);
 
 		ep_buf[endpoint].flags ^= EP_TX_DTS;
 #endif
@@ -1546,10 +1508,10 @@ void usb_send_in_buffer(uint8_t endpoint, size_t len)
 bool usb_in_endpoint_busy(uint8_t endpoint)
 {
 #ifdef PPB_EPn
-	uint8_t ppbi = (ep_buf[endpoint].flags & EP_TX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep_buf[endpoint].flags & EP_TX_PPBI) ? 1 : 0;
 	return BDSnIN(endpoint, ppbi).STAT.UOWN;
 #else
-	return BDSnIN(endpoint,0).STAT.UOWN;
+	return BDSnIN(endpoint, 0).STAT.UOWN;
 #endif
 }
 
@@ -1572,7 +1534,7 @@ bool usb_in_endpoint_halted(uint8_t endpoint)
 uint8_t usb_get_out_buffer(uint8_t endpoint, const unsigned char **buf)
 {
 #ifdef PPB_EPn
-	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI)? 1: 0;
+	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI) ? 1 : 0;
 
 	if (ppbi /*odd*/)
 		*buf = ep_buf[endpoint].out1;
@@ -1589,26 +1551,26 @@ uint8_t usb_get_out_buffer(uint8_t endpoint, const unsigned char **buf)
 bool usb_out_endpoint_has_data(uint8_t endpoint)
 {
 #ifdef PPB_EPn
-	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI)? 1: 0;
-	return !BDSnOUT(endpoint,ppbi).STAT.UOWN;
+	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI) ? 1 : 0;
+	return !BDSnOUT(endpoint, ppbi).STAT.UOWN;
 #else
-	return !BDSnOUT(endpoint,0).STAT.UOWN;
+	return !BDSnOUT(endpoint, 0).STAT.UOWN;
 #endif
 }
 
 void usb_arm_out_endpoint(uint8_t endpoint)
 {
 #ifdef PPB_EPn
-	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI)? 1: 0;
-	uint8_t pid = (ep_buf[endpoint].flags & EP_RX_DTS)? 1: 0;
+	uint8_t ppbi = (ep_buf[endpoint].flags & EP_RX_PPBI) ? 1 : 0;
+	uint8_t pid = (ep_buf[endpoint].flags & EP_RX_DTS) ? 1 : 0;
 
 	if (pid)
-		SET_BDN(BDSnOUT(endpoint,ppbi),
-			BDNSTAT_UOWN|BDNSTAT_DTSEN|BDNSTAT_DTS,
+		SET_BDN(BDSnOUT(endpoint, ppbi),
+			BDNSTAT_UOWN | BDNSTAT_DTSEN | BDNSTAT_DTS,
 			ep_buf[endpoint].out_len);
 	else
-		SET_BDN(BDSnOUT(endpoint,ppbi),
-			BDNSTAT_UOWN|BDNSTAT_DTSEN,
+		SET_BDN(BDSnOUT(endpoint, ppbi),
+			BDNSTAT_UOWN | BDNSTAT_DTSEN,
 			ep_buf[endpoint].out_len);
 
 	/* Alternate the PPBI */
@@ -1616,14 +1578,14 @@ void usb_arm_out_endpoint(uint8_t endpoint)
 	ep_buf[endpoint].flags ^= EP_RX_DTS;
 
 #else
-	uint8_t pid = (ep_buf[endpoint].flags & EP_RX_DTS)? 1: 0;
+	uint8_t pid = (ep_buf[endpoint].flags & EP_RX_DTS) ? 1 : 0;
 	if (pid)
-		SET_BDN(BDSnOUT(endpoint,0),
-			BDNSTAT_UOWN|BDNSTAT_DTS|BDNSTAT_DTSEN,
+		SET_BDN(BDSnOUT(endpoint, 0),
+			BDNSTAT_UOWN | BDNSTAT_DTS | BDNSTAT_DTSEN,
 			ep_buf[endpoint].out_len);
 	else
-		SET_BDN(BDSnOUT(endpoint,0),
-			BDNSTAT_UOWN|BDNSTAT_DTSEN,
+		SET_BDN(BDSnOUT(endpoint, 0),
+			BDNSTAT_UOWN | BDNSTAT_DTSEN,
 			ep_buf[endpoint].out_len);
 
 	ep_buf[endpoint].flags ^= EP_RX_DTS;
@@ -1648,7 +1610,7 @@ bool usb_out_endpoint_halted(uint8_t endpoint)
 }
 
 void usb_start_receive_ep0_data_stage(char *buffer, size_t len,
-                                      usb_ep0_data_stage_callback callback, void *context)
+				      usb_ep0_data_stage_callback callback, void *context)
 {
 	reset_ep0_data_stage();
 
@@ -1659,7 +1621,7 @@ void usb_start_receive_ep0_data_stage(char *buffer, size_t len,
 }
 
 void usb_send_data_stage(char *buffer, size_t len,
-	usb_ep0_data_stage_callback callback, void *context)
+			 usb_ep0_data_stage_callback callback, void *context)
 {
 	/* Start sending the first block. Subsequent blocks will be sent
 	   when IN tokens are received on endpoint zero. */
@@ -1688,8 +1650,7 @@ void usb_enable_transaction_interrupt()
 #ifdef USB_USE_INTERRUPTS
 #ifdef __XC16__
 
-void _ISR __attribute((auto_psv)) _USB1Interrupt()
-{
+void _ISR __attribute((auto_psv)) _USB1Interrupt(){
 	usb_service();
 }
 
@@ -1706,8 +1667,8 @@ void __attribute__((vector(_USB_1_VECTOR), interrupt(), nomips16)) _USB1Interrup
 
 #elif __C18
 #elif __XC8
-	/* On these systems, interupt handlers are shared. An interrupt
-	 * handler from the application must call usb_service(). */
+/* On these systems, interupt handlers are shared. An interrupt
+ * handler from the application must call usb_service(). */
 #else
 #error Compiler not supported yet
 #endif

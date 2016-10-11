@@ -115,19 +115,19 @@ extern const struct configuration_descriptor *USB_CONFIG_DESCRIPTOR_MAP[];
 
 
 
- /** @defgroup static_callbacks Static Callbacks
-  *  @brief Optional static callback macros to be defined in the
-  *  application's usb_config.h.
-  *
-  *  If desired, #define these callback functions in your application's
-  *  @p usb_config.h to receive notification about specific events which
-  *  happen during enumeration and otherwise. While these are not strictly
-  *  required for all devices, they may be required depending on your
-  *  device configuration.
-  *
-  *  @addtogroup static_callbacks
-  *  @{
-  */
+/** @defgroup static_callbacks Static Callbacks
+ *  @brief Optional static callback macros to be defined in the
+ *  application's usb_config.h.
+ *
+ *  If desired, #define these callback functions in your application's
+ *  @p usb_config.h to receive notification about specific events which
+ *  happen during enumeration and otherwise. While these are not strictly
+ *  required for all devices, they may be required depending on your
+ *  device configuration.
+ *
+ *  @addtogroup static_callbacks
+ *  @{
+ */
 
 #ifdef SET_CONFIGURATION_CALLBACK
 /** @brief Callback for SET_CONFIGURATION requests
@@ -436,7 +436,7 @@ bool usb_in_endpoint_busy(uint8_t endpoint);
  * @returns
  *    Return 0 if the endpoint can be halted, or -1 if the endpoint number
  *    is invalid.
-*/
+ */
 uint8_t usb_halt_ep_in(uint8_t ep);
 
 /** @brief Check whether an endpoint is halted
@@ -555,7 +555,7 @@ typedef void (*usb_ep0_data_stage_callback)(bool transfer_ok, void *context);
  *                   does not dereference this pointer
  */
 void usb_start_receive_ep0_data_stage(char *buffer, size_t len,
-	usb_ep0_data_stage_callback callback, void *context);
+				      usb_ep0_data_stage_callback callback, void *context);
 
 /** @brief Start the data stage of an IN control transfer
  *
@@ -584,7 +584,7 @@ void usb_start_receive_ep0_data_stage(char *buffer, size_t len,
  *                   does not dereference this pointer.
  */
 void usb_send_data_stage(char *buffer, size_t len,
-	usb_ep0_data_stage_callback callback, void *context);
+			 usb_ep0_data_stage_callback callback, void *context);
 
 
 /* Doxygen end-of-group for public_api */

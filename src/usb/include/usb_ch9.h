@@ -165,9 +165,9 @@ enum EndpointAttributes {
 struct setup_packet {
 	union {
 		struct {
-			uint8_t destination : 5; /**< @see enum DestinationType */
-			uint8_t type : 2;        /**< @see enum RequestType */
-			uint8_t direction : 1;   /**< 0=out, 1=in */
+			uint8_t destination : 5;        /**< @see enum DestinationType */
+			uint8_t type : 2;               /**< @see enum RequestType */
+			uint8_t direction : 1;          /**< 0=out, 1=in */
 		};
 		uint8_t bmRequestType;
 	} REQUEST;
@@ -180,8 +180,8 @@ struct setup_packet {
 /** Device Descriptor */
 struct device_descriptor {
 	uint8_t bLength;
-	uint8_t bDescriptorType; /**< set to DESC_DEVICE */
-	uint16_t bcdUSB; /**< Set to 0x0200 for USB 2.0 */
+	uint8_t bDescriptorType;        /**< set to DESC_DEVICE */
+	uint16_t bcdUSB;                /**< Set to 0x0200 for USB 2.0 */
 	uint8_t bDeviceClass;
 	uint8_t bDeviceSubclass;
 	uint8_t bDeviceProtocol;
@@ -189,10 +189,10 @@ struct device_descriptor {
 	uint16_t idVendor;
 	uint16_t idProduct;
 	uint16_t bcdDevice;
-	uint8_t  iManufacturer; /**< index of manufacturer string descriptor */
-	uint8_t  iProduct;      /**< index of product string descriptor */
-	uint8_t  iSerialNumber; /**< index of serial number string descriptor */
-	uint8_t  bNumConfigurations;
+	uint8_t iManufacturer;  /**< index of manufacturer string descriptor */
+	uint8_t iProduct;       /**< index of product string descriptor */
+	uint8_t iSerialNumber;  /**< index of serial number string descriptor */
+	uint8_t bNumConfigurations;
 };
 
 /** Configuration Descriptor */
@@ -204,7 +204,7 @@ struct configuration_descriptor {
 	uint8_t bConfigurationValue;
 	uint8_t iConfiguration; /**< index of string descriptor */
 	uint8_t bmAttributes;
-	uint8_t bMaxPower; /**< one-half the max power required by this device. */
+	uint8_t bMaxPower;      /**< one-half the max power required by this device. */
 };
 
 /** Interface Descriptor */
@@ -244,8 +244,8 @@ struct string_descriptor {
  * available from www.usb.org .
  */
 struct interface_association_descriptor {
-	uint8_t bLength;         /**< Set to 8 bytes */
-	uint8_t bDescriptorType; /**< Set to DESC_INTERFACE_ASSOCIATION = 0xB */
+	uint8_t bLength;                /**< Set to 8 bytes */
+	uint8_t bDescriptorType;        /**< Set to DESC_INTERFACE_ASSOCIATION = 0xB */
 	uint8_t bFirstInterface;
 	uint8_t bInterfaceCount;
 	uint8_t bFunctionClass;
@@ -265,10 +265,10 @@ struct interface_association_descriptor {
  * will not need to include this file outside their usb_descriptors.c, so
  * there isn't much namespace pollution.
  */
-#define USB_ARRAYLEN(X) (sizeof(X)/sizeof(*X))
-#define STATIC_SIZE_CHECK_EQUAL(X,Y) typedef char USB_CONCAT(STATIC_SIZE_CHECK_LINE_,__LINE__) [(X==Y)?1:-1]
-#define USB_CONCAT(X,Y)  USB_CONCAT_HIDDEN(X,Y)
-#define USB_CONCAT_HIDDEN(X,Y) X ## Y
+#define USB_ARRAYLEN(X) (sizeof(X) / sizeof(*X))
+#define STATIC_SIZE_CHECK_EQUAL(X, Y) typedef char USB_CONCAT (STATIC_SIZE_CHECK_LINE_, __LINE__) [(X == Y) ? 1 : -1]
+#define USB_CONCAT(X, Y)  USB_CONCAT_HIDDEN (X, Y)
+#define USB_CONCAT_HIDDEN(X, Y) X ## Y
 
 /** @endcond */
 

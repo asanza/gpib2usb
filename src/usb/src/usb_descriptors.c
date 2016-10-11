@@ -56,20 +56,20 @@
  * Yours will of course vary.
  */
 struct configuration_1_packet {
-	struct configuration_descriptor  config;
+	struct configuration_descriptor config;
 	struct interface_association_descriptor iad;
 
 	/* CDC Class Interface */
-	struct interface_descriptor      cdc_class_interface;
+	struct interface_descriptor cdc_class_interface;
 	struct cdc_functional_descriptor_header cdc_func_header;
 	struct cdc_acm_functional_descriptor cdc_acm;
 	struct cdc_union_functional_descriptor cdc_union;
-	struct endpoint_descriptor       cdc_ep;
+	struct endpoint_descriptor cdc_ep;
 
 	/* CDC Data Interface */
-	struct interface_descriptor      cdc_data_interface;
-	struct endpoint_descriptor       data_ep_in;
-	struct endpoint_descriptor       data_ep_out;
+	struct interface_descriptor cdc_data_interface;
+	struct endpoint_descriptor data_ep_in;
+	struct endpoint_descriptor data_ep_out;
 
 };
 
@@ -83,21 +83,21 @@ struct configuration_1_packet {
  */
 const ROMPTR struct device_descriptor this_device_descriptor =
 {
-	sizeof(struct device_descriptor), // bLength
-	DESC_DEVICE, // bDescriptorType
-	0x0200, // 0x0200 = USB 2.0, 0x0110 = USB 1.1
-	DEVICE_CLASS_MISC, // Device class
-	0x02, /* Device Subclass. See the document entitled: "USB Interface
-	         Association Descriptor Device Class Code and Use Model" */
-	0x01, // Protocol. See document referenced above.
-	EP_0_LEN, // bMaxPacketSize0
-	0x1209, // Vendor
-	0x0001, // Product. Test pid. please change.
-	0x0001, // device release (1.0)
-	1, // Manufacturer
-	2, // Product
-	5, // Serial
-	NUMBER_OF_CONFIGURATIONS // NumConfigurations
+	sizeof(struct device_descriptor),       // bLength
+	DESC_DEVICE,                            // bDescriptorType
+	0x0200,                                 // 0x0200 = USB 2.0, 0x0110 = USB 1.1
+	DEVICE_CLASS_MISC,                      // Device class
+	0x02,                                   /* Device Subclass. See the document entitled: "USB Interface
+	                                           Association Descriptor Device Class Code and Use Model" */
+	0x01,                                   // Protocol. See document referenced above.
+	EP_0_LEN,                               // bMaxPacketSize0
+	0x1209,                                 // Vendor
+	0x0001,                                 // Product. Test pid. please change.
+	0x0001,                                 // device release (1.0)
+	1,                                      // Manufacturer
+	2,                                      // Product
+	5,                                      // Serial
+	NUMBER_OF_CONFIGURATIONS                // NumConfigurations
 };
 
 /* Configuration Packet Instance
@@ -112,112 +112,112 @@ const ROMPTR struct device_descriptor this_device_descriptor =
 static const ROMPTR struct configuration_1_packet configuration_1 =
 {
 	{
-	// Members from struct configuration_descriptor
-	sizeof(struct configuration_descriptor),
-	DESC_CONFIGURATION,
-	sizeof(configuration_1), // wTotalLength (length of the whole packet)
-	2, // bNumInterfaces
-	1, // bConfigurationValue
-	2, // iConfiguration (index of string descriptor)
-	0b10000000,
-	50,   // 100/2 indicates 100mA
+		// Members from struct configuration_descriptor
+		sizeof(struct configuration_descriptor),
+		DESC_CONFIGURATION,
+		sizeof(configuration_1),        // wTotalLength (length of the whole packet)
+		2,                              // bNumInterfaces
+		1,                              // bConfigurationValue
+		2,                              // iConfiguration (index of string descriptor)
+		0b10000000,
+		50,                             // 100/2 indicates 100mA
 	},
 
 	/* Interface Association Descriptor */
 	{
-	sizeof(struct interface_association_descriptor),
-	DESC_INTERFACE_ASSOCIATION,
-	0, /* bFirstInterface */
-	2, /* bInterfaceCount */
-	CDC_COMMUNICATION_INTERFACE_CLASS,
-	CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS,
-	0, /* bFunctionProtocol */
-	2, /* iFunction (string descriptor index) */
+		sizeof(struct interface_association_descriptor),
+		DESC_INTERFACE_ASSOCIATION,
+		0,      /* bFirstInterface */
+		2,      /* bInterfaceCount */
+		CDC_COMMUNICATION_INTERFACE_CLASS,
+		CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS,
+		0,      /* bFunctionProtocol */
+		2,      /* iFunction (string descriptor index) */
 	},
 
 	/* CDC Class Interface */
 	{
-	// Members from struct interface_descriptor
-	sizeof(struct interface_descriptor), // bLength;
-	DESC_INTERFACE,
-	0x0, // InterfaceNumber
-	0x0, // AlternateSetting
-	0x1, // bNumEndpoints
-	CDC_COMMUNICATION_INTERFACE_CLASS, // bInterfaceClass
-	CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS, // bInterfaceSubclass
-	0x00, // bInterfaceProtocol
-	0x03, // iInterface (index of string describing interface)
+		// Members from struct interface_descriptor
+		sizeof(struct interface_descriptor),            // bLength;
+		DESC_INTERFACE,
+		0x0,                                            // InterfaceNumber
+		0x0,                                            // AlternateSetting
+		0x1,                                            // bNumEndpoints
+		CDC_COMMUNICATION_INTERFACE_CLASS,              // bInterfaceClass
+		CDC_COMMUNICATION_INTERFACE_CLASS_ACM_SUBCLASS, // bInterfaceSubclass
+		0x00,                                           // bInterfaceProtocol
+		0x03,                                           // iInterface (index of string describing interface)
 	},
 
 	/* CDC Functional Descriptor Header */
 	{
-	sizeof(struct cdc_functional_descriptor_header),
-	DESC_CS_INTERFACE,
-	CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_HEADER,
-	0x0110, /* bcdCDC (version in BCD) */
+		sizeof(struct cdc_functional_descriptor_header),
+		DESC_CS_INTERFACE,
+		CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_HEADER,
+		0x0110, /* bcdCDC (version in BCD) */
 	},
 
 	/* CDC ACM Functional Descriptor */
 	{
-	sizeof(struct cdc_acm_functional_descriptor),
-	DESC_CS_INTERFACE,
-	CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_ACM,
-	/* bmCapabilities: Make sure to keep in sync with the actual
-	 * capabilities (ie: which callbacks are defined). */
-	CDC_ACM_CAPABILITY_LINE_CODINGS | CDC_ACM_CAPABILITY_SEND_BREAK,
+		sizeof(struct cdc_acm_functional_descriptor),
+		DESC_CS_INTERFACE,
+		CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_ACM,
+		/* bmCapabilities: Make sure to keep in sync with the actual
+		 * capabilities (ie: which callbacks are defined). */
+		CDC_ACM_CAPABILITY_LINE_CODINGS | CDC_ACM_CAPABILITY_SEND_BREAK,
 	},
 
 	/* CDC Union Functional Descriptor */
 	{
-	sizeof (struct cdc_union_functional_descriptor),
-	DESC_CS_INTERFACE,
-	CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_UNION,
-	0, /* bMasterInterface */
-	1, /* bSlaveInterface0 */
+		sizeof(struct cdc_union_functional_descriptor),
+		DESC_CS_INTERFACE,
+		CDC_FUNCTIONAL_DESCRIPTOR_SUBTYPE_UNION,
+		0,      /* bMasterInterface */
+		1,      /* bSlaveInterface0 */
 	},
 
 	/* CDC ACM Notification Endpoint (Endpoint 1 IN) */
 	{
-	sizeof(struct endpoint_descriptor),
-	DESC_ENDPOINT,
-	0x01 | 0x80, // endpoint #1 0x80=IN
-	EP_INTERRUPT, // bmAttributes
-	EP_1_IN_LEN, // wMaxPacketSize
-	1, // bInterval in ms.
+		sizeof(struct endpoint_descriptor),
+		DESC_ENDPOINT,
+		0x01 | 0x80,    // endpoint #1 0x80=IN
+		EP_INTERRUPT,   // bmAttributes
+		EP_1_IN_LEN,    // wMaxPacketSize
+		1,              // bInterval in ms.
 	},
 
 	/* CDC Data Interface */
 	{
-	// Members from struct interface_descriptor
-	sizeof(struct interface_descriptor), // bLength;
-	DESC_INTERFACE,
-	0x1, // InterfaceNumber
-	0x0, // AlternateSetting
-	0x2, // bNumEndpoints
-	CDC_DATA_INTERFACE_CLASS, // bInterfaceClass
-	0, // bInterfaceSubclass (no subclass)
-	CDC_DATA_INTERFACE_CLASS_PROTOCOL_NONE, // bInterfaceProtocol
-	0x04, // iInterface (index of string describing interface)
+		// Members from struct interface_descriptor
+		sizeof(struct interface_descriptor),    // bLength;
+		DESC_INTERFACE,
+		0x1,                                    // InterfaceNumber
+		0x0,                                    // AlternateSetting
+		0x2,                                    // bNumEndpoints
+		CDC_DATA_INTERFACE_CLASS,               // bInterfaceClass
+		0,                                      // bInterfaceSubclass (no subclass)
+		CDC_DATA_INTERFACE_CLASS_PROTOCOL_NONE, // bInterfaceProtocol
+		0x04,                                   // iInterface (index of string describing interface)
 	},
 
 	/* CDC Data IN Endpoint */
 	{
-	sizeof(struct endpoint_descriptor),
-	DESC_ENDPOINT,
-	0x02 | 0x80, // endpoint #2 0x80=IN
-	EP_BULK, // bmAttributes
-	EP_2_IN_LEN, // wMaxPacketSize
-	1, // bInterval in ms.
+		sizeof(struct endpoint_descriptor),
+		DESC_ENDPOINT,
+		0x02 | 0x80,    // endpoint #2 0x80=IN
+		EP_BULK,        // bmAttributes
+		EP_2_IN_LEN,    // wMaxPacketSize
+		1,              // bInterval in ms.
 	},
 
 	/* CDC Data OUT Endpoint */
 	{
-	sizeof(struct endpoint_descriptor),
-	DESC_ENDPOINT,
-	0x02 /*| 0x00*/, // endpoint #2 0x00=OUT
-	EP_BULK, // bmAttributes
-	EP_2_OUT_LEN, // wMaxPacketSize
-	1, // bInterval in ms.
+		sizeof(struct endpoint_descriptor),
+		DESC_ENDPOINT,
+		0x02 /*| 0x00*/,        // endpoint #2 0x00=OUT
+		EP_BULK,                // bmAttributes
+		EP_2_OUT_LEN,           // wMaxPacketSize
+		1,                      // bInterval in ms.
 	},
 };
 
@@ -233,41 +233,41 @@ static const ROMPTR struct configuration_1_packet configuration_1 =
 
 /* String index 0, only has one character in it, which is to be set to the
    language ID of the language which the other strings are in. */
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t lang; } str00 = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t lang; } str00 = {
 	sizeof(str00),
 	DESC_STRING,
 	0x0409 // US English
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[16]; } vendor_string = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t chars[16]; } vendor_string = {
 	sizeof(vendor_string),
 	DESC_STRING,
-	{'A','M',' ','S','o','f','t','w','a','r','e',' ','L','L','C','.',}
+	{ 'A',		      'M',' ', 'S', 'o', 'f', 't', 'w', 'a', 'r', 'e', ' ', 'L', 'L', 'C', '.', }
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[16]; } product_string = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t chars[16]; } product_string = {
 	sizeof(product_string),
 	DESC_STRING,
-	{'G','P','I','B','2','U','S','B',' ','A','d','a','p','t','e','r',}
+	{ 'G',		       'P','I', 'B', '2', 'U', 'S', 'B', ' ', 'A', 'd', 'a', 'p', 't', 'e', 'r', }
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[13]; } cdc_interface_string = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t chars[13]; } cdc_interface_string = {
 	sizeof(cdc_interface_string),
 	DESC_STRING,
-	{'C','D','C',' ','I','n','t','e','r','f','a','c','e'}
+	{ 'C',			     'D','C', ' ', 'I', 'n', 't', 'e', 'r', 'f', 'a', 'c', 'e' }
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[18]; } cdc_data_string = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t chars[18]; } cdc_data_string = {
 	sizeof(cdc_data_string),
 	DESC_STRING,
-	{'C','D','C',' ','D','a','t','a',' ','I','n','t','e','r','f','a','c','e'}
+	{ 'C',			'D','C', ' ', 'D', 'a', 't', 'a', ' ', 'I', 'n', 't', 'e', 'r', 'f', 'a', 'c', 'e' }
 };
 
-static const ROMPTR struct {uint8_t bLength;uint8_t bDescriptorType; uint16_t chars[23]; } fake_serial_num = {
+static const ROMPTR struct { uint8_t bLength; uint8_t bDescriptorType; uint16_t chars[23]; } fake_serial_num = {
 	sizeof(fake_serial_num),
 	DESC_STRING,
-	{'S','i','m','p','l','e',' ','G','P','I','B','2','U','S','B',' ','A','d',
-		'a','p','t','e','r', }
+	{ 'S',			'i',  'm', 'p', 'l', 'e', ' ', 'G', 'P', 'I', 'B', '2', 'U', 'S', 'B', ' ', 'A', 'd',
+	  'a',			'p',  't', 'e', 'r', }
 };
 
 
@@ -286,24 +286,19 @@ int16_t usb_application_get_string(uint8_t string_number, const void **ptr)
 	if (string_number == 0) {
 		*ptr = &str00;
 		return sizeof(str00);
-	}
-	else if (string_number == 1) {
+	}else if (string_number == 1) {
 		*ptr = &vendor_string;
 		return sizeof(vendor_string);
-	}
-	else if (string_number == 2) {
+	}else if (string_number == 2) {
 		*ptr = &product_string;
 		return sizeof(product_string);
-	}
-	else if (string_number == 3) {
+	}else if (string_number == 3) {
 		*ptr = &cdc_interface_string;
 		return sizeof(cdc_interface_string);
-	}
-	else if (string_number == 4) {
+	}else if (string_number == 4) {
 		*ptr = &cdc_data_string;
 		return sizeof(cdc_data_string);
-	}
-	else if (string_number == 5) {
+	}else if (string_number == 5) {
 		/* This is where you will have code to do something like read
 		 * a serial number out of EEPROM and return it. For CDC
 		 * devices, this is a MUST.
@@ -332,7 +327,7 @@ int16_t usb_application_get_string(uint8_t string_number, const void **ptr)
  */
 const struct configuration_descriptor *usb_application_config_descs[] =
 {
-	(struct configuration_descriptor*) &configuration_1,
+	(struct configuration_descriptor*)&configuration_1,
 };
 STATIC_SIZE_CHECK_EQUAL(USB_ARRAYLEN(USB_CONFIG_DESCRIPTOR_MAP), NUMBER_OF_CONFIGURATIONS);
 STATIC_SIZE_CHECK_EQUAL(sizeof(USB_DEVICE_DESCRIPTOR), 18);

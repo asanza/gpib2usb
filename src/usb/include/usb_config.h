@@ -35,8 +35,8 @@
 
 #define EP_1_OUT_LEN 1
 #define EP_1_IN_LEN 10 /* May need to be longer, depending
-                        * on the notifications you support. */
- /* The code in the demo app assumes that EP2 IN and OUT are the same length */
+	                * on the notifications you support. */
+/* The code in the demo app assumes that EP2 IN and OUT are the same length */
 #define EP_2_LEN 64
 #define EP_2_OUT_LEN EP_2_LEN
 #define EP_2_IN_LEN EP_2_LEN
@@ -44,13 +44,13 @@
 #define NUMBER_OF_CONFIGURATIONS 1
 
 /* Ping-pong buffering mode. Valid values are:
-	PPB_NONE         - Do not ping-pong any endpoints
-	PPB_EPO_OUT_ONLY - Ping-pong only endpoint 0 OUT
-	PPB_ALL          - Ping-pong all endpoints
-	PPB_EPN_ONLY     - Ping-pong all endpoints except 0
-*/
+        PPB_NONE         - Do not ping-pong any endpoints
+        PPB_EPO_OUT_ONLY - Ping-pong only endpoint 0 OUT
+        PPB_ALL          - Ping-pong all endpoints
+        PPB_EPN_ONLY     - Ping-pong all endpoints except 0
+ */
 #ifdef __PIC32MX__
-	/* PIC32MX only supports PPB_ALL */
+/* PIC32MX only supports PPB_ALL */
 	#define PPB_MODE PPB_ALL
 #else
 	#define PPB_MODE PPB_NONE

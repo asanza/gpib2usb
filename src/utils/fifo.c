@@ -24,7 +24,7 @@ int fifo_read(fifo_t * f, void * buf, int nbytes)
 			if ( f->tail == f->size )       //check for wrap-around
 				f->tail = 0;
 		} else
-			return i; //number of bytes read
+			return i;  //number of bytes read
 	}
 	return nbytes;
 }
@@ -43,7 +43,7 @@ int fifo_write(fifo_t * f, const void * buf, int nbytes)
 		//first check to see if there is space in the buffer
 		if ( (f->head + 1 == f->tail) ||
 		     ( (f->head + 1 == f->size) && (f->tail == 0) ) )
-			return i; //no more room
+			return i;  //no more room
 		else {
 			f->buf[f->head] = *p++;
 			f->head++;                      //increment the head

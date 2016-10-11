@@ -26,56 +26,64 @@
 
 #include "HardwareProfile.h"
 
-void hal_sys_init(){
-TRISBbits.TRISB5 = 0;
-LATBbits.LATB5 = 1;
+void hal_sys_init()
+{
+	TRISBbits.TRISB5 = 0;
+	LATBbits.LATB5 = 1;
 
-PinAsOutput(RED_LED);
-PinAsOutput(GREEN_LED);
-PinAsOutput(YELLOW_LED);
+	PinAsOutput(RED_LED);
+	PinAsOutput(GREEN_LED);
+	PinAsOutput(YELLOW_LED);
 
-PinClearValue(RED_LED);
-PinClearValue(GREEN_LED);
-PinClearValue(YELLOW_LED);
+	PinClearValue(RED_LED);
+	PinClearValue(GREEN_LED);
+	PinClearValue(YELLOW_LED);
 
 /* Configure interrupts, per architecture */
 #ifdef USB_USE_INTERRUPTS
 	#if defined (_PIC18) || defined(_PIC14E)
-		INTCONbits.PEIE = 1;
-		INTCONbits.GIE = 1;
+	INTCONbits.PEIE = 1;
+	INTCONbits.GIE = 1;
 	#elif __PIC32MX__
-		INTCONbits.MVEC = 1; /* Multi-vector interrupts */
-		IPC11bits.USBIP = 4; /* Interrupt priority, must set to != 0. */
-		__asm volatile("ei");
+	INTCONbits.MVEC = 1;            /* Multi-vector interrupts */
+	IPC11bits.USBIP = 4;            /* Interrupt priority, must set to != 0. */
+	__asm volatile ("ei");
 	#endif
 #endif
 
 }
 
-void hal_sys_green_led_on(void){
-    PinSetValue(GREEN_LED);
+void hal_sys_green_led_on(void)
+{
+	PinSetValue(GREEN_LED);
 }
 
-void hal_sys_green_led_toggle(void){
-    PinToggleValue(GREEN_LED);
+void hal_sys_green_led_toggle(void)
+{
+	PinToggleValue(GREEN_LED);
 }
 
-void hal_sys_red_led_on(void){
-    PinSetValue(RED_LED);
+void hal_sys_red_led_on(void)
+{
+	PinSetValue(RED_LED);
 }
 
-void hal_sys_yellow_led_on(void){
-    PinSetValue(YELLOW_LED);
+void hal_sys_yellow_led_on(void)
+{
+	PinSetValue(YELLOW_LED);
 }
 
-void hal_sys_yellow_led_toggle(void){
-    PinToggleValue(YELLOW_LED);
+void hal_sys_yellow_led_toggle(void)
+{
+	PinToggleValue(YELLOW_LED);
 }
 
-void hal_sys_enter_critical(void){
-	INTCONbits.GIE = 0;	
+void hal_sys_enter_critical(void)
+{
+	INTCONbits.GIE = 0;
 }
 
-void hal_sys_exit_critical(void){
+void hal_sys_exit_critical(void)
+{
 	INTCONbits.GIE = 1;
 }

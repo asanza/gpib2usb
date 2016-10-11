@@ -46,14 +46,14 @@
 #define TXD     16
 #define RXD     17
 
-typedef enum{
-  CONTROLLER = 0x01,
-  DEVICE = 0x02,
+typedef enum {
+	CONTROLLER = 0x01,
+	DEVICE = 0x02,
 }hal_gpib_driver_mode;
 
-typedef enum{
-  TALKER = 0x04,
-  LISTENER = 0x08
+typedef enum {
+	TALKER = 0x04,
+	LISTENER = 0x08
 }hal_gpib_data_direction;
 
 void hal_gpib_set_driver_direction(hal_gpib_data_direction direction);

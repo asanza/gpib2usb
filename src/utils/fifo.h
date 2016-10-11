@@ -2,10 +2,10 @@
 #define fifo_H
 
 typedef struct {
-     char * buf;
-     int head;
-     int tail;
-     int size;
+	char * buf;
+	int head;
+	int tail;
+	int size;
 } fifo_t;
 
 

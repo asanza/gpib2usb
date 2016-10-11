@@ -63,13 +63,13 @@
  * This is the first descriptor Windows will request, as string number 0xee.
  */
 struct microsoft_os_descriptor {
-	uint8_t bLength;         /**< set to 0x12 */
-	uint8_t bDescriptorType; /**< set to 0x3 */
-	uint16_t qwSignature[7]; /**< set to "MSFT100" (Unicode) (no NULL) */
-	uint8_t bMS_VendorCode;  /**< Set to the bRequest by which the host
-	                              should ask for the Compat ID and
-	                              Property descriptors. */
-	uint8_t bPad;            /**< Set to 0x0 */
+	uint8_t bLength;                /**< set to 0x12 */
+	uint8_t bDescriptorType;        /**< set to 0x3 */
+	uint16_t qwSignature[7];        /**< set to "MSFT100" (Unicode) (no NULL) */
+	uint8_t bMS_VendorCode;         /**< Set to the bRequest by which the host
+	                                     should ask for the Compat ID and
+	                                     Property descriptors. */
+	uint8_t bPad;                   /**< Set to 0x0 */
 };
 
 /** Extended Compat ID Header
@@ -77,11 +77,11 @@ struct microsoft_os_descriptor {
  * This is the header for the Extended Compat ID Descriptor
  */
 struct microsoft_extended_compat_header {
-	uint32_t dwLength;   /**< Total length of descriptor (header + functions) */
-	uint16_t bcdVersion; /**< Descriptor version number, 0x0100. */
-	uint16_t wIndex;     /**< This OS feature descriptor; set to 0x04. */
-	uint8_t  bCount;     /**< Number of custom property sections */
-	uint8_t  reserved[7];
+	uint32_t dwLength;      /**< Total length of descriptor (header + functions) */
+	uint16_t bcdVersion;    /**< Descriptor version number, 0x0100. */
+	uint16_t wIndex;        /**< This OS feature descriptor; set to 0x04. */
+	uint8_t bCount;         /**< Number of custom property sections */
+	uint8_t reserved[7];
 };
 
 /** Extended Compat ID Function
@@ -89,10 +89,10 @@ struct microsoft_extended_compat_header {
  * This is the function struct for the Extended Compat ID Descriptor
  */
 struct microsoft_extended_compat_function {
-	uint8_t bFirstInterfaceNumber; /**< The interface or function number */
+	uint8_t bFirstInterfaceNumber;  /**< The interface or function number */
 	uint8_t reserved;
-	uint8_t compatibleID[8];       /**< Compatible String */
-	uint8_t subCompatibleID[8];    /**< Subcompatible String */
+	uint8_t compatibleID[8];        /**< Compatible String */
+	uint8_t subCompatibleID[8];     /**< Subcompatible String */
 	uint8_t reserved2[6];
 };
 
@@ -101,10 +101,10 @@ struct microsoft_extended_compat_function {
  * This is the header for the Extended Properties Descriptor
  */
 struct microsoft_extended_properties_header {
-	uint32_t dwLength;   /**< Total length of descriptor (header + functions) */
-	uint16_t bcdVersion; /**< Descriptor version number, 0x0100. */
-	uint16_t wIndex;     /**< This OS feature descriptor; set to 0x04. */
-	uint16_t bCount;     /**< Number of custom property sections */
+	uint32_t dwLength;      /**< Total length of descriptor (header + functions) */
+	uint16_t bcdVersion;    /**< Descriptor version number, 0x0100. */
+	uint16_t wIndex;        /**< This OS feature descriptor; set to 0x04. */
+	uint16_t bCount;        /**< Number of custom property sections */
 };
 
 /** Extended Property Section header
@@ -115,14 +115,14 @@ struct microsoft_extended_properties_header {
  *
  */
 struct microsoft_extended_property_section_header {
-	uint32_t dwSize; /**< Size of this section (this struct + data) */
-	uint32_t dwPropertyDataType; /**< Property Data Format */
+	uint32_t dwSize;                /**< Size of this section (this struct + data) */
+	uint32_t dwPropertyDataType;    /**< Property Data Format */
 
 /* Variable-length fields and lengths:
-	uint16_t wPropertyNameLength;
-	uint16_t bPropertyName[];
-	uint32_t dwPropertyDataLength;
-	uint8_t  bPropertyData[];
+        uint16_t wPropertyNameLength;
+        uint16_t bPropertyName[];
+        uint32_t dwPropertyDataLength;
+        uint8_t  bPropertyData[];
  */
 };
 
@@ -144,7 +144,7 @@ struct microsoft_extended_property_section_header {
  *   if the descriptor does not exist.
  */
 uint16_t MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC(uint8_t interface,
-                                              const void **descriptor);
+					     const void **descriptor);
 #endif
 
 #ifdef MICROSOFT_CUSTOM_PROPERTY_DESCRIPTOR_FUNC
@@ -165,7 +165,7 @@ uint16_t MICROSOFT_COMPAT_ID_DESCRIPTOR_FUNC(uint8_t interface,
  *   if the descriptor does not exist.
  */
 uint16_t MICROSOFT_CUSTOM_PROPERTY_DESCRIPTOR_FUNC(uint8_t interface,
-                                                   const void **descriptor);
+						   const void **descriptor);
 #endif
 
 /* Doxygen end-of-group for microsoft_items */

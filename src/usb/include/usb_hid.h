@@ -90,13 +90,13 @@ enum HIDProtocols {
 };
 
 struct hid_descriptor {
-	uint8_t bLength; /**< Size of this struct plus any optional descriptors */
-	uint8_t bDescriptorType; /**< Set to DESC_HID */
-	uint16_t bcdHID; /**< HID Version in BCD. (0x0100 is 1.00) */
+	uint8_t bLength;                /**< Size of this struct plus any optional descriptors */
+	uint8_t bDescriptorType;        /**< Set to DESC_HID */
+	uint16_t bcdHID;                /**< HID Version in BCD. (0x0100 is 1.00) */
 	uint8_t bCountryCode;
-	uint8_t bNumDescriptors; /**< Number of class descriptors (always at least 1) */
-	uint8_t bDescriptorType2; /**< Set to DESC_REPORT */
-	uint16_t wDescriptorLength; /**< Set to size of report descriptor */
+	uint8_t bNumDescriptors;        /**< Number of class descriptors (always at least 1) */
+	uint8_t bDescriptorType2;       /**< Set to DESC_REPORT */
+	uint16_t wDescriptorLength;     /**< Set to size of report descriptor */
 };
 
 struct hid_optional_descriptor {
@@ -190,9 +190,9 @@ extern int16_t USB_HID_PHYSICAL_DESCRIPTOR_FUNC(uint8_t interface, uint8_t index
  *   will cause STALL to be returned to the host.
  */
 extern int16_t HID_GET_REPORT_CALLBACK(uint8_t interface, uint8_t report_type,
-                                       uint8_t report_id, const void **report,
-                                       usb_ep0_data_stage_callback *callback,
-                                       void **context);
+				       uint8_t report_id, const void **report,
+				       usb_ep0_data_stage_callback *callback,
+				       void **context);
 #endif
 
 
@@ -202,7 +202,7 @@ extern int16_t HID_GET_REPORT_CALLBACK(uint8_t interface, uint8_t report_type,
  * The USB Stack will call this function when a Set_Report request has been
  * received from the host. There are two ways to handle this:
  *
- * 0. For unknown requests, return -1. This will send a STALL to the host. 
+ * 0. For unknown requests, return -1. This will send a STALL to the host.
  * 1. For known requests the callback should call
  *    @p usb_start_receive_ep0_data_stage() with a buffer to be filled with
  *    the report data and a callback which will get called when the data
@@ -230,7 +230,7 @@ extern int16_t HID_GET_REPORT_CALLBACK(uint8_t interface, uint8_t report_type,
  *   will cause STALL to be returned to the host.
  */
 extern int8_t HID_SET_REPORT_CALLBACK(uint8_t interface, uint8_t report_type,
-                                      uint8_t report_id);
+				      uint8_t report_id);
 #endif
 
 #ifdef HID_GET_IDLE_CALLBACK
@@ -264,7 +264,7 @@ extern uint8_t HID_GET_IDLE_CALLBACK(uint8_t interface, uint8_t report_id);
  *   Return 0 on success and -1 on failure.
  */
 extern int8_t HID_SET_IDLE_CALLBACK(uint8_t interface, uint8_t report_id,
-                                    uint8_t idle_rate);
+				    uint8_t idle_rate);
 #endif
 
 #ifdef HID_GET_PROTOCOL_CALLBACK
