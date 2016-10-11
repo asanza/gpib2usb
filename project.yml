@@ -1,9 +1,30 @@
 ---
 
-# Notes:
-# Sample project C code is not presently written to produce a release artifact.
-# As such, release build options are disabled.
-# This sample, therefore, only demonstrates running a collection of unit tests.
+# Ceedling configuration file.
+# Copyright (c) 2015, Diego Asanza. All rights reserved.
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301  USA
+#
+# Created on October 10, 2016, 10:08 PM
+#
+# Adjust according to your setup.
+# We use the microchip toolchain. For the unit tests the mdb (microchip
+# debugger) is necessary. For command line programming the ipecmd (microchip
+# ipe tool) is needed.
+#
 
 :project:
   :use_exceptions: FALSE
@@ -13,18 +34,14 @@
   :release_build: TRUE
   :test_file_prefix: test_
 
-#:release_build:
-#  :output: MyApp.out
-#  :use_assembly: FALSE
-
 :environment:
-  - :mcu: 18F2550
+  - :mcu: 18F2550 # choose your processor
   - :path:
     - /bin
-    - /usr/bin
-    - /opt/microchip/xc8/v1.37/bin
-    - /opt/microchip/mplabx/v3.30/mplab_ide/bin
-    - /opt/microchip/mplabx/v3.30/mplab_ipe
+    - /usr/bin  # path for rake (ruby make)
+    - /opt/microchip/xc8/v1.37/bin  # path to xc8 compiler
+    - /opt/microchip/mplabx/v3.30/mplab_ide/bin # path to the mdb executable.
+    - /opt/microchip/mplabx/v3.30/mplab_ipe # path to the ipecmd executable.
 
 :extension:
   :executable: .out
@@ -43,7 +60,7 @@
   :support:
     - test/support
   :include:
-    - "/opt/microchip/xc8/v1.37/include"
+    - "/opt/microchip/xc8/v1.37/include"  # path to microchip libraries
 
 :defines:
   # in order to add common defines:
@@ -84,7 +101,7 @@
     :executable: xc8
     :arguments:
       - --pass1
-      - --chip=18F4550
+      - --chip=#{ENV['MCU']}
       - -Q
       - -G
       - --double=24
@@ -113,7 +130,7 @@
   :test_linker:
     :executable: xc8
     :arguments:
-      - --chip=18F4550
+      - --chip=#{ENV['MCU']}
       - -G
       - -m"./build/test/TestBuild.map"
       - --double=24
