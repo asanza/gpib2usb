@@ -2,7 +2,7 @@
 
 ![gpib2usb](doc/cad.png)
 
-We live in wonderful times... Now is possible for us to get wonderful, old and used measurement equipment on e-bay, just for a few bucks. Equipment that otherwise would be out of  the hobbist leage, like 6.5 digit multimeters, oscilloscopes, signal generators... just to name a few.
+We live in wonderful times... Now is possible for us to get pretty good but old and used measurement equipment on e-bay, just for a few bucks. Equipment that otherwise would be out of  the hobbist leage, like 6.5 digit multimeters, oscilloscopes, signal generators... just to name a few.
 
 These old equipment often come with a GPIB interface, which allows to control them from a computer with the corresponding GPIB connection. Regretably, computers do not come with GPIB interfaces, and the adapters available are not cheap.
 
@@ -12,7 +12,7 @@ For now is yet a work in progress.
 
 # USB Interface
 
-The device presents itself as a serial port. Following commands are supported:
+The device presents itself as a serial port. The commands are the same as the similar device sold by [Prologix LLC](http://prologix.biz/gpib-usb-controller.html), but compatibility is not guaranteed.
 
 | Command	 | Description |
 |----------|-------------|
@@ -23,7 +23,7 @@ The device presents itself as a serial port. Following commands are supported:
 |++eoi	|Query current EOI setting
 |++eos 0/1/2/3	|EOS terminator — 0:CR+LF, 1:CR, 2:LF, 3:None. Default is 0. This command specifies GPIB termination characters. When data from host is received over USB, all non-escaped LF, CR and ESC characters are removed and GPIB terminators, as specified by this command, are appended before sending the data to instruments. This command does not affect data from instruments received over GPIB port.|
 |++eos	|Query current EOS setting
-|++ifc	|Issue interface clear. This command asserts GPIB IFC signal for 150 microseconds making the gpib2usb controller the Controller-In-Charge on the GPIB bus. 
+|++ifc	|Issue interface clear. This command asserts GPIB IFC signal for 150 microseconds making the gpib2usb controller the Controller-In-Charge on the GPIB bus.
 |++loc	|Return device to local mode
 |++read  [eoi/char]| This command can be used to read data from an instrument until: EOI is detected or timeout expires, or A specified character is read or timeout expires, or Timeout expires. Timeout is set using the read_tmo_ms command and applies to inter-character delay, i.e., the delay since the last character was read. Timeout is not be confused with the total time for which data is read. |
 |++read_tmo_ms [1-3000]| This command specifies the timeout value, in milliseconds, to be used in the read command and spoll command. Timeout may be set to any value between 1 and 3000 milliseconds.|
@@ -52,3 +52,4 @@ with content:
 # gpib2usb converter
 ATTRS{idVendor}=="1209", ATTRS{idProduct}=="0001", ENV{ID_MM_DEVICE_IGNORE}="1"
 ```
+## Contributing

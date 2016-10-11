@@ -37,7 +37,7 @@
 #ifdef MULTI_CLASS_DEVICE
 static uint8_t cdc_interfaces[] = { 0 };
 #endif
-int temp = 0;
+
 static void send_string_sync(uint8_t endpoint, const char *str)
 {
 	char *in_buf = (char*)usb_get_in_buffer(endpoint);
