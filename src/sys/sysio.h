@@ -51,6 +51,10 @@ sysio_state_t sysio_get_state(void);
  */
 void sysio_release(void);
 
-
+/**
+ * get the input buffer
+ * @param buffer input buffer
+ */
+int sysio_get_buffer(char** buffer);
 
 #endif // sysio_H

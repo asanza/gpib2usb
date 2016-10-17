@@ -67,7 +67,6 @@ int main(void)
 {
 	char* input;
 	int len;
-
 	hal_sys_init();
 	sys_init();
 #ifdef MULTI_CLASS_DEVICE
@@ -76,7 +75,6 @@ int main(void)
 	usb_init();
 	while (1) {
 		if (!usb_is_configured()) continue;
-		write_char_sync('a');
 		switch (sysio_get_state()) {
 		case SYSIO_EMPTY: break;
 		case SYSIO_DATA_AVAILABLE:         /* data */
@@ -84,6 +82,11 @@ int main(void)
 			sysio_release();
 			break;
 		case SYSIO_CMD_AVAILABLE:         /* cmd  */
+			len = sysio_get_buffer(&input);
+			len = sys_process_command(input, len);
+			if(len != 0){
+				write_buffer_sync(input, len);
+			}
 			sysio_release();
 			break;
 		}
