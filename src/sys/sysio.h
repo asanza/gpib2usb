@@ -34,9 +34,21 @@ typedef enum {
 }sysio_state_t;
 
 
-/* returns len of error message */
+/**
+ * [sysio_data_received description]
+ * @param  data [description]
+ * @param  len  [description]
+ * @return      [description]
+ */
 int sysio_data_received(char* data, int len);
+/**
+ * [sysio_get_state description]
+ * @return  [description]
+ */
 sysio_state_t sysio_get_state(void);
+/**
+ * [sysio_release description]
+ */
 void sysio_release(void);
 
 

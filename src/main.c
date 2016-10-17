@@ -53,7 +53,6 @@ static void send_string_sync(uint8_t endpoint, const char *str)
 static void write_buffer_sync(const char* str, int len)
 {
 	char *in_buf = (char*)usb_get_in_buffer(2);
-
 	while (usb_in_endpoint_busy(2)) ;
 	strncpy(in_buf, str, len);
 	usb_send_in_buffer(2, len);
@@ -62,40 +61,6 @@ static void write_buffer_sync(const char* str, int len)
 static void write_char_sync(const char c)
 {
 	write_buffer_sync(&c, 1);
-}
-
-static volatile int not_configured = 1;
-
-static void timer_task(void)
-{
-	const unsigned char *out_buf, *in_buf;
-	size_t len;
-
-	if (!usb_is_configured()) {
-		not_configured = 1;
-		return;
-	}
-	;
-	if (usb_out_endpoint_halted(2)) {
-		not_configured = 1;
-		return;
-	}
-	;
-	not_configured = 0;
-	in_buf = (char*)usb_get_in_buffer(2);
-	if (!usb_out_endpoint_has_data(2)) {
-		while (usb_in_endpoint_busy(2)) ;
-		len = sys_gpib_get_buffer(in_buf, EP_2_IN_LEN);
-		if (len <= 0)
-			return;
-	} else {
-		len = usb_get_out_buffer(2, &out_buf);
-		len = sysio_data_received(out_buf, len);
-		while (usb_in_endpoint_busy(2)) ;
-		strncpy(in_buf, out_buf, len);
-	}
-	usb_send_in_buffer(2, len);
-	usb_arm_out_endpoint(2);
 }
 
 int main(void)
@@ -109,9 +74,9 @@ int main(void)
 	cdc_set_interface_list(cdc_interfaces, sizeof(cdc_interfaces));
 #endif
 	usb_init();
-	hal_timer_init(1000, timer_task);
 	while (1) {
-		if (not_configured) continue;
+		if (!usb_is_configured()) continue;
+		write_char_sync('a');
 		switch (sysio_get_state()) {
 		case SYSIO_EMPTY: break;
 		case SYSIO_DATA_AVAILABLE:         /* data */
@@ -155,7 +120,21 @@ int8_t app_get_interface_callback(uint8_t interface)
 
 void app_out_transaction_callback(uint8_t endpoint)
 {
-
+	char* out_buf;
+	char* in_buf;
+	int len;
+	if(!usb_is_configured())
+		return;
+	if(!usb_out_endpoint_has_data(2))
+		return;
+ 	in_buf = (char*)usb_get_in_buffer(2);
+	len = usb_get_out_buffer(2, &out_buf);
+	len = sysio_data_received(out_buf, len);
+	if(len){
+		strncpy(in_buf, out_buf, len);
+		usb_send_in_buffer(2, len);
+	}
+	usb_arm_out_endpoint(2);
 }
 
 void app_in_transaction_complete_callback(uint8_t endpoint)
@@ -250,6 +229,5 @@ int8_t app_send_break_callback(uint8_t interface, uint16_t duration)
 
 void interrupt high_priority isr()
 {
-	hal_timer_service();
 	usb_service();
 }
