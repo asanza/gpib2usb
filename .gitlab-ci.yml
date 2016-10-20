@@ -1,5 +1,5 @@
 before_script:
-  - export PATH=/usr/local/bin:/usr/bin:/bin:/opt/microchip/xc8/v1.37/bin/:/opt/microchip/mplabx/v3.05/mplab_ide/bin
+  - export PATH=/usr/local/bin:/usr/bin:/bin:/opt/microchip/xc8/v1.37/bin/:/opt/microchip/mplabx/v3.05/mplab_ide/bin/
 
 UnitTests:
   script: "rake test:all"
