@@ -1,5 +1,5 @@
 # GPIB (IEEE-488) to usb adapter
-[![build status](https://ci.dirac.org/diego/gpib2usb/badges/master/build.svg)](https://ci.dirac.org/diego/gpib2usb)
+[![build status](https://ci.dirac.org/open-source/gpib2usb/badges/master/build.svg)](https://ci.dirac.org/open-source/gpib2usb)
 
 ![gpib2usb](doc/cad.png)
 
