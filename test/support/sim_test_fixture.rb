@@ -7,6 +7,7 @@ if is_windows
 else
 	var = IO.popen("mdb.sh ./test/support/sim_instructions.txt > ./test/support/simlog.txt")
 end
+print var
 Process.wait
 if File.exists? OUT_FILE
     file_contents = File.read OUT_FILE
