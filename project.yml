@@ -35,7 +35,7 @@
   :test_file_prefix: test_
 
 :environment:
-  - :mcu: 18F2550 # choose your processor
+  - :mcu: 18F4550 # choose your processor
   - :path:
     - /bin
     - /usr/bin  # path for rake (ruby make)
