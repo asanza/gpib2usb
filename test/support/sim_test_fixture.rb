@@ -5,7 +5,7 @@ File.delete OUT_FILE if File.exists? OUT_FILE
 if is_windows
 	var = IO.popen("mdb.bat ./test/support/sim_instructions.txt > ./test/support/simlog.txt")
 else
-	var = IO.popen("mdb.sh ./test/support/sim_instructions.txt > ./test/support/simlog.txt")
+	var = IO.popen("/opt/microchip/mplabx/v3.05/mplab_ide/bin/mdb.sh ./test/support/sim_instructions.txt > ./test/support/simlog.txt")
 end
 Process.wait
 if File.exists? OUT_FILE
