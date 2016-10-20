@@ -1,5 +1,4 @@
 require 'rbconfig'
-IO.popen(ENV, "echo $PATH").read.chomp
 is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
 OUT_FILE = "./test/support/out.txt"
 File.delete OUT_FILE if File.exists? OUT_FILE
